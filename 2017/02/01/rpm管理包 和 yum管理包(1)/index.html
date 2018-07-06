@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>安装管理包：rpm包和yum包 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="包基础知识包名称 在rhel/centos/fedora上，包的名称以rpm结尾，分为二进制包和源码包。源码包以”.src.rpm”结尾，它是未编译过的包，可以自行进行编译或者用其制作自己的二进制rpm包，非”.src.rpm”结尾的包都是二进制包，都是已经编译完成的，安装rpm包的过程实际上就是将包中的文件复制到Linux上，有可能还会在复制文件的前后执行一些命令，如创建一个必要的用户，删除非必">
+<meta name="keywords" content="Linux,rpm">
+<meta property="og:type" content="article">
+<meta property="og:title" content="安装管理包：rpm包和yum包">
+<meta property="og:url" content="http://yoursite.com/2017/02/01/rpm管理包 和 yum管理包(1)/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="包基础知识包名称 在rhel/centos/fedora上，包的名称以rpm结尾，分为二进制包和源码包。源码包以”.src.rpm”结尾，它是未编译过的包，可以自行进行编译或者用其制作自己的二进制rpm包，非”.src.rpm”结尾的包都是二进制包，都是已经编译完成的，安装rpm包的过程实际上就是将包中的文件复制到Linux上，有可能还会在复制文件的前后执行一些命令，如创建一个必要的用户，删除非必">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2018-06-19T08:08:02.964Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="安装管理包：rpm包和yum包">
+<meta name="twitter:description" content="包基础知识包名称 在rhel/centos/fedora上，包的名称以rpm结尾，分为二进制包和源码包。源码包以”.src.rpm”结尾，它是未编译过的包，可以自行进行编译或者用其制作自己的二进制rpm包，非”.src.rpm”结尾的包都是二进制包，都是已经编译完成的，安装rpm包的过程实际上就是将包中的文件复制到Linux上，有可能还会在复制文件的前后执行一些命令，如创建一个必要的用户，删除非必">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-rpm管理包 和 yum管理包(1)" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/02/01/rpm管理包 和 yum管理包(1)/" class="article-date">
+  <time datetime="2017-01-31T16:00:00.000Z" itemprop="datePublished">2017-02-01</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      安装管理包：rpm包和yum包
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h4 id="包基础知识"><a href="#包基础知识" class="headerlink" title="包基础知识"></a>包基础知识</h4><h5 id="包名称"><a href="#包名称" class="headerlink" title="包名称"></a>包名称</h5><blockquote>
+<p>在rhel/centos/fedora上，包的名称以rpm结尾，分为二进制包和源码包。源码包以”.src.rpm”结尾，它是未编译过的包，可以自行进行编译或者用其制作自己的二进制rpm包，非”.src.rpm”结尾的包都是二进制包，都是已经编译完成的，安装rpm包的过程实际上就是将包中的文件复制到Linux上，有可能还会在复制文件的前后执行一些命令，如创建一个必要的用户，删除非必要文件等。<br><a id="more"></a></p>
+</blockquote>
+<blockquote>
+<p>注意区分源码包和源码的概念，源码一般是打包压缩后的文件(如.tar.gz结尾的文件)。源码包中包含了源码，还包含了一些有助于制作二进制rpm的文件。最有力的说明就是源码编译安装的程序都没有服务启动脚本(/etc/init.d/下对应的启动脚本)，而二进制rpm包安装的就有，因为二进制rpm包都是通过源码包”.src.rpm”定制而来，在源码包中提供了必要的文件(如服务启动脚本)，并在安装rpm的时候复制到指定路径下。  </p>
+</blockquote>
+<h6 id="回归正题，一个rpm包的名称分为包全名和包名，包全名如httpd-2-2-15-39-el6-centos-x86-64-rpm，包全名中各部分的意义如下："><a href="#回归正题，一个rpm包的名称分为包全名和包名，包全名如httpd-2-2-15-39-el6-centos-x86-64-rpm，包全名中各部分的意义如下：" class="headerlink" title="回归正题，一个rpm包的名称分为包全名和包名，包全名如httpd-2.2.15-39.el6.centos.x86_64.rpm，包全名中各部分的意义如下："></a>回归正题，一个rpm包的名称分为包全名和包名，包全名如httpd-2.2.15-39.el6.centos.x86_64.rpm，包全名中各部分的意义如下：</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">httpd       包名</span><br><span class="line">2.2.15      版本号，版本号格式[ 主版本号.[ 次版本号.[ 修正号 ] ] ]</span><br><span class="line">39          软件发布次数</span><br><span class="line">el6.centos  适合的操作系统平台以及适合的操作系统版本</span><br><span class="line">x86_64      适合的硬件平台，硬件平台根据cpu来决定，有i386、i586、i686、x86_64、noarch或者省略，noarch或省略表示不区分硬件平台</span><br><span class="line">rpm         软件包后缀扩展名</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>使用rpm工具管理包时，如果要操作未安装的包，则使用包全名，如安装包，查看未安装包的信息等；如果要操作已安装的rpm包，则只需要给定其包名即可，如查询已装包生成了哪些文件，查看已装包的信息等。</p>
+</blockquote>
+<blockquote>
+<p>而对于yum工具来说，只需给定其包名即可，若有需要，再指定版本号，如明确指明要安装1.6.10版本的tree工具，yum install tree-1.6.10。</p>
+</blockquote>
+<h4 id="rpm管理包"><a href="#rpm管理包" class="headerlink" title="rpm管理包"></a>rpm管理包</h4><blockquote>
+<p>rpm包被安装后，会在/var/lib/rpm下会建立已装rpm数据库，以后有任何rpm的升级、查询、版本比较等包的操作都是从这个目录下获取信息并完成相应操作的。</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@xuexi ~]# ls /var/lib/rpm/ </span><br><span class="line">Basenames     __db.003     Group         Packages        Requirename     Triggername</span><br><span class="line">Conflictname  __db.004     Installtid    Providename     Requireversion</span><br><span class="line">__db.001      Dirnames     Name          Provideversion  Sha1header</span><br><span class="line">__db.002      Filedigests  Obsoletename  Pubkeys         Sigmd5</span><br></pre></td></tr></table></figure>
+<h6 id="安装包后的文件分布"><a href="#安装包后的文件分布" class="headerlink" title="安装包后的文件分布"></a>安装包后的文件分布</h6><blockquote>
+<blockquote>
+<p>rpm安装完成后，相关的文件会复制到多个目录下(具体复制的路径是在制作rpm包时指定的)。一般来说，分布形式差不多如下表。</p>
+</blockquote>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">/etc</span><br><span class="line">放置配置文件的目录</span><br><span class="line">/bin、/sbin、/usr/bin或/usr/sbin</span><br><span class="line">一些可执行文件</span><br><span class="line">/lib、/lib64、/usr/lib(/usr/lib64)</span><br><span class="line">一些库文件</span><br><span class="line">/usr/include</span><br><span class="line">一些头文件</span><br><span class="line">/usr/share/doc</span><br><span class="line">一些基本的软件使用手册与帮助文件</span><br><span class="line">/usr/share/man</span><br><span class="line">一些 man page 档案</span><br></pre></td></tr></table></figure>
+<h4 id="rpm安装、升级、卸载"><a href="#rpm安装、升级、卸载" class="headerlink" title="rpm安装、升级、卸载"></a>rpm安装、升级、卸载</h4><blockquote>
+<p>rpm工具安装、升级和卸载的功能都很少使用。对于安装来说，它需要人为解决包的依赖关系，这是极其令人恶心的事对于升级来说，基本上都会使用yum工具进行安装和升级，而卸载行为在Linux上很少出现，大不了直接覆盖重装。  </p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">rpm -ivhUe --nodeps --test --force --prefix</span><br><span class="line">选项说明：</span><br><span class="line">-i 表示安装，install的意思</span><br><span class="line">-v 显示安装信息，还可以&quot;-vv&quot;、&quot;-vvv&quot;，v提供的越多显示信息越多</span><br><span class="line">-h 显示安装进度，以#显示安装的进度</span><br><span class="line">-U 升级或升级包</span><br><span class="line">-F 只升级已安装的包</span><br><span class="line">-e 卸载包，卸载也有依赖性,&quot;--erase&quot;</span><br><span class="line">--nodeps 忽略依赖性强制安装或卸载(no dependencies)</span><br><span class="line">--test 测试是否能够成功安装指定的rpm包</span><br><span class="line">--prefix 新路径 自行指定安装路径而不是使用默认路径，基本上都不支持该功能，功能极其简单的软件估计才支持重定位安装路径</span><br><span class="line">--force 强制动作</span><br><span class="line">--replacepkgs 替换安装，即重新覆盖安装。</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>有时误删文件可以不用卸载再装，直接使用–replacepkgs选项再次安装即可。  </p>
+</blockquote>
+<blockquote>
+<p>rpm包另一个缺陷是只能安装本地或给定url路径的rpm包。  </p>
+</blockquote>
+<h6 id="注意：不要对内核进行升级；多版本的内核可以并存，因此可以执行安装操作。"><a href="#注意：不要对内核进行升级；多版本的内核可以并存，因此可以执行安装操作。" class="headerlink" title="注意：不要对内核进行升级；多版本的内核可以并存，因此可以执行安装操作。"></a>注意：不要对内核进行升级；多版本的内核可以并存，因此可以执行安装操作。</h6><h4 id="rpm查询功能"><a href="#rpm查询功能" class="headerlink" title="rpm查询功能"></a>rpm查询功能</h4><blockquote>
+<p>rpm工具的安装功能很少使用，毕竟解决依赖关系是不是件容易的事。但是rpm的查询功能则非常实用。  </p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">-q[p] -q查询已安装的包，-qp查询未安装的包。它们都可接下面的参数</span><br><span class="line">    -a 查询所有已安装的包，也可以指定通配符名称进行查询</span><br><span class="line">    -i 查询指定包的信息（版本、开发商、安装时间等）。从这里面可以查看到软件包属于哪个包组。</span><br><span class="line">    -l 查询包的文件列表和目录（包在生产的时候就指定了文件路径，因此可查未装包）</span><br><span class="line">    -R 查询包的依赖性（Required）</span><br><span class="line">    -c 查询安装后包生成的配置文件</span><br><span class="line">    -d 查询安装后包生成的帮助文档</span><br><span class="line">-f 查询系统文件属于哪个已安装的包（接的是文件而不是包）</span><br><span class="line">--scripts 查询包相关的脚本文档。脚本文档分四类：安装前运行、安装后运行、卸载前运行、卸载后运行</span><br></pre></td></tr></table></figure>
+<h6 id="例如："><a href="#例如：" class="headerlink" title="例如："></a>例如：</h6><h6 id="1-查询文件-etc-yum-conf是通过哪个包安装的。"><a href="#1-查询文件-etc-yum-conf是通过哪个包安装的。" class="headerlink" title="(1).查询文件/etc/yum.conf是通过哪个包安装的。"></a>(1).查询文件/etc/yum.conf是通过哪个包安装的。</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@xuexi cdrom]# rpm -qf /etc/yum.conf</span><br><span class="line">yum-3.2.29-60.el6.centos.noarch</span><br></pre></td></tr></table></figure>
+<h6 id="2-查询安装httpd时生成了哪些目录和文件，还可以过滤出提供了哪些命令行工具。"><a href="#2-查询安装httpd时生成了哪些目录和文件，还可以过滤出提供了哪些命令行工具。" class="headerlink" title="(2).查询安装httpd时生成了哪些目录和文件，还可以过滤出提供了哪些命令行工具。"></a>(2).查询安装httpd时生成了哪些目录和文件，还可以过滤出提供了哪些命令行工具。</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">rpm -ql httpd</span><br><span class="line">rpm -ql httpd | grep &apos;bin/&apos;</span><br></pre></td></tr></table></figure>
+<h6 id="3-查询某个未安装包的依赖性如zip-3-0-1-el6-x86-64-rpm的依赖性。"><a href="#3-查询某个未安装包的依赖性如zip-3-0-1-el6-x86-64-rpm的依赖性。" class="headerlink" title="(3).查询某个未安装包的依赖性如zip-3.0-1.el6.x86_64.rpm的依赖性。"></a>(3).查询某个未安装包的依赖性如zip-3.0-1.el6.x86_64.rpm的依赖性。</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[root@xuexi cdrom]# rpm -qRp zip-3.0-1.el6.x86_64.rpm</span><br><span class="line">libc.so.6()(64bit) </span><br><span class="line">libc.so.6(GLIBC_2.2.5)(64bit) </span><br><span class="line">libc.so.6(GLIBC_2.3)(64bit) </span><br><span class="line">libc.so.6(GLIBC_2.3.4)(64bit) </span><br><span class="line">libc.so.6(GLIBC_2.4)(64bit) </span><br><span class="line">libc.so.6(GLIBC_2.7)(64bit) </span><br><span class="line">rpmlib(CompressedFileNames) &lt;= 3.0.4-1</span><br><span class="line">rpmlib(FileDigests) &lt;= 4.6.0-1</span><br><span class="line">rpmlib(PayloadFilesHavePrefix) &lt;= 4.0-1</span><br><span class="line">rtld(GNU_HASH) </span><br><span class="line">rpmlib(PayloadIsXz) &lt;= 5.2-1</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>实际上，查看包的依赖性时，使用yum-utils包中的repoquery工具更好，”repoquery -R pkg_name”会更简洁。yum-utils中包含了好几个非常实用的包管理工具，可以大致都了解下。  </p>
+</blockquote>
+<h4 id="提取rpm包中文件"><a href="#提取rpm包中文件" class="headerlink" title="提取rpm包中文件"></a>提取rpm包中文件</h4><blockquote>
+<p>安装rpm包会安装rpm中所有文件，如果将某个文件删除了，除了重装rpm，还可以通过从rpm包提取缺失文件的方式来修复。在win上安装个万能压缩工具”好压”，可以直接打开rpm包，然后从中解压需要的文件出来。但是在Linux上，过程还是有点小复杂的，其中涉及了cpio这个古来的归档工具。  </p>
+</blockquote>
+<blockquote>
+<p>方法：使用rpm2cpio命令组合cpio -idv命令的方式来提取。</p>
+</blockquote>
+<blockquote>
+<p>rpm2cpio是将rpm转换为cpio格式归档文件的命令，有了cpio文件，就可以使用cpio命令对其进行相关的操作。  </p>
+</blockquote>
+<blockquote>
+<p>cpio命令是从归档文件中提取文件或向归档文件中写入文件的工具，一般都从标准输入或输出操作归档文件，所以都使用管道或重定向符号。  </p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">-i： 运行在copy-in模式，即从归档文件中将文件copy出来，即提取文件（提取）</span><br><span class="line">-o： 运行在copy-out模式，将文件copy到归档文件中，即将文件拷贝到归档文件中（写入）</span><br><span class="line">-d： 需要目录时自动建立目录</span><br><span class="line">-v： 显示信息</span><br></pre></td></tr></table></figure>
+<h6 id="提取rpm包文件的一般格式为以下格式："><a href="#提取rpm包文件的一般格式为以下格式：" class="headerlink" title="提取rpm包文件的一般格式为以下格式："></a>提取rpm包文件的一般格式为以下格式：</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rpm2cpio package_full_name|cpio -idv dir_name</span><br></pre></td></tr></table></figure>
+<h6 id="例如，删除-bin-ls文件，将导致ls命令不可用，使用文件提取的方式去修复。"><a href="#例如，删除-bin-ls文件，将导致ls命令不可用，使用文件提取的方式去修复。" class="headerlink" title="例如，删除/bin/ls文件，将导致ls命令不可用，使用文件提取的方式去修复。"></a>例如，删除/bin/ls文件，将导致ls命令不可用，使用文件提取的方式去修复。</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">[root@xuexi cdrom]# which ls     # 查找需要删除的ls文件位置</span><br><span class="line">alias ls=&apos;ls --color=auto&apos;</span><br><span class="line">        /bin/ls</span><br><span class="line"></span><br><span class="line">[root@xuexi cdrom]# rpm -qf /bin/ls   # 查找ls命令属于哪个包</span><br><span class="line">coreutils-8.4-37.el6.x86_64</span><br><span class="line"></span><br><span class="line">[root@xuexi cdrom]# rm -f /bin/ls      # 删除ls命令</span><br><span class="line">[root@xuexi cdrom]# ls                           # ls命令已不可用</span><br><span class="line">-bash: /bin/ls: No such file or directory</span><br><span class="line"></span><br><span class="line">[root@xuexi ~]# yumdownloader coreutils         # 下载所需的rpm包</span><br><span class="line"></span><br><span class="line">[root@xuexi ~]# rpm2cpio coreutils-8.4-37.el6.x86_64.rpm | cpio -id ./bin/ls   # 提取bin/ls到当前目录下</span><br><span class="line"></span><br><span class="line">[root@xuexi ~]# dir ~/bin     # 使用dir命令查看已经提取成功，dir命令功能等价于ls</span><br><span class="line">ls</span><br><span class="line"></span><br><span class="line">[root@xuexi tmp]# cp bin/ls /bin/      # 复制ls命令到/bin下</span><br><span class="line">[root@xuexi tmp]# ls                     # 测试，ls已经可用</span><br></pre></td></tr></table></figure>
+<h4 id="yum管理包"><a href="#yum管理包" class="headerlink" title="yum管理包"></a>yum管理包</h4><blockquote>
+<p>yum工具通过仓库的方式简化rpm包的管理。它从仓库中搜索相关的软件包，并自动下载和解决软件包的依赖性，非常方便。  </p>
+</blockquote>
+<h5 id="etc-yum-conf"><a href="#etc-yum-conf" class="headerlink" title="/etc/yum.conf"></a>/etc/yum.conf</h5><blockquote>
+<p>  /etc/yum.conf是yum的默认文件，里面配置的也是全局默认项。 </p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">[root@server2 ~]# cat /etc/yum.conf</span><br><span class="line"></span><br><span class="line">[main]</span><br><span class="line">cachedir=/var/cache/yum/$basearch/$releasever   # 缓存目录</span><br><span class="line">keepcache=0          # 是否保留缓存，设置为1时，安装包时所下载的包将不会被删除</span><br><span class="line">debuglevel=2         # 调试信息的级别</span><br><span class="line">logfile=/var/log/yum.log   # 日志文件位置</span><br><span class="line">exactarch=1         # 设置为1将只会安装和系统架构完全匹配的包</span><br><span class="line">obsoletes=1         # 是否允许更新旧的包</span><br><span class="line">gpgcheck=1          # 是否要进行gpg check</span><br><span class="line">plugins=1           # 是否允许使用yum插件</span><br><span class="line">installonly_limit=5</span><br><span class="line">bugtracker_url=http://bugs.centos.org/set_project.php?project_id=23&amp;ref=http://bugs.centos.org/bug_report_page.php?category=yum</span><br><span class="line">distroverpkg=centos-release    # 指定基准包，yum会根据这个包判断发行版本</span><br></pre></td></tr></table></figure>
+<h4 id="配置yum仓库"><a href="#配置yum仓库" class="headerlink" title="配置yum仓库"></a>配置yum仓库</h4><blockquote>
+<p>首先配置yum仓库，配置文件为/etc/yum.conf和/etc/yum.repos.d/中的”.repo”文件，其中/etc/yum.conf配置的是仓库的默认项，一般配置yum源都是在/etc/yum.repos.d/*.repo中配置。注意，该目录中任意repo文件都会被读取。  </p>
+</blockquote>
+<blockquote>
+<p>默认/etc/yum.repos.d/下会有以下几个仓库文件，除了CentOS-Base.repo，其他的都可以删掉，基本没用。  </p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@xuexi yum.repos.d]# ls /etc/yum.repos.d/</span><br><span class="line">CentOS-Base.repo       CentOS-fasttrack.repo  CentOS-Vault.repo</span><br><span class="line">CentOS-Debuginfo.repo  CentOS-Media.repo</span><br></pre></td></tr></table></figure>
+<h6 id="repo文件的配置格式如下："><a href="#repo文件的配置格式如下：" class="headerlink" title="repo文件的配置格式如下："></a>repo文件的配置格式如下：</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">[root@xuexi yum.repos.d]# vim CentOS-Base.repo</span><br><span class="line"></span><br><span class="line">[base]      # 仓库ID，ID必须保证唯一性</span><br><span class="line">name        # 仓库名称，可随意命名</span><br><span class="line">mirrorlist  # 该地址下包含了仓库地址列表，包含一个或多个镜像站点，和baseurl使用一个就可以了</span><br><span class="line">#baseurl    # 仓库地址。网络上的地址则写网络地址，本地地址则写本地地址，格式为“file://”后接路径，如file:///mnt/cdrom</span><br><span class="line">gpgcheck=1  # 指定是否需要签名，1表示需要，0表示不需要</span><br><span class="line">gpgkey=     # 签名文件的路径</span><br><span class="line">enable      # 该仓库是否生效，enable=1表示生效，enable=0表示不生效</span><br><span class="line">cost=       # 开销越高，优先级越低</span><br><span class="line"></span><br><span class="line">【repo配置文件中可用的宏：】</span><br><span class="line">$releasever：程序的版本，对Yum而言指的是redhat-relrase版本。只替换为主版本号，如Redhat6.5 则替换为6</span><br><span class="line">$arch：系统架构</span><br><span class="line">$basharch：系统基本架构，如i686，i586等的基本架构为i386</span><br><span class="line">$YUM0-9：在系统定义的环境变量，可以在yum中使用</span><br></pre></td></tr></table></figure>
+<h4 id="repo配置示例：配置epel仓库"><a href="#repo配置示例：配置epel仓库" class="headerlink" title="repo配置示例：配置epel仓库"></a>repo配置示例：配置epel仓库</h4><blockquote>
+<p>系统发行商在系统中放置的rpm包一般版本都较老，可能有些包有较大的延后性。而epel是由fedora社区维护的高质量高可靠性的安装源，有很多包是比系统包更新的，且多出很多系统没有的包。总之，用到epel的机会很多很多，所以就拿来当配置示例了。  </p>
+</blockquote>
+<h6 id="有两种方式可以使用epel源。"><a href="#有两种方式可以使用epel源。" class="headerlink" title="有两种方式可以使用epel源。"></a>有两种方式可以使用epel源。</h6><h6 id="方法一：安装epel-release-noarch-rpm"><a href="#方法一：安装epel-release-noarch-rpm" class="headerlink" title="方法一：安装epel-release-noarch.rpm"></a>方法一：安装epel-release-noarch.rpm</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">shell&gt; rpm -ivh epel-release-latest-6.noarch.rpm</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>安装后会在/etc/yum.repo.d/目录下生成两个epel相关的repo文件，其中一个是epel.repo。此文件中epel的源设置在了fedora的镜像站点上，这对国内网来说可能会较慢，可以修改它为下面的内容。  </p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[epel]</span><br><span class="line">name=Extra Packages for Enterprise Linux 6 - $basearch</span><br><span class="line">baseurl=http://mirrors.sohu.com/fedora-epel/6Server/$basearch/</span><br><span class="line">#mirrorlist=https://mirrors.fedoraproject.org/metalink?repo=epel-6&amp;arch=$basearch</span><br><span class="line">failovermethod=priority</span><br><span class="line">enabled=1</span><br><span class="line">gpgcheck=1</span><br><span class="line">gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-6</span><br></pre></td></tr></table></figure>
+<h6 id="方法二：直接增加epel仓库"><a href="#方法二：直接增加epel仓库" class="headerlink" title="方法二：直接增加epel仓库"></a>方法二：直接增加epel仓库</h6><h6 id="在-etc-yum-repos-d-下任意一个repo文件中添加上epel的仓库即可。"><a href="#在-etc-yum-repos-d-下任意一个repo文件中添加上epel的仓库即可。" class="headerlink" title="在/etc/yum.repos.d/下任意一个repo文件中添加上epel的仓库即可。"></a>在/etc/yum.repos.d/下任意一个repo文件中添加上epel的仓库即可。</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[epel]</span><br><span class="line">name=epel</span><br><span class="line">baseurl=http://mirrors.sohu.com/fedora-epel/6Server/$basearch/</span><br><span class="line">enabled=1</span><br><span class="line">gpgcheck=0</span><br></pre></td></tr></table></figure>
+<h6 id="然后清除缓存再建立缓存即可。"><a href="#然后清除缓存再建立缓存即可。" class="headerlink" title="然后清除缓存再建立缓存即可。"></a>然后清除缓存再建立缓存即可。</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">shell&gt; yum clean all ; yum makecache</span><br></pre></td></tr></table></figure>
+<h4 id="yum命令"><a href="#yum命令" class="headerlink" title="yum命令"></a>yum命令</h4><h6 id="不同的版本，yum命令可能功能上有所不同，例如在CentOS-7上的yum有–downloadonly的功能，而在CentOS-6-6上就没有-更新yum包后就有了-。此处介绍几个yum命令。"><a href="#不同的版本，yum命令可能功能上有所不同，例如在CentOS-7上的yum有–downloadonly的功能，而在CentOS-6-6上就没有-更新yum包后就有了-。此处介绍几个yum命令。" class="headerlink" title="不同的版本，yum命令可能功能上有所不同，例如在CentOS 7上的yum有–downloadonly的功能，而在CentOS 6.6上就没有(更新yum包后就有了)。此处介绍几个yum命令。"></a>不同的版本，yum命令可能功能上有所不同，例如在CentOS 7上的yum有–downloadonly的功能，而在CentOS 6.6上就没有(更新yum包后就有了)。此处介绍几个yum命令。</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">Usage: yum [options] COMMAND</span><br><span class="line"></span><br><span class="line">List of Commands:</span><br><span class="line">help           命令的帮助信息，用法：yum help command，如yum help install则查看install命令的用法说明</span><br><span class="line">clean          清除缓存数据，如yum clean all</span><br><span class="line">makecache      生成元数据缓存数据，yum makecache</span><br><span class="line">deplist        列出包的依赖关系</span><br><span class="line">erase          卸载包</span><br><span class="line">fs             为当前文件系统创建快照，或者列出或删除当前已有快照。快照是非常有用的，升级或打补丁前拍个快照，就能放心地升级或打补丁了</span><br><span class="line">fssnapshot     同fs一样</span><br><span class="line">groups         操作包组</span><br><span class="line">history        查看yum事务信息，yum是独占模式的进程，所以有时候查看事务信息还是有用的</span><br><span class="line">info           输出包或包组的信息，例如该包是谁制作的，大概是干什么用的，来源于哪个包组等信息</span><br><span class="line">install        包安装命令</span><br><span class="line">list           列出包名，一般会结合grep来搜索包，如yum list all | grep -i zabbix</span><br><span class="line">provides       搜索给定的内容是谁提供的，可用来搜索来源于个包，如CentOS 7上mysql被mariadb替代，搜索Mysql提供者时就能找出包mariadb</span><br><span class="line">reinstall      重新安装包</span><br><span class="line">repolist       列出可用的仓库列表</span><br><span class="line">search         给定字符串搜索相关包，并给出相关包较为详细的信息</span><br><span class="line">update         更新包</span><br><span class="line"> </span><br><span class="line">Options:</span><br><span class="line"></span><br><span class="line">  -R [minutes], --randomwait=[minutes]：最多等待时间</span><br><span class="line">  -q, --quiet           安静模式</span><br><span class="line">  -v, --verbose         详细模式</span><br><span class="line">  -y, --assumeyes       对所有问题回答yes</span><br><span class="line">  --assumeno            对所有问题回答no</span><br><span class="line">  --enablerepo=[repo]   启用一个或多个仓库，可用通配符通配仓库ID</span><br><span class="line">  --disablerepo=[repo]  禁用一个或多个仓库，可用通配符通配仓库ID</span><br><span class="line">  -x [package], --exclude=[package]  通配要排除的包</span><br><span class="line">  --nogpgcheck          禁用gpgcheck</span><br><span class="line">  --color=COLOR         带颜色</span><br><span class="line">  --downloadonly        仅下载包，不安装或升级。默认下载在yum的缓存目录中，默认为/var/cache/yum/$basearch/$releasever</span><br><span class="line">  --downloaddir=DLDIR   指定下载目录</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>很多时候，yum操作失败的原因是repo的配置错误，或者缓存未更新。</p>
+</blockquote>
+<h4 id="yum操作包组"><a href="#yum操作包组" class="headerlink" title="yum操作包组"></a>yum操作包组</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[root@server2 ~]# yum help groups</span><br><span class="line">Loaded plugins: fastestmirror, langpacks</span><br><span class="line">groups [list|info|summary|install|upgrade|remove|mark] [GROUP]</span><br><span class="line"></span><br><span class="line">Display, or use, the groups information</span><br><span class="line"></span><br><span class="line">aliases: group, grouplist, groupinfo, groupinstall, groupupdate, groupremove, grouperase</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>所以，可以使用别名group, grouplist, groupinfo, groupinstall, groupupdate, groupremove, grouperase替代相应的命令。  </p>
+</blockquote>
+<blockquote>
+<p>如安装包组yum groups install pkg_groupname，也可以yum groupinstall pkg_groupname。</p>
+</blockquote>
+<h4 id="源码编译安装程序"><a href="#源码编译安装程序" class="headerlink" title="源码编译安装程序"></a>源码编译安装程序</h4><h5 id="源码编译的几个阶段"><a href="#源码编译的几个阶段" class="headerlink" title="源码编译的几个阶段"></a>源码编译的几个阶段</h5><h6 id="拿到源码的压缩包后，首先就是解压，这就不需说了。解压后，进入解压目录，这是必须动作，之后就是源码编译的一般步骤。并非适用所有程序的编译，但知道过程之后也可以举一反三了。"><a href="#拿到源码的压缩包后，首先就是解压，这就不需说了。解压后，进入解压目录，这是必须动作，之后就是源码编译的一般步骤。并非适用所有程序的编译，但知道过程之后也可以举一反三了。" class="headerlink" title="拿到源码的压缩包后，首先就是解压，这就不需说了。解压后，进入解压目录，这是必须动作，之后就是源码编译的一般步骤。并非适用所有程序的编译，但知道过程之后也可以举一反三了。"></a>拿到源码的压缩包后，首先就是解压，这就不需说了。解压后，进入解压目录，这是必须动作，之后就是源码编译的一般步骤。并非适用所有程序的编译，但知道过程之后也可以举一反三了。</h6><blockquote>
+<p>1.阅读解压目录中的INSTALL/README文件。如果不是对着官方手册或文档，那么在安装前务必读一读INSTALL文件或README文件，只需读其中如何安装的部分即可。  </p>
+</blockquote>
+<blockquote>
+<p>2.解压后的目录里一般还有configure文件（也可能是config文件）。执行”./configure”或带有编译选项的”./configure”，检查系统环境是否符合满足安装要求，并将定义好的安装配置写入和系统环境信息写入Makefile文件中。里面包含了如何编译、启用哪些功能、安装路径等信息。  </p>
+</blockquote>
+<blockquote>
+<p>3.执行make命令进行编译。make命令会根据Makefile文件进行编译。编译工作主要是调用编译器(如gcc)将源码编译为可执行文件，通常需要一些函数库才能产生一个完整的可执行文件。  </p>
+</blockquote>
+<blockquote>
+<p>4.make install将上一步所编译的数据复制到指定的目录下。<br>这就已经完成编译程序的过程了。  </p>
+</blockquote>
+<h5 id="configure脚本的通用功能"><a href="#configure脚本的通用功能" class="headerlink" title="configure脚本的通用功能"></a>configure脚本的通用功能</h5><blockquote>
+<p>configure一般都会接受以下几个编译选项：  </p>
+</blockquote>
+<blockquote>
+<p>–prefix=          ：指定安装的路径<br>–sysconfdir=      ：指定配置文件目录<br>–enable-feature   ：启用某个特性<br>–disable-fecture  ：禁用特性<br>–with-function    ：启用某功能<br>–without-function ：禁用某功能  </p>
+</blockquote>
+<blockquote>
+<p>不同的程序，其configure选项不尽相同，应使用”./configure –help”获取具体的信息。  </p>
+</blockquote>
+<h5 id="源码编译安装须知"><a href="#源码编译安装须知" class="headerlink" title="源码编译安装须知"></a>源码编译安装须知</h5><blockquote>
+<p>1.上面的每一个步骤都不能出错，否则后一步都不能正常进行。  </p>
+</blockquote>
+<blockquote>
+<p>2.上面的步骤每一步如果出现警告或错误，如果步骤未停止而是继续，则属于可忽略错误或警告，不影响安装。但是进行的步骤停止了出现警告或错误，则根据步骤考虑对策。可以使用“$?”命令查看上一个命令是否正确执行，如果是返回0则是正确，其他的则是错误。  </p>
+</blockquote>
+<blockquote>
+<p>3.卸载时，只需删除安装目录即可。<br>因此，若要便于删除，最好将源码程序安装在/usr/local/对应的目录下。例如apache2安装在/usr/local/apache2下。  </p>
+</blockquote>
+<blockquote>
+<p>4.通过源码编译的软件，需要做一些后续操作，虽非必须，但是都是个性化定制，方便以后的操作。个性化定制大致包括以下几项：<br>(1).将安装路径下的命令路径加入到环境变量。  </p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">shell&gt; echo &quot;export PATH=/usr/local/apache/bin:$PATH&quot; &gt; /etc/profile.d/apache.sh</span><br><span class="line">shell&gt; chmod +x /etc/profile.d/apache.sh</span><br><span class="line">shell&gt; source /etc/profile.d/apache.sh</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>(2).按需求定制服务启动脚本，并考虑是否加入开机启动项。   </p>
+</blockquote>
+<blockquote>
+<p>(3).输出头文件和库文件。  </p>
+</blockquote>
+<blockquote>
+<p>头文件库文件很多时候只是为其他程序提供的，所以可能不输出它们的路径也不会影响该程序的运行。  </p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># 输出头文件</span><br><span class="line">shell&gt; ln -s /usr/local/apache/include /usr/include/apache</span><br><span class="line"></span><br><span class="line"># 输出库文件</span><br><span class="line">shell&gt; echo &quot;/usr/local/apache/lib&quot; &gt;/etc/ld.so.conf.d/apache.conf</span><br><span class="line">shell&gt; ldconfig</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>(4).导出man路径  </p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">shell&gt; echo  &quot;MANPATH /usr/local/apache/man&quot; &gt;&gt; /etc/man.conf</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2017/02/01/rpm管理包 和 yum管理包(1)/" data-id="cjj9vr39p000kt0rbvv9axyo1" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/">Linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/rpm/">rpm</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2017/02/08/实现PXE自动安装/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          实现PXE自动安装
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2017/01/20/搭建CA/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">如何搭建CA（向CA申请证书）</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/CA/">CA</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DHCP/">DHCP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DNS/">DNS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/">Linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MYSQL/">MYSQL</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SSH/">SSH</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/TCP-IP/">TCP/IP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/dns/">dns</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mini系统/">mini系统</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rpm/">rpm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/su和sudo/">su和sudo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/基本命令/">基本命令</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/文件系统/">文件系统</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/权限管理/">权限管理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/用户组/">用户组</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/练习题/">练习题</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/自动化安装/">自动化安装</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/进程管理、计划任务/">进程管理、计划任务</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/CA/" style="font-size: 10px;">CA</a> <a href="/tags/DHCP/" style="font-size: 10px;">DHCP</a> <a href="/tags/DNS/" style="font-size: 16.67px;">DNS</a> <a href="/tags/Linux/" style="font-size: 20px;">Linux</a> <a href="/tags/MYSQL/" style="font-size: 16.67px;">MYSQL</a> <a href="/tags/SSH/" style="font-size: 10px;">SSH</a> <a href="/tags/TCP-IP/" style="font-size: 10px;">TCP/IP</a> <a href="/tags/dns/" style="font-size: 10px;">dns</a> <a href="/tags/mini系统/" style="font-size: 10px;">mini系统</a> <a href="/tags/rpm/" style="font-size: 10px;">rpm</a> <a href="/tags/su和sudo/" style="font-size: 10px;">su和sudo</a> <a href="/tags/基本命令/" style="font-size: 10px;">基本命令</a> <a href="/tags/文件系统/" style="font-size: 13.33px;">文件系统</a> <a href="/tags/权限管理/" style="font-size: 10px;">权限管理</a> <a href="/tags/用户组/" style="font-size: 10px;">用户组</a> <a href="/tags/练习题/" style="font-size: 10px;">练习题</a> <a href="/tags/自动化安装/" style="font-size: 10px;">自动化安装</a> <a href="/tags/进程管理、计划任务/" style="font-size: 10px;">进程管理、计划任务</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">June 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">March 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">February 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">January 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">December 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">November 2016</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2017/06/01/介绍 MYSQL的事务日志/">介绍 MYSQL的事务日志</a>
+          </li>
+        
+          <li>
+            <a href="/2017/05/22/MYSQL 数据库的日志介绍/">MYSQL 数据库的日志介绍</a>
+          </li>
+        
+          <li>
+            <a href="/2017/05/15/MYSQL MariaDB 的事务和事务隔离级别/">MYSQL MariaDB 的事务和事务隔离级别</a>
+          </li>
+        
+          <li>
+            <a href="/2017/05/08/MASQL MariaDB 用户权限管理/">MASQL MariaDB 用户权限管理</a>
+          </li>
+        
+          <li>
+            <a href="/2017/04/20/ext 文件系统机制原理/">ext 文件系统机制原理</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2018 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

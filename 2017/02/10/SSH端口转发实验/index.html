@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>SSH端口转发实验 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="一、SSH端口转发相关概念二、实验：模拟SSH本地端口转发三、实验：模拟SSH远程端口转发四、实验：模拟SSH动态端口转发一、SSH端口转发相关概念    在上一节我们知道，SSH会自动加密和解密所有SSH客户端和服务器之间的网络数据。   但是，SSH还同时提供了一个非常有用的功能，这就是端口转发。它能够将其他TCP端口的网络数据通过安全的SSH协议   转发，例如：Telnet，SMTP等这些">
+<meta name="keywords" content="Linux,SSH">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SSH端口转发实验">
+<meta property="og:url" content="http://yoursite.com/2017/02/10/SSH端口转发实验/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="一、SSH端口转发相关概念二、实验：模拟SSH本地端口转发三、实验：模拟SSH远程端口转发四、实验：模拟SSH动态端口转发一、SSH端口转发相关概念    在上一节我们知道，SSH会自动加密和解密所有SSH客户端和服务器之间的网络数据。   但是，SSH还同时提供了一个非常有用的功能，这就是端口转发。它能够将其他TCP端口的网络数据通过安全的SSH协议   转发，例如：Telnet，SMTP等这些">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="http://www.178linux.com/wp-content/uploads/2018/05/%E9%98%B2%E7%81%AB%E5%A2%99.png">
+<meta property="og:image" content="http://www.178linux.com/wp-content/uploads/2018/05/ping%E4%B8%8D%E9%80%9A.png">
+<meta property="og:image" content="http://www.178linux.com/wp-content/uploads/2018/05/%E9%87%8D%E5%90%AFxinetd.png">
+<meta property="og:image" content="http://www.178linux.com/wp-content/uploads/2018/05/%E7%99%BB%E5%BD%95%E6%88%90%E5%8A%9F.png">
+<meta property="og:image" content="http://www.178linux.com/wp-content/uploads/2018/05/lanserver%E5%91%BD%E4%BB%A4.png">
+<meta property="og:image" content="http://www.178linux.com/wp-content/uploads/2018/05/telnet%E6%88%90%E5%8A%9F.png">
+<meta property="og:image" content="http://www.178linux.com/wp-content/uploads/2018/05/internet.png">
+<meta property="og:image" content="http://www.178linux.com/wp-content/uploads/2018/05/gogole.png">
+<meta property="og:image" content="http://www.178linux.com/wp-content/uploads/2018/05/%E6%97%A0%E6%B3%95%E6%89%93%E5%BC%80.png">
+<meta property="og:image" content="http://www.178linux.com/wp-content/uploads/2018/05/%E7%99%BB%E5%BD%95%E4%BB%A3%E7%90%86.png">
+<meta property="og:image" content="http://www.178linux.com/wp-content/uploads/2018/05/%E8%AE%BE%E7%BD%AE%E7%81%AB%E7%8B%90.png">
+<meta property="og:image" content="http://www.178linux.com/wp-content/uploads/2018/05/%E8%AE%BF%E9%97%AE%E6%88%90%E5%8A%9F.png">
+<meta property="og:image" content="http://www.178linux.com/wp-content/uploads/2018/05/%E5%AD%97%E7%AC%A6%E7%95%8C%E9%9D%A2%E7%99%BB%E5%BD%95.png">
+<meta property="og:updated_time" content="2018-06-13T08:59:24.876Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="SSH端口转发实验">
+<meta name="twitter:description" content="一、SSH端口转发相关概念二、实验：模拟SSH本地端口转发三、实验：模拟SSH远程端口转发四、实验：模拟SSH动态端口转发一、SSH端口转发相关概念    在上一节我们知道，SSH会自动加密和解密所有SSH客户端和服务器之间的网络数据。   但是，SSH还同时提供了一个非常有用的功能，这就是端口转发。它能够将其他TCP端口的网络数据通过安全的SSH协议   转发，例如：Telnet，SMTP等这些">
+<meta name="twitter:image" content="http://www.178linux.com/wp-content/uploads/2018/05/%E9%98%B2%E7%81%AB%E5%A2%99.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-SSH端口转发实验" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/02/10/SSH端口转发实验/" class="article-date">
+  <time datetime="2017-02-09T16:00:00.000Z" itemprop="datePublished">2017-02-10</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      SSH端口转发实验
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h4 id="一、SSH端口转发相关概念"><a href="#一、SSH端口转发相关概念" class="headerlink" title="一、SSH端口转发相关概念"></a>一、SSH端口转发相关概念</h4><h4 id="二、实验：模拟SSH本地端口转发"><a href="#二、实验：模拟SSH本地端口转发" class="headerlink" title="二、实验：模拟SSH本地端口转发"></a>二、实验：模拟SSH本地端口转发</h4><h4 id="三、实验：模拟SSH远程端口转发"><a href="#三、实验：模拟SSH远程端口转发" class="headerlink" title="三、实验：模拟SSH远程端口转发"></a>三、实验：模拟SSH远程端口转发</h4><h4 id="四、实验：模拟SSH动态端口转发"><a href="#四、实验：模拟SSH动态端口转发" class="headerlink" title="四、实验：模拟SSH动态端口转发"></a>四、实验：模拟SSH动态端口转发</h4><h5 id="一、SSH端口转发相关概念-1"><a href="#一、SSH端口转发相关概念-1" class="headerlink" title="一、SSH端口转发相关概念"></a>一、SSH端口转发相关概念</h5><blockquote>
+<p>   在上一节我们知道，SSH会自动加密和解密所有SSH客户端和服务器之间的网络数据。<br>   但是，SSH还同时<br>提供了一个非常有用的功能，这就是端口转发。它能够将其他TCP端口的网络数据通过安全的SSH协议</p>
+</blockquote>
+<blockquote>
+<p>转发，例如：Telnet，SMTP等这些TCP应用都能从中受益，避免了用户名，密码以及隐私信息的明文传<br>输。而与此同时，如果在你的工作环境中防火墙限制了一些网络端口的使用，但是允许SSH的连接，那么<br>端口转发功能也能够将TCP端口转发来使用SSH进行通信。</p>
+</blockquote>
+ <a id="more"></a>
+<h6 id="SSH端口转发提供的功能主要有："><a href="#SSH端口转发提供的功能主要有：" class="headerlink" title="SSH端口转发提供的功能主要有："></a>SSH端口转发提供的功能主要有：</h6><blockquote>
+<p>1.加密SSH Client端至SSH Server端之间的数据</p>
+<p>2.突破防火墙的限制完成一些之前无法建立的TCP连接</p>
+</blockquote>
+<h6 id="SSH端口转发提供的类型有："><a href="#SSH端口转发提供的类型有：" class="headerlink" title="SSH端口转发提供的类型有："></a>SSH端口转发提供的类型有：</h6><blockquote>
+<p>本地转发</p>
+<p>远程转发</p>
+<p>动态转发</p>
+<p>X协议转发</p>
+</blockquote>
+<h6 id="本地转发："><a href="#本地转发：" class="headerlink" title="本地转发："></a>本地转发：</h6><blockquote>
+<p>当外网用户想要临时访问公司内部的不安全TCP协议服务器时，由于防火墙限制无法直接访问，但可利用<br>先SSH连接至公司内网的SSH服务器在转发至不安全的TCP协议服务器。由于作为转发的SSH服务器与要访<br>问的不安全TCP协议服务器在同一网络环境内，故这种连接就叫本地转发。</p>
+</blockquote>
+<h6 id="格式："><a href="#格式：" class="headerlink" title="格式："></a>格式：</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh -L localprot:remotehost:remotehostport  sshserver</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>localprot：指定本机端口</p>
+<p>remotehost：指定远程不安全协议的服务器地址</p>
+<p>remotehostport：远程不安全协议的服务器地址端口</p>
+<p>sshserver：SSH服务器地址</p>
+</blockquote>
+<h6 id="options："><a href="#options：" class="headerlink" title="options："></a>options：</h6><blockquote>
+<p>-f      后台启用</p>
+<p>-N    不打开远程shell，处于等待状态</p>
+<p>-g     启用网关功能</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">示例：</span><br><span class="line"></span><br><span class="line">ssh -L 9527:telnetsrv:23  -N sshsrv</span><br><span class="line"></span><br><span class="line">telnet 127.0.0.1 9527</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>当访问本机的9527端口时，被加密后转发到sshsrv的ssh服务，再解密被转发到telnetsrv:23</p>
+</blockquote>
+<h6 id="大致流程："><a href="#大致流程：" class="headerlink" title="大致流程："></a>大致流程：</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Data &lt;–&gt; localhost:9527 &lt;–&gt;localhost:xxxxx &lt;–&gt; sshsrv:22 &lt;–&gt;sshsrv:yyyyy &lt;–&gt; telnetsrv:23</span><br></pre></td></tr></table></figure>
+<h5 id="远程转发："><a href="#远程转发：" class="headerlink" title="远程转发："></a>远程转发：</h5><blockquote>
+<p>与本地端口转发相比，我们将SSH服务器与Client访问端的位置对调，将与不安全TCP协议服务器同一内网<br>的主机作为Client，将外部网络主机作为SSH服务器做为端口转发。由于作为转发的SSH服务器处在外部网<br>络环境中，故这种连接就叫远程转发。</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">格式：</span><br><span class="line"></span><br><span class="line">ssh -R sshserverport:remotehost:remotehostport sshserver</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>sshserverport：指定SSH服务器端口</p>
+<p>remotehost：指定远程不安全协议的服务器地址</p>
+<p>remotehost:remotehostport：指定远程不安全协议的服务器端口</p>
+<p>sshserver：SSH服务器地址</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">示例：</span><br><span class="line"></span><br><span class="line">ssh -R 9527:telnetsrv:23 -N sshsrv</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>让sshsrv侦听9527端口的访问，如有访问，就加密后通过ssh服务转发请求到本机ssh客户端，再由本机解密后转发到telnetsrv:23</p>
+</blockquote>
+<h6 id="大致流程：-1"><a href="#大致流程：-1" class="headerlink" title="大致流程："></a>大致流程：</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Data &lt;–&gt; sshsrv:9527 &lt;–&gt; sshsrv:22 &lt;–&gt; localhost:xxxxx &lt;–&gt; localhost:yyyyy &lt;–&gt; telnetsrv:23</span><br></pre></td></tr></table></figure>
+<h5 id="动态端口转发："><a href="#动态端口转发：" class="headerlink" title="动态端口转发："></a>动态端口转发：</h5><blockquote>
+<p>在之前我们已经了解了本地转发，以及远程转发，但它们实现的前提都是要求有一个固定的应用服务端端口  。<br>  但在某些场景下，例如用浏览器浏览网页，是没有固定端口的，这时就需要利用到动态的端口转<br>发。比如说，当用firefox访问Internet时，本机的1080端口作为代理服务器，firefox的访问请求被转发到<br>sshserver上，由sshserver替代访问Internet</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh -D 1080 root@sshserver</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>在本机firefox设置socketproxy:127.0.0.1:1080</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl –socks5  127.0.0.1:1080  http://www.qq.com</span><br></pre></td></tr></table></figure>
+<h6 id="X协议转发："><a href="#X协议转发：" class="headerlink" title="X协议转发："></a>X协议转发：</h6><blockquote>
+<p>所有图形化应用程序都是X客户程序</p>
+<p>能够通过tcp/ip连接远程X服务器</p>
+<p>数据没有加密机，但是它通过ssh连接隧道安全进行</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh -X user@remotehost gedit</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>remotehost主机上的gedit工具，将会显示在本机的X服务器上</p>
+<p>传输的数据将通过ssh连接加密</p>
+</blockquote>
+<h6 id="相关文件："><a href="#相关文件：" class="headerlink" title="相关文件："></a>相关文件：</h6><blockquote>
+<p>/var/log/secure               存放日志</p>
+<p>/etc/ssh/sshd_config      SSH服务配置文件</p>
+</blockquote>
+<h6 id="Port-22-端口"><a href="#Port-22-端口" class="headerlink" title="#Port 22           端口"></a>#Port 22           端口</h6><pre><code>生产中一般第一步先改端口号
+
+如Port 9527  
+</code></pre><blockquote>
+<p>定义公钥、私钥存放文件名，位置</p>
+</blockquote>
+<p>H<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">ostKey /etc/ssh/ssh_host_rsa_key</span><br><span class="line"></span><br><span class="line">#HostKey /etc/ssh/ssh_host_dsa_key</span><br><span class="line"></span><br><span class="line">HostKey /etc/ssh/ssh_host_ecdsa_key</span><br><span class="line"></span><br><span class="line">HostKey /etc/ssh/ssh_host_ed25519_key</span><br><span class="line"></span><br><span class="line">日志设置选项，日志存放在/var/log/secure</span><br></pre></td></tr></table></figure></p>
+<h1 id="Logging"><a href="#Logging" class="headerlink" title="Logging"></a>Logging</h1><blockquote>
+<p>#SyslogFacility AUTH</p>
+<p>SyslogFacility AUTHPRIV</p>
+<p>#LogLevel INFO</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">#LoginGraceTime 2m              不输入密码最大时间端口</span><br><span class="line"></span><br><span class="line">#PermitRootLogin yes            生产中一般改成no，普通用户连接su切换</span><br><span class="line"></span><br><span class="line">#StrictModes yes             检查文件权限</span><br><span class="line"></span><br><span class="line">#MaxAuthTries 6                      密码登录最大验证次数</span><br><span class="line"></span><br><span class="line">#MaxSessions 10                      单个会话能开的最大克隆数</span><br><span class="line"></span><br><span class="line"> </span><br><span class="line"></span><br><span class="line">PasswordAuthentication yes  是否允许基于口令登录方式，no表示禁止</span><br><span class="line"></span><br><span class="line"> </span><br><span class="line"></span><br><span class="line">#ClientAliveInterval 0              连接后不操作最大时间，单位：秒</span><br><span class="line"></span><br><span class="line">#ClientAliveCountMax 3                  连接环不操作最大时间次数</span><br></pre></td></tr></table></figure>
+<pre><code>生产中一般要修改AliveInterval 30
+
+                 AliveCountMax 3   
+
+表示连接后不进行任何操作30S，3次后自动断开连接
+</code></pre><h6 id="ShowPatchLevel-no"><a href="#ShowPatchLevel-no" class="headerlink" title="#ShowPatchLevel no"></a>#ShowPatchLevel no</h6><h6 id="UseDNS-no"><a href="#UseDNS-no" class="headerlink" title="UseDNS no"></a>UseDNS no</h6><blockquote>
+<p>是否使用DNS反向解析，关闭可提高连接速度</p>
+</blockquote>
+<blockquote>
+<p>#MaxStartups<br>10:30:100                 最大并发连接数，默认10</p>
+</blockquote>
+<h6 id="限制可登录用户的办法："><a href="#限制可登录用户的办法：" class="headerlink" title="限制可登录用户的办法："></a>限制可登录用户的办法：</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">AllowUsers user1 user2 user3</span><br><span class="line"></span><br><span class="line">DenyUsers</span><br><span class="line"></span><br><span class="line">AllowGroups</span><br><span class="line"></span><br><span class="line">DenyGroups</span><br></pre></td></tr></table></figure>
+<h6 id="SSH服务的最佳实践配置："><a href="#SSH服务的最佳实践配置：" class="headerlink" title="SSH服务的最佳实践配置："></a>SSH服务的最佳实践配置：</h6><blockquote>
+<p>建议使用非默认端口</p>
+<p>禁止使用protocol version 1</p>
+<p>限制可登录用户</p>
+<p>设定空闲会话超时时长</p>
+<p>利用防火墙设置ssh访问策略</p>
+<p>仅监听特定的IP地址</p>
+</blockquote>
+<h6 id="基于口令认证时，使用强密码策略"><a href="#基于口令认证时，使用强密码策略" class="headerlink" title="基于口令认证时，使用强密码策略"></a>基于口令认证时，使用强密码策略</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tr -dc A-Za-z0-9_ &lt; /dev/urandom | head -c 30| xargs</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>使用基于密钥的认证</p>
+<p>禁止使用空密码</p>
+<p>禁止root用户直接登录</p>
+<p>限制ssh的访问频度和并发在线数</p>
+<p>经常分析日志</p>
+</blockquote>
+<h4 id="二、实验：模拟SSH本地端口转发-1"><a href="#二、实验：模拟SSH本地端口转发-1" class="headerlink" title="二、实验：模拟SSH本地端口转发"></a>二、实验：模拟SSH本地端口转发</h4><blockquote>
+<p>应用场景：当外部客户端想要访问公司内网的Telnet服务器时，由于防火墙限制无法直接访问，可使用<br>SSH本地端口转发实现：</p>
+</blockquote>
+<h6 id="前期准备："><a href="#前期准备：" class="headerlink" title="前期准备："></a>前期准备：</h6><blockquote>
+<p>以三台CentOS模拟机作为服务器及主机，主机名网络配置如下：</p>
+<p>客户端：192.168.30.133</p>
+<p>SSH服务器：192.168.30.158</p>
+<p>telnet服务器：192.168.30.160</p>
+</blockquote>
+<h6 id="telnet服务器端操作："><a href="#telnet服务器端操作：" class="headerlink" title="telnet服务器端操作："></a>telnet服务器端操作：</h6><blockquote>
+<p>一、安装telnet-server包，系统默认未安装</p>
+<p>二、防火墙禁止远程客户端访问：</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">iptables  -A  INPUT  -s  192.168.30.133  -j  REJECT</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>为了防止之前防火墙策略干扰，最好先清空下防火墙策略：</p>
+</blockquote>
+<p>iptables  -K<br><img src="http://www.178linux.com/wp-content/uploads/2018/05/%E9%98%B2%E7%81%AB%E5%A2%99.png" alt="image"></p>
+<p>防火墙</p>
+<blockquote>
+<p>此时作为Clinet的192.168.30.133已经ping不通作为telnet服务器的192.168.30.160<br><img src="http://www.178linux.com/wp-content/uploads/2018/05/ping%E4%B8%8D%E9%80%9A.png" alt="image"></p>
+</blockquote>
+<blockquote>
+<p>ping不通</p>
+</blockquote>
+<h6 id="三、开启telnet-server服务"><a href="#三、开启telnet-server服务" class="headerlink" title="三、开启telnet-server服务"></a>三、开启telnet-server服务</h6><blockquote>
+<p>CentOS6：</p>
+<p>service  xinted  start                       开启xinted进程</p>
+<p>chkconfig  telnet  on                        开启telnet服务</p>
+<p>service  xinted  restart                   重启xinted服务</p>
+<p>重启xinetd</p>
+</blockquote>
+<p><img src="http://www.178linux.com/wp-content/uploads/2018/05/%E9%87%8D%E5%90%AFxinetd.png" alt="image"></p>
+<blockquote>
+<p>CentOS7：</p>
+<p>systemctl start telnet-scoket</p>
+</blockquote>
+<h6 id="客户端操作："><a href="#客户端操作：" class="headerlink" title="客户端操作："></a>客户端操作：</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh -L 9527:192.168.30.17:23 [-Nf] 192.168.30.6</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>加-Nf选项将后台执行，关闭时只能通过kill关闭进程</p>
+<p>telnet 127.0.0.1 9527</p>
+<p>提示输入用户名，密码；默认不让root账户使用SSH端口转发登录<br><img src="http://www.178linux.com/wp-content/uploads/2018/05/%E7%99%BB%E5%BD%95%E6%88%90%E5%8A%9F.png" alt="image"></p>
+</blockquote>
+<h6 id="登录成功"><a href="#登录成功" class="headerlink" title="登录成功"></a>登录成功</h6><h6 id="三、实验：模拟SSH远程端口转发-1"><a href="#三、实验：模拟SSH远程端口转发-1" class="headerlink" title="三、实验：模拟SSH远程端口转发"></a>三、实验：模拟SSH远程端口转发</h6><blockquote>
+<p>应用场景：当外部有工程师想要临时访问内部telnet服务器时，作为系统管理员，我们可以将对方主机作<br>为SSH服务器进行端口转发，让其临时可访问公司的telnet服务器。</p>
+</blockquote>
+<h6 id="前期准备：-1"><a href="#前期准备：-1" class="headerlink" title="前期准备："></a>前期准备：</h6><h6 id="以三台CentOS模拟机作为服务器及主机，主机名及网络配置如下："><a href="#以三台CentOS模拟机作为服务器及主机，主机名及网络配置如下：" class="headerlink" title="以三台CentOS模拟机作为服务器及主机，主机名及网络配置如下："></a>以三台CentOS模拟机作为服务器及主机，主机名及网络配置如下：</h6><p>Internet：192.168.30.133</p>
+<p>lanserver：192.168.30.158</p>
+<p>telnet服务器：192.168.30.160</p>
+<h6 id="lanserver端操作："><a href="#lanserver端操作：" class="headerlink" title="lanserver端操作："></a>lanserver端操作：</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh -R 9527:192.168.30.17:23 [-Nf] 192.168.30.7</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>加-Nf选项将后台执行，关闭时只能通过kill关闭进程<br><img src="http://www.178linux.com/wp-content/uploads/2018/05/lanserver%E5%91%BD%E4%BB%A4.png" alt="image"><br>lanserver命令</p>
+</blockquote>
+<h6 id="Internet端操作："><a href="#Internet端操作：" class="headerlink" title="Internet端操作："></a>Internet端操作：</h6><p>telnet 127.0.0.1 9527<br><img src="http://www.178linux.com/wp-content/uploads/2018/05/telnet%E6%88%90%E5%8A%9F.png" alt="image"><br>telnet成功</p>
+<h6 id="四、实验：模拟SSH动态端口转发-1"><a href="#四、实验：模拟SSH动态端口转发-1" class="headerlink" title="四、实验：模拟SSH动态端口转发"></a>四、实验：模拟SSH动态端口转发</h6><blockquote>
+<p>应用场景：在某些场景中，用浏览器浏览网页，是没有固定端口的，这时就需要利用到动态的端口转<br>发。下面我们模拟用一台虚拟机模拟google网站，用Internet主机通过代理服务器proxy访问google模拟机</p>
+</blockquote>
+<h6 id="前期准备：-2"><a href="#前期准备：-2" class="headerlink" title="前期准备："></a>前期准备：</h6><blockquote>
+<p>以三台CentOS模拟机作为服务器及主机，主机名及网络配置如下：</p>
+<p>Internet：192.168.30.133</p>
+<p>proxy：192.168.30.158</p>
+<p>google：192.168.30.160</p>
+</blockquote>
+<h6 id="google模拟服务器操作："><a href="#google模拟服务器操作：" class="headerlink" title="google模拟服务器操作："></a>google模拟服务器操作：</h6><blockquote>
+<p>开启http服务，模拟网页内容：</p>
+<p>CentOS6：</p>
+<p>service httpd start</p>
+<p>CentOS7：</p>
+<p>systemctl start  httpd</p>
+</blockquote>
+<p>echo <a href="http://www.google.com" target="_blank" rel="noopener">www.google.com</a> &gt; /var/www/html/index.html<br><img src="http://www.178linux.com/wp-content/uploads/2018/05/internet.png" alt="image"><br>internet</p>
+<p>此时访问192.168.30.160，正常网页内容显示如下:<br><img src="http://www.178linux.com/wp-content/uploads/2018/05/gogole.png" alt="image"></p>
+<h6 id="gogole"><a href="#gogole" class="headerlink" title="gogole"></a>gogole</h6><blockquote>
+<p>Internet端操作：</p>
+<p>此时在Internet端我们是无法访问google服务器的<br><img src="http://www.178linux.com/wp-content/uploads/2018/05/%E6%97%A0%E6%B3%95%E6%89%93%E5%BC%80.png" alt="image"><br>无法打开</p>
+</blockquote>
+<p>使用proxy的1080端口作为动态转发：</p>
+<p>ssh -D 1080 <a href="mailto:root@192.168.30.158" target="_blank" rel="noopener">root@192.168.30.158</a><br><img src="http://www.178linux.com/wp-content/uploads/2018/05/%E7%99%BB%E5%BD%95%E4%BB%A3%E7%90%86.png" alt="image"><br>登录代理</p>
+<blockquote>
+<p>接下来我们可以通过图形界面或者字符界面来尝试访问：</p>
+</blockquote>
+<h6 id="图形界面："><a href="#图形界面：" class="headerlink" title="图形界面："></a>图形界面：</h6><blockquote>
+<p>打开firefox浏览器，按以下顺序操作：</p>
+</blockquote>
+<p>–<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;preferences–&gt;advanced–&gt;network–setting–manual proxy configuration</span><br><span class="line">–&gt;SOCKS Host:127.0.0.1</span><br></pre></td></tr></table></figure></p>
+<p><img src="http://www.178linux.com/wp-content/uploads/2018/05/%E8%AE%BE%E7%BD%AE%E7%81%AB%E7%8B%90.png" alt="image"><br>设置火狐</p>
+<h6 id="现在再次尝试访问192-168-30-160的google模拟服务器，发现可以正常访问了！"><a href="#现在再次尝试访问192-168-30-160的google模拟服务器，发现可以正常访问了！" class="headerlink" title="现在再次尝试访问192.168.30.160的google模拟服务器，发现可以正常访问了！"></a>现在再次尝试访问192.168.30.160的google模拟服务器，发现可以正常访问了！</h6><p><img src="http://www.178linux.com/wp-content/uploads/2018/05/%E8%AE%BF%E9%97%AE%E6%88%90%E5%8A%9F.png" alt="image"><br>访问成功</p>
+<blockquote>
+<p>字符界面：</p>
+<p>在字符界面我们可执行下面的命令来进行访问：<br><img src="http://www.178linux.com/wp-content/uploads/2018/05/%E5%AD%97%E7%AC%A6%E7%95%8C%E9%9D%A2%E7%99%BB%E5%BD%95.png" alt="image"><br>curl -socks5 127.0.0.1:1080 192.168.30.17</p>
+</blockquote>
+<h6 id="字符界面登录"><a href="#字符界面登录" class="headerlink" title="字符界面登录"></a>字符界面登录</h6>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2017/02/10/SSH端口转发实验/" data-id="cjj9vr39k000gt0rb28e3xo4f" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/">Linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/SSH/">SSH</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2017/02/15/DNS 服务从基础到深入/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          DNS 服务从基础到深入
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2017/02/08/实现PXE自动安装/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">实现PXE自动安装</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/CA/">CA</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DHCP/">DHCP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DNS/">DNS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/">Linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MYSQL/">MYSQL</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SSH/">SSH</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/TCP-IP/">TCP/IP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/dns/">dns</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mini系统/">mini系统</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rpm/">rpm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/su和sudo/">su和sudo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/基本命令/">基本命令</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/文件系统/">文件系统</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/权限管理/">权限管理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/用户组/">用户组</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/练习题/">练习题</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/自动化安装/">自动化安装</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/进程管理、计划任务/">进程管理、计划任务</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/CA/" style="font-size: 10px;">CA</a> <a href="/tags/DHCP/" style="font-size: 10px;">DHCP</a> <a href="/tags/DNS/" style="font-size: 16.67px;">DNS</a> <a href="/tags/Linux/" style="font-size: 20px;">Linux</a> <a href="/tags/MYSQL/" style="font-size: 16.67px;">MYSQL</a> <a href="/tags/SSH/" style="font-size: 10px;">SSH</a> <a href="/tags/TCP-IP/" style="font-size: 10px;">TCP/IP</a> <a href="/tags/dns/" style="font-size: 10px;">dns</a> <a href="/tags/mini系统/" style="font-size: 10px;">mini系统</a> <a href="/tags/rpm/" style="font-size: 10px;">rpm</a> <a href="/tags/su和sudo/" style="font-size: 10px;">su和sudo</a> <a href="/tags/基本命令/" style="font-size: 10px;">基本命令</a> <a href="/tags/文件系统/" style="font-size: 13.33px;">文件系统</a> <a href="/tags/权限管理/" style="font-size: 10px;">权限管理</a> <a href="/tags/用户组/" style="font-size: 10px;">用户组</a> <a href="/tags/练习题/" style="font-size: 10px;">练习题</a> <a href="/tags/自动化安装/" style="font-size: 10px;">自动化安装</a> <a href="/tags/进程管理、计划任务/" style="font-size: 10px;">进程管理、计划任务</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">June 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">March 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">February 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">January 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">December 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">November 2016</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2017/06/01/介绍 MYSQL的事务日志/">介绍 MYSQL的事务日志</a>
+          </li>
+        
+          <li>
+            <a href="/2017/05/22/MYSQL 数据库的日志介绍/">MYSQL 数据库的日志介绍</a>
+          </li>
+        
+          <li>
+            <a href="/2017/05/15/MYSQL MariaDB 的事务和事务隔离级别/">MYSQL MariaDB 的事务和事务隔离级别</a>
+          </li>
+        
+          <li>
+            <a href="/2017/05/08/MASQL MariaDB 用户权限管理/">MASQL MariaDB 用户权限管理</a>
+          </li>
+        
+          <li>
+            <a href="/2017/04/20/ext 文件系统机制原理/">ext 文件系统机制原理</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2018 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>实现PXE自动安装 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="实现PXE自动安装1、基础网络建设与搭建DHCP服务配置静态IP地址并重起网卡12345678910cat /etc/sysconfig/network-scripts/ifcfg-eth0   DEVICE=eth0  TYPE=Ethernet  ONBOOT=yes  NM_CONTROLLED=yes  BOOTPROTO=static  IPADDR=10.0.0.4  NETMASK=">
+<meta name="keywords" content="Linux,自动化安装">
+<meta property="og:type" content="article">
+<meta property="og:title" content="实现PXE自动安装">
+<meta property="og:url" content="http://yoursite.com/2017/02/08/实现PXE自动安装/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="实现PXE自动安装1、基础网络建设与搭建DHCP服务配置静态IP地址并重起网卡12345678910cat /etc/sysconfig/network-scripts/ifcfg-eth0   DEVICE=eth0  TYPE=Ethernet  ONBOOT=yes  NM_CONTROLLED=yes  BOOTPROTO=static  IPADDR=10.0.0.4  NETMASK=">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2018-06-14T14:18:06.373Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="实现PXE自动安装">
+<meta name="twitter:description" content="实现PXE自动安装1、基础网络建设与搭建DHCP服务配置静态IP地址并重起网卡12345678910cat /etc/sysconfig/network-scripts/ifcfg-eth0   DEVICE=eth0  TYPE=Ethernet  ONBOOT=yes  NM_CONTROLLED=yes  BOOTPROTO=static  IPADDR=10.0.0.4  NETMASK=">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-实现PXE自动安装" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/02/08/实现PXE自动安装/" class="article-date">
+  <time datetime="2017-02-07T16:00:00.000Z" itemprop="datePublished">2017-02-08</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      实现PXE自动安装
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="实现PXE自动安装"><a href="#实现PXE自动安装" class="headerlink" title="实现PXE自动安装"></a>实现PXE自动安装</h2><h3 id="1、基础网络建设与搭建DHCP服务"><a href="#1、基础网络建设与搭建DHCP服务" class="headerlink" title="1、基础网络建设与搭建DHCP服务"></a>1、基础网络建设与搭建DHCP服务</h3><h5 id="配置静态IP地址并重起网卡"><a href="#配置静态IP地址并重起网卡" class="headerlink" title="配置静态IP地址并重起网卡"></a>配置静态IP地址并重起网卡</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">cat /etc/sysconfig/network-scripts/ifcfg-eth0   </span><br><span class="line">DEVICE=eth0  </span><br><span class="line">TYPE=Ethernet  </span><br><span class="line">ONBOOT=yes  </span><br><span class="line">NM_CONTROLLED=yes  </span><br><span class="line">BOOTPROTO=static  </span><br><span class="line">IPADDR=10.0.0.4  </span><br><span class="line">NETMASK=255.255.255.0  </span><br><span class="line">GATEWAY=10.0.0.2</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>/etc/init.d/network restart<br>ifconfig eth0</p>
+</blockquote>
+<h5 id="2）安装配置DHCP服务"><a href="#2）安装配置DHCP服务" class="headerlink" title="2）安装配置DHCP服务"></a>2）安装配置DHCP服务</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">yum -y install dhcp  </span><br><span class="line">vim /etc/dhcp/dhcpd.conf  </span><br><span class="line">default-lease-time 600;  </span><br><span class="line">max-lease-time 7200;  </span><br><span class="line">ddns-update-style none;  </span><br><span class="line">option domain-name-servers 202.106.0.20;  </span><br><span class="line">#DNS地址可配置2个用逗号分隔  </span><br><span class="line">ignore client-updates;</span><br></pre></td></tr></table></figure>
+<a id="more"></a>
+<blockquote>
+<p>subnet 10.0.0.0 netmask 255.255.255.0 {<br>  range 10.0.0.100 10.0.0.150;    </p>
+<p>  #宣告获取地址段<br>  option subnet-mask 255.255.255.0;   </p>
+<p>  #子网<br>  option routers 10.0.0.2;                    </p>
+<p>  #获取网关地址<br>  next-server 10.0.0.4;                    </p>
+<p>  #重点配置PEX地址<br>  filename “pxelinux.0”;                   </p>
+<p>  #内核文件名  </p>
+</blockquote>
+<blockquote>
+<p>配置开机自启动<br>chkconfig –add dhcpd<br>chkconfig dhcpd on<br>chkconfig –list dhcpd<br>查看DHCP监听端口好UDP 67<br>netstat -lntup|grep 67  </p>
+</blockquote>
+<h4 id="2、搭建TFTP服务"><a href="#2、搭建TFTP服务" class="headerlink" title="2、搭建TFTP服务"></a>2、搭建TFTP服务</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum -y install tftp-server tftp</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"> </span><br><span class="line">vim /etc/xinetd.d/tftp  </span><br><span class="line">#配置TFTP配置文件：  </span><br><span class="line">service tftp  </span><br><span class="line">&#123;</span><br><span class="line">        socket_type             = dgram  </span><br><span class="line">        protocol                = udp  </span><br><span class="line">        wait                    = yes  </span><br><span class="line">        user                    = root  </span><br><span class="line">        server                  = /usr/sbin/in.tftpd  </span><br><span class="line">        server_args             = -s   /tftpboot            #修改TFTP服务目录  </span><br><span class="line">        disable                 = no                      #修改为no，启动TFTP  </span><br><span class="line">        per_source              = 11  </span><br><span class="line">        cps                     = 100 2  </span><br><span class="line">        flags                   = IPv4  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"> </span><br><span class="line">配置自启动  </span><br><span class="line">chkconfig tftp on  </span><br><span class="line">chkconfig --list tftp  </span><br><span class="line">chkconfig --list xinetd  </span><br><span class="line">重启动xinetd服务，TFTP是由xinetd服务运行的  </span><br><span class="line">/etc/init.d/xinetd restart   </span><br><span class="line">netstat -lntup|grep 69 ;netstat -a|grep tftp  </span><br><span class="line">udp 0 0 0.0.0.0:69 0.0.0.0:* 1877/xinetd   </span><br><span class="line">udp 0 0 *:tftp   </span><br><span class="line">TFTP端口号为UDP的69  </span><br><span class="line">测试下载  </span><br><span class="line">mkdir /tftpboot  </span><br><span class="line">cd /tftpboot/  </span><br><span class="line">touch test.txt  </span><br><span class="line">ls  </span><br><span class="line">test.txt  </span><br><span class="line">cd ..  </span><br><span class="line">tftp 10.0.0.4 -c get test.txt  </span><br><span class="line">ls #下载成功！  </span><br><span class="line">test.txt</span><br></pre></td></tr></table></figure>
+<h4 id="3、搭建HTTP服务"><a href="#3、搭建HTTP服务" class="headerlink" title="3、搭建HTTP服务"></a>3、搭建HTTP服务</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">yum -y install httpd  </span><br><span class="line">#配置自启动  </span><br><span class="line">chkconfig --add httpd  </span><br><span class="line">chkconfig httpd on  </span><br><span class="line">chkconfig --list httpd  </span><br><span class="line">#启动http服务  </span><br><span class="line">/etc/init.d/httpd start  </span><br><span class="line">netstat -lntup|grep 80  </span><br><span class="line"></span><br><span class="line">#使用浏览器测试  </span><br><span class="line">http://10.0.0.4</span><br></pre></td></tr></table></figure>
+<h4 id="4、组建PXE服务环境"><a href="#4、组建PXE服务环境" class="headerlink" title="4、组建PXE服务环境"></a>4、组建PXE服务环境</h4><blockquote>
+<p>1)安装syslinux包<br>yum -y install syslinux  </p>
+<p>#如不安装syslinux包就没有pxelinux.0文件</p>
+<p>find / -type f -name “pxelinux.0”<br>/usr/share/syslinux/pxelinux.0  </p>
+<p>#将pxelinux.0拷贝到tftp服务目录  </p>
+<p>cp /usr/share/syslinux/pxelinux.0   /tftpboot/  </p>
+<p>#在tftp服务目录下创建pxelinux.cfg目录<br>mkdir /tftpboot/pxelinux.cfg -p </p>
+</blockquote>
+<blockquote>
+<p>2)挂载linux系统盘，拷贝linux内核，初始化镜像文件<br>mkdir -p /media/cdrom<br>mount -t iso9660 -o loop /dev/sr0   /media/cdrom<br>cd /media/cdrom/images/pxeboot<br>cp vmlinuz initrd.img /tftpboot/<br>cd /tftpboot/<br>ls<br>initrd.img pxelinux.0 pxelinux.cfg   vmlinuz  </p>
+<p>#配置启动菜单文件，将系统自带的启动文件拷贝到TFTP目录下改名为  </p>
+<p>cp /media/cdrom/isolinux/isolinux.cfg   /tftpboot/pxelinux.cfg/default<br>修改启动菜单文件  </p>
+<p>cat default   </p>
+<p>default auto   #指定默认启动项<br>prompt 0         #为0时不选择自动按默认安装，为1时可选择选项安装  </p>
+<p>label auto     #配置选项auto<br>  kernel vmlinuz   #指定内核<br>  append initrd=initrd.img   ks=<a href="http://10.0.0.4/ks.cfg" target="_blank" rel="noopener">http://10.0.0.4/ks.cfg</a>   devfs=nomount ramdisk_size=8192     #指定自动安装文件ks.cfg<br>label linux text<br>  kernel vmlinuz<br>  append initrd=initrd.img devfs=nomount ramdisk_size=8192<br>label rescue<br>  kernel vmlinuz<br>  append initrd=initrd.img rescue  </p>
+<p>#重启动TFTP服务加载配置<br>/etc/init.d/xinetd restart  </p>
+</blockquote>
+<h5 id="5、创建kickstart文件"><a href="#5、创建kickstart文件" class="headerlink" title="5、创建kickstart文件"></a>5、创建kickstart文件</h5><blockquote>
+<p>1)安装system-config-kickstart<br>yum -y install system-config-kickstart  </p>
+<p>#注意安装桌面服务才能启动KICKSTART，创建启动文件<br>/usr/bin/system-config-kickstart  </p>
+</blockquote>
+<blockquote>
+<p>cat ks.cfg</p>
+<p>#platform=x86, AMD64, or Intel EM64T</p>
+<p>#version=DEVEL<br> Firewall configuration关闭防火墙<br>firewall –disabled<br> Install OS instead of upgrade 安装系统<br>install<br> Root password  配置ROOT密码<br>rootpw –iscrypted $1$jIsDXG2F$EGT.VAhEBlZ/ww9GNOTo7.<br>System authorization information 系统授权信息<br>auth  –useshadow  –passalgo=md5<br> Use graphical install 图形安装<br>graphical<br>System keyboard 配置键盘<br>keyboard us<br>System language 配置系统语言<br>lang en_US<br> SELinux configuration 关闭selinux<br>selinux –disabled<br> Do not configure the X Window System 不安装图形界面<br>skipx<br>Installation logging level 安装系统日志记录级别<br>logging –level=info<br> Reboot after installation 安装完重新引导<br>reboot<br>System timezone  #配置时区<br>timezone  Asia/Shanghai<br>Network information 配置网络为自动获取<br>network  –bootproto=dhcp –device=eth0 –onboot=on<br>System bootloader configuration 系统引导程序配置<br>bootloader –location=mbr<br>Clear the Master Boot Record 清除主引导记录<br>zerombr<br>Partition clearing information 分区信息<br>clearpart –all<br>Disk partitioning information  指定分区大小<br>part swap –fstype=”swap” –size=2048<br>part /boot –fstype=”ext4” –size=200<br>part / –fstype=”ext4” –grow –size=1</p>
+<p>%packages<br>@base<br>@compat-libraries<br>@debugging<br>@development</p>
+<p>%end</p>
+</blockquote>
+<h6 id="将应答脚本拷贝到http目录，并赋予权限"><a href="#将应答脚本拷贝到http目录，并赋予权限" class="headerlink" title="#将应答脚本拷贝到http目录，并赋予权限"></a>#将应答脚本拷贝到http目录，并赋予权限</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cp ks.cfg /var/www/html/  </span><br><span class="line">chown apache.apache /var/www/html/ks.cfg</span><br></pre></td></tr></table></figure>
+<h4 id="6、启动客户机安装"><a href="#6、启动客户机安装" class="headerlink" title="6、启动客户机安装"></a>6、启动客户机安装</h4><blockquote>
+<p>注意：客户机要和服务器在同一个局域网内<br>如果使用vmware做实验，需要关闭VMware自带的DHCP功能</p>
+</blockquote>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2017/02/08/实现PXE自动安装/" data-id="cjj9vr39v000rt0rbw9spkzm8" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/">Linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/自动化安装/">自动化安装</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2017/02/10/SSH端口转发实验/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          SSH端口转发实验
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2017/02/01/rpm管理包 和 yum管理包(1)/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">安装管理包：rpm包和yum包</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/CA/">CA</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DHCP/">DHCP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DNS/">DNS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/">Linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MYSQL/">MYSQL</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SSH/">SSH</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/TCP-IP/">TCP/IP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/dns/">dns</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mini系统/">mini系统</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rpm/">rpm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/su和sudo/">su和sudo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/基本命令/">基本命令</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/文件系统/">文件系统</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/权限管理/">权限管理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/用户组/">用户组</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/练习题/">练习题</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/自动化安装/">自动化安装</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/进程管理、计划任务/">进程管理、计划任务</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/CA/" style="font-size: 10px;">CA</a> <a href="/tags/DHCP/" style="font-size: 10px;">DHCP</a> <a href="/tags/DNS/" style="font-size: 16.67px;">DNS</a> <a href="/tags/Linux/" style="font-size: 20px;">Linux</a> <a href="/tags/MYSQL/" style="font-size: 16.67px;">MYSQL</a> <a href="/tags/SSH/" style="font-size: 10px;">SSH</a> <a href="/tags/TCP-IP/" style="font-size: 10px;">TCP/IP</a> <a href="/tags/dns/" style="font-size: 10px;">dns</a> <a href="/tags/mini系统/" style="font-size: 10px;">mini系统</a> <a href="/tags/rpm/" style="font-size: 10px;">rpm</a> <a href="/tags/su和sudo/" style="font-size: 10px;">su和sudo</a> <a href="/tags/基本命令/" style="font-size: 10px;">基本命令</a> <a href="/tags/文件系统/" style="font-size: 13.33px;">文件系统</a> <a href="/tags/权限管理/" style="font-size: 10px;">权限管理</a> <a href="/tags/用户组/" style="font-size: 10px;">用户组</a> <a href="/tags/练习题/" style="font-size: 10px;">练习题</a> <a href="/tags/自动化安装/" style="font-size: 10px;">自动化安装</a> <a href="/tags/进程管理、计划任务/" style="font-size: 10px;">进程管理、计划任务</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">June 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">March 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">February 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">January 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">December 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">November 2016</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2017/06/01/介绍 MYSQL的事务日志/">介绍 MYSQL的事务日志</a>
+          </li>
+        
+          <li>
+            <a href="/2017/05/22/MYSQL 数据库的日志介绍/">MYSQL 数据库的日志介绍</a>
+          </li>
+        
+          <li>
+            <a href="/2017/05/15/MYSQL MariaDB 的事务和事务隔离级别/">MYSQL MariaDB 的事务和事务隔离级别</a>
+          </li>
+        
+          <li>
+            <a href="/2017/05/08/MASQL MariaDB 用户权限管理/">MASQL MariaDB 用户权限管理</a>
+          </li>
+        
+          <li>
+            <a href="/2017/04/20/ext 文件系统机制原理/">ext 文件系统机制原理</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2018 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

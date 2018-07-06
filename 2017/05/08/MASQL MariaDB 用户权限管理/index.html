@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>MASQL MariaDB 用户权限管理 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="MariaDB/MySQL中的user由用户名和主机名构成，如”root@localhost”，同用户名但不同主机名对MySQL/MariaDB来讲是不同的，也就是说”root@localhost”和”root@127.0.0.1“是不同的用户，尽管它们都是本机的root。权限验证 在MariaDB/MySQL服务器启动后会载入权限表到内存中，当用户要连接服务器，会读取权限表来验证和分配权限，即在">
+<meta name="keywords" content="Linux,MYSQL">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MASQL MariaDB 用户权限管理">
+<meta property="og:url" content="http://yoursite.com/2017/05/08/MASQL MariaDB 用户权限管理/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="MariaDB/MySQL中的user由用户名和主机名构成，如”root@localhost”，同用户名但不同主机名对MySQL/MariaDB来讲是不同的，也就是说”root@localhost”和”root@127.0.0.1“是不同的用户，尽管它们都是本机的root。权限验证 在MariaDB/MySQL服务器启动后会载入权限表到内存中，当用户要连接服务器，会读取权限表来验证和分配权限，即在">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="https://images2018.cnblogs.com/blog/733013/201805/733013-20180505095656394-796549048.png">
+<meta property="og:image" content="https://images2018.cnblogs.com/blog/733013/201805/733013-20180505101617556-1709630136.png">
+<meta property="og:image" content="https://images2018.cnblogs.com/blog/733013/201805/733013-20180505102338765-1650899435.png">
+<meta property="og:image" content="https://images2018.cnblogs.com/blog/733013/201805/733013-20180505104008412-118553110.png">
+<meta property="og:updated_time" content="2018-06-18T06:20:32.651Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="MASQL MariaDB 用户权限管理">
+<meta name="twitter:description" content="MariaDB/MySQL中的user由用户名和主机名构成，如”root@localhost”，同用户名但不同主机名对MySQL/MariaDB来讲是不同的，也就是说”root@localhost”和”root@127.0.0.1“是不同的用户，尽管它们都是本机的root。权限验证 在MariaDB/MySQL服务器启动后会载入权限表到内存中，当用户要连接服务器，会读取权限表来验证和分配权限，即在">
+<meta name="twitter:image" content="https://images2018.cnblogs.com/blog/733013/201805/733013-20180505095656394-796549048.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-MASQL MariaDB 用户权限管理" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/05/08/MASQL MariaDB 用户权限管理/" class="article-date">
+  <time datetime="2017-05-07T16:00:00.000Z" itemprop="datePublished">2017-05-08</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      MASQL MariaDB 用户权限管理
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h6 id="MariaDB-MySQL中的user由用户名和主机名构成，如”root-localhost”，同用户名但不同主机名对MySQL-MariaDB来讲是不同的，也就是说”root-localhost”和”root-127-0-0-1“是不同的用户，尽管它们都是本机的root。"><a href="#MariaDB-MySQL中的user由用户名和主机名构成，如”root-localhost”，同用户名但不同主机名对MySQL-MariaDB来讲是不同的，也就是说”root-localhost”和”root-127-0-0-1“是不同的用户，尽管它们都是本机的root。" class="headerlink" title="MariaDB/MySQL中的user由用户名和主机名构成，如”root@localhost”，同用户名但不同主机名对MySQL/MariaDB来讲是不同的，也就是说”root@localhost”和”root@127.0.0.1“是不同的用户，尽管它们都是本机的root。"></a>MariaDB/MySQL中的user由用户名和主机名构成，如”root@localhost”，同用户名但不同主机名对MySQL/MariaDB来讲是不同的，也就是说”root@localhost”和”<a href="mailto:root@127.0.0.1" target="_blank" rel="noopener">root@127.0.0.1</a>“是不同的用户，尽管它们都是本机的root。</h6><h3 id="权限验证"><a href="#权限验证" class="headerlink" title="权限验证"></a>权限验证</h3><blockquote>
+<p>在MariaDB/MySQL服务器启动后会载入权限表到内存中，当用户要连接服务器，会读取权限表来验证和分配权限，即在内存中进行权限的读取和写入。<br><a id="more"></a></p>
+</blockquote>
+<h6 id="MariaDB-MySQL中的权限系统经过两步验证："><a href="#MariaDB-MySQL中的权限系统经过两步验证：" class="headerlink" title="MariaDB/MySQL中的权限系统经过两步验证："></a>MariaDB/MySQL中的权限系统经过两步验证：</h6><blockquote>
+<p>1.合法性验证：验证user是否合法，合法者允许连接服务器，否则拒绝连接。<br>2.权限验证和分配：对通过合法性验证的用户分配对数据库中各对象的操作权限。</p>
+</blockquote>
+<h5 id="权限表"><a href="#权限表" class="headerlink" title="权限表"></a>权限表</h5><blockquote>
+<p>MariaDB/MySQL中的权限表都存放在mysql数据库中。MySQL5.6以前，权限相关的表有user表、db表、host表、tables_priv表、columns_priv表、procs_priv表(存储过程和函数相关的权限)。从MySQL5.6开始，host表已经没有了。MariaDB中虽然有host表，但却不用。 </p>
+</blockquote>
+<p><img src="https://images2018.cnblogs.com/blog/733013/201805/733013-20180505095656394-796549048.png" alt="image"></p>
+<blockquote>
+<p>这几个表用的最多的是user表。user表主要分为几个部分：用户列、权限列、安全列、资源控制列以及杂项列，最需要关注的是用户列和权限列。其中权限列又分为普通权限(上表中红色字体)和管理权限列，如select类的为普通权限，super权限为管理权限。且可以看到，db表中的权限全都是普通权限，user表中除了db表中具有的普通权限还有show_db_pirv和create_tablespace_priv，除此之外还有几个管理员权限。也就是说，db中没有的权限是无法授予到指定数据库的。例如不能授予super权限给test数据库。  </p>
+</blockquote>
+<blockquote>
+<p>另外，usage权限在上表中没有列出，因为该权限是所有用户都有的权限，它只用来表示能否登录数据库，它的一个特殊功能是grant仅指定该权限的时候不会影响现有权限，也就是说可以拿grant来修改密码而不影响现有权限。  </p>
+</blockquote>
+<blockquote>
+<p>需要说明的是，从user表到db表再到tables_priv表最后是columns_priv表，它们的权限是逐层细化的。user表中的普通权限是针对所有数据库的，例如在user表中的select_priv为Y，则对所有数据库都有select权限；db表是针对特定数据库中所有表的，如果只有test数据库中有select权限，那么db表中就有一条记录test数据库的select权限为Y，这样对test数据库中的所有表都有select权限，而此时user表中的select权限就为N(因为为Y的时候是所有数据库都有权限)；同理tables_priv表也一样，是针对特定表中所有列的权限；columns_priv则是针对特定列的权限。  </p>
+</blockquote>
+<h6 id="所以对于已经通过身份合法性验证的用户的权限读取和分配的机制如下："><a href="#所以对于已经通过身份合法性验证的用户的权限读取和分配的机制如下：" class="headerlink" title="所以对于已经通过身份合法性验证的用户的权限读取和分配的机制如下："></a>所以对于已经通过身份合法性验证的用户的权限读取和分配的机制如下：</h6><blockquote>
+<p>1.读取uesr表，看看user表是否有对应为Y的权限列，有则分配。  </p>
+<p>2.读取db表，看看db表中是否有哪个数据库分配了对应的权限。  </p>
+<p>3.读取tables_priv表，看看哪些表中有对应的权限。  </p>
+<p>4.读取columns_priv表，看看对哪些具体的列有什么权限。  </p>
+</blockquote>
+<h6 id="例如，为某一用户授予test数据库的select权限。可以看到user表中的select-priv为N，而db表中的select为Y。"><a href="#例如，为某一用户授予test数据库的select权限。可以看到user表中的select-priv为N，而db表中的select为Y。" class="headerlink" title="例如，为某一用户授予test数据库的select权限。可以看到user表中的select_priv为N，而db表中的select为Y。"></a>例如，为某一用户授予test数据库的select权限。可以看到user表中的select_priv为N，而db表中的select为Y。</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">GRANT SELECT ON test.* TO &apos;long&apos;@&apos;192.168.100.1&apos; IDENTIFIED BY &apos;123456&apos;;</span><br><span class="line">SELECT host,user,select_priv FROM mysql.user;</span><br><span class="line">SELECT * FROM mysql.db;</span><br></pre></td></tr></table></figure>
+<p><img src="https://images2018.cnblogs.com/blog/733013/201805/733013-20180505101617556-1709630136.png" alt="image"></p>
+<h5 id="图解认证和权限分配的两个阶段"><a href="#图解认证和权限分配的两个阶段" class="headerlink" title="图解认证和权限分配的两个阶段"></a>图解认证和权限分配的两个阶段</h5><p> <img src="https://images2018.cnblogs.com/blog/733013/201805/733013-20180505102338765-1650899435.png" alt="image"></p>
+<h5 id="权限生效时机"><a href="#权限生效时机" class="headerlink" title="权限生效时机"></a>权限生效时机</h5><blockquote>
+<p>在服务器启动时读取权限表到内存中，从此时开始权限表生效。  </p>
+<p>之后使用grant、revoke、set password 等命令也会隐含的刷新权限表到内存中。  </p>
+<p>另外，使用显式的命令flush privileges或mysqladmin flush-privileges或mysqladmin reolad也会将上述几张权限表重新刷到内存中以供后续的身份验证和权限验证、分配。</p>
+</blockquote>
+<h3 id="用户管理"><a href="#用户管理" class="headerlink" title="用户管理"></a>用户管理</h3><h6 id="用户管理分为几个方面，创建用户、对用户授权、修改和删除用户。"><a href="#用户管理分为几个方面，创建用户、对用户授权、修改和删除用户。" class="headerlink" title="用户管理分为几个方面，创建用户、对用户授权、修改和删除用户。"></a>用户管理分为几个方面，创建用户、对用户授权、修改和删除用户。</h6><h5 id="创建用户"><a href="#创建用户" class="headerlink" title="创建用户"></a>创建用户</h5><h6 id="创建账号有几种方法。"><a href="#创建账号有几种方法。" class="headerlink" title="创建账号有几种方法。"></a>创建账号有几种方法。</h6><blockquote>
+<p>1.使用grant直接对账号授权，账号不存在则会创建；  </p>
+<p>2.向mysql.user表中插入记录；  </p>
+<p>3.使用create user命令。  </p>
+<p>后两种方法创建的用户初始时没有任何权限(只有usage登录数据库的权限)，并且修改权限后要使用 FLUSH PRIVILEGES 语句或执行 mysqladmin flush-privileges 或 mysqladmin reload 命令刷新权限表到内存中，而第一种方法简便的多，创建用户后会自动刷新权限表。  </p>
+</blockquote>
+<h6 id="grant和revoke语法："><a href="#grant和revoke语法：" class="headerlink" title="grant和revoke语法："></a>grant和revoke语法：</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">GRANT</span><br><span class="line">    priv_type [(column_list)]</span><br><span class="line">      [, priv_type [(column_list)]] ...</span><br><span class="line">    ON [object_type] priv_level</span><br><span class="line">    TO user  [IDENTIFIED [BY [PASSWORD] &apos;password&apos;][WITH with_option [with_option]</span><br><span class="line"></span><br><span class="line">object_type:</span><br><span class="line">    TABLE</span><br><span class="line">  | FUNCTION</span><br><span class="line">  | PROCEDURE</span><br><span class="line"></span><br><span class="line">priv_level:</span><br><span class="line">    *</span><br><span class="line">  | *.*</span><br><span class="line">  | db_name.*</span><br><span class="line">  | db_name.tbl_name</span><br><span class="line">  | tbl_name</span><br><span class="line">  | db_name.routine_name</span><br><span class="line"></span><br><span class="line">with_option:  </span><br><span class="line">    GRANT OPTION</span><br><span class="line">  | MAX_QUERIES_PER_HOUR count</span><br><span class="line">  | MAX_UPDATES_PER_HOUR count</span><br><span class="line">  | MAX_CONNECTIONS_PER_HOUR count</span><br><span class="line">  | MAX_USER_CONNECTIONS count</span><br><span class="line">  | MAX_STATEMENT_TIME time</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>grant可以在库、表、函数、存储过程、特定列上授权，且一次性可以为多个用户授予多个对象的权限。其中 with grant option 表示拥有该权限后的用户可以给别的用户授予自身所拥有的权限。  </p>
+</blockquote>
+<blockquote>
+<p>revoke表示收回权限，注意revoke无法收回usage权限。  </p>
+</blockquote>
+<blockquote>
+<p>其中user的表示方法是 ‘用户名‘@’主机名’ ，主机名部分可以是主机名，可以是IP地址，可以是localhost，可以是通配符组成的主机名(空的host值也表示所有host，等价于‘user_name‘@’%’)。如下示例：<br><img src="https://images2018.cnblogs.com/blog/733013/201805/733013-20180505104008412-118553110.png" alt="image"></p>
+</blockquote>
+<blockquote>
+<p>对于网段地址，可以指定掩码来表示，如192.168.100.1/255.255.255.0，不能使用cidr格式的掩码记录方式，也不能指定非8、16、24、32位的掩码，如192.168.100.1/255.255.255.240是不允许的。  </p>
+</blockquote>
+<blockquote>
+<p>如果在user表中的用户有交叉部分，如root既可以从localhost登录，也可以从127.0.0.1登录，还可以从本机IP192.168.100.61登录，还可以从网段地址192.168.100.%登录，那么到底会从哪个登录？  </p>
+</blockquote>
+<h6 id="在读取权限表user到内存中的时候，首先会根据host列的具体性进行排序，然后再根据user列进行具体性排序-即理解为order-by-host-user-，然后从上到下扫描，首次扫描到符合的记录就使用该记录登录。具体性的意思是越具体的user优先级越高，通配符范围越宽的user优先级越低。例如root-localhost的具体性比root-’-’的具体性高，后者又比‘-‘-’-’的具体性高。"><a href="#在读取权限表user到内存中的时候，首先会根据host列的具体性进行排序，然后再根据user列进行具体性排序-即理解为order-by-host-user-，然后从上到下扫描，首次扫描到符合的记录就使用该记录登录。具体性的意思是越具体的user优先级越高，通配符范围越宽的user优先级越低。例如root-localhost的具体性比root-’-’的具体性高，后者又比‘-‘-’-’的具体性高。" class="headerlink" title="在读取权限表user到内存中的时候，首先会根据host列的具体性进行排序，然后再根据user列进行具体性排序(即理解为order by host,user)，然后从上到下扫描，首次扫描到符合的记录就使用该记录登录。具体性的意思是越具体的user优先级越高，通配符范围越宽的user优先级越低。例如root@localhost的具体性比root@’%’的具体性高，后者又比‘%‘@’%’的具体性高。"></a>在读取权限表user到内存中的时候，首先会根据host列的具体性进行排序，然后再根据user列进行具体性排序(即理解为order by host,user)，然后从上到下扫描，首次扫描到符合的记录就使用该记录登录。具体性的意思是越具体的user优先级越高，通配符范围越宽的user优先级越低。例如root@localhost的具体性比root@’%’的具体性高，后者又比‘%‘@’%’的具体性高。</h6><h5 id="create-user和alter-user"><a href="#create-user和alter-user" class="headerlink" title="create user和alter user"></a>create user和alter user</h5><blockquote>
+<p>在MySQL 5.6.7之前，不要使用这两个命令创建用户和修改用户，因为它们会在mysql.user表的password列设置空串。到mysql5.6.7解决了这个问题。MariaDB可随意使用。  </p>
+</blockquote>
+<h6 id="语法："><a href="#语法：" class="headerlink" title="语法："></a>语法：</h6><p>C<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">REATE [OR REPLACE] USER [IF NOT EXISTS] </span><br><span class="line"> user_specification [,user_specification] ...</span><br><span class="line">  [WITH resource_option [resource_option] ...]</span><br><span class="line"></span><br><span class="line">user_specification:</span><br><span class="line">  username [authentication_option]</span><br><span class="line"></span><br><span class="line">authentication_option:</span><br><span class="line">  IDENTIFIED BY &apos;authentication_string&apos; </span><br><span class="line">  </span><br><span class="line">resource_option:</span><br><span class="line">  MAX_QUERIES_PER_HOUR count</span><br><span class="line">  | MAX_UPDATE_PER_HOUR count</span><br><span class="line">  | MAX_CONNECTIONS_PER_HOUR count</span><br><span class="line">  | MAX_USER_CONNECTIONS count</span><br></pre></td></tr></table></figure></p>
+<h6 id="例如："><a href="#例如：" class="headerlink" title="例如："></a>例如：</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">create user &apos;longshuai&apos;@&apos;127.0.0.1&apos; identified by &apos;123456&apos;;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>alter user和create user语法基本一致，但在MySQL中有让密码过期的功能，而在MariaDB中不支持该功能。  </p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ALTER USER user_specification [, user_specification] ...</span><br><span class="line">user_specification:</span><br><span class="line">    user PASSWORD EXPIRE</span><br></pre></td></tr></table></figure>
+<h6 id="例如，让刚才创建的用户过期。"><a href="#例如，让刚才创建的用户过期。" class="headerlink" title="例如，让刚才创建的用户过期。"></a>例如，让刚才创建的用户过期。</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">alter user &apos;longshuai&apos;@&apos;127.0.0.1&apos; password expire;</span><br></pre></td></tr></table></figure>
+<h6 id="记录创建用户的时间"><a href="#记录创建用户的时间" class="headerlink" title="记录创建用户的时间"></a>记录创建用户的时间</h6><blockquote>
+<p>MariaDB/MySQL中user的元数据信息都存放在mysql.user表中，但是在这个表中的信息分类很少，常用的就只有用户类列和权限类列，没有用户的创建时间。   </p>
+</blockquote>
+<blockquote>
+<p>可以通过新增一列来记录用户的创建时间。  </p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">alter table mysql.user add column create_time timestamp default current_timestamp;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>这样以后新建用户都会记录创建时间。但是显然，对于已有的用户是没有记录时间的，它们的值都为’0000-00-00 00:00:00’。  </p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">MariaDB [mysql]&gt; select host,user,create_time from mysql.user;</span><br><span class="line">+---------------------+-----------+---------------------+</span><br><span class="line">| host                | user      | create_time         |</span><br><span class="line">+---------------------+-----------+---------------------+</span><br><span class="line">| localhost           | root      | 2018-04-21 05:58:19 |</span><br><span class="line">| 127.0.0.1           | root      | 2018-04-21 05:58:19 |</span><br><span class="line">| ::1                 | root      | 2018-04-21 05:58:19 |</span><br><span class="line">| localhost           |           | 2018-04-21 05:58:19 |</span><br><span class="line">| 192.168.100.%       | root      | 2018-04-21 05:58:19 |</span><br><span class="line">| 192.168.100.1       | long      | 2018-04-21 05:58:19 |</span><br><span class="line">| 127.0.0.1           | longshuai | 2018-04-21 05:58:19 |</span><br><span class="line">| 192.168.100.1       | longshuai | 0000-00-00 00:00:00 |</span><br><span class="line">+---------------------+-----------+---------------------+</span><br></pre></td></tr></table></figure>
+<h5 id="查看用户权限"><a href="#查看用户权限" class="headerlink" title="查看用户权限"></a>查看用户权限</h5><blockquote>
+<p>可以使用show grants语句查看某个user的权限信息。  </p>
+</blockquote>
+<h6 id="例如：-1"><a href="#例如：-1" class="headerlink" title="例如："></a>例如：</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">MariaDB [mysql]&gt; show grants for &apos;root&apos;@&apos;localhost&apos;;</span><br><span class="line"></span><br><span class="line">Grants for root@localhost                                                                                    </span><br><span class="line">-----------------------------------------------------------------------------------------------------------------</span><br><span class="line">GRANT ALL PRIVILEGES ON *.* TO &apos;root&apos;@&apos;localhost&apos; IDENTIFIED BY PASSWORD &apos;*6BB4837EB74329105EE4568DDA7DC67ED2CA2AD9&apos; WITH GRANT OPTION </span><br><span class="line">GRANT PROXY ON &apos;&apos;@&apos;&apos; TO &apos;root&apos;@&apos;localhost&apos; WITH GRANT OPTION</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">MariaDB [mysql]&gt;SHOW GRANTS FOR &apos;long&apos;@&apos;192.168.100.1&apos;;</span><br><span class="line"></span><br><span class="line">Grants for long@192.168.100.1   </span><br><span class="line">-----------------------------------------------------------------------------------------------------------</span><br><span class="line">GRANT USAGE ON *.* TO &apos;long&apos;@&apos;192.168.100.1&apos; IDENTIFIED BY PASSWORD &apos;*6BB4837EB74329105EE4568DDA7DC67ED2CA2AD9&apos; </span><br><span class="line">GRANT SELECT ON `test`.* TO &apos;long&apos;@&apos;192.168.100.1&apos;</span><br></pre></td></tr></table></figure>
+<h5 id="revoke命令的严格性"><a href="#revoke命令的严格性" class="headerlink" title="revoke命令的严格性"></a>revoke命令的严格性</h5><blockquote>
+<p>revoke命令回收权限时必须要明确指定回收的数据库对象以及用户名，其中usage权限无法回收。特别要说明的是revoke all，当你以为它会回收所有权限的时候，它可能一点权限都没有回收。也就是说revoke命令的书写非常严格。  </p>
+</blockquote>
+<blockquote>
+<p>用户 ‘long‘@’192.168.100.1’ 在 <em>.</em> 上具有usage权限，在test.*上具有select权限。  </p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">MariaDB [mysql]&gt; SHOW GRANTS FOR &apos;long&apos;@&apos;192.168.100.1&apos;;</span><br><span class="line">Grants for long@192.168.100.1 </span><br><span class="line">-----------------------------------------------------------------------------------------------------------</span><br><span class="line">GRANT USAGE ON *.* TO &apos;long&apos;@&apos;192.168.100.1&apos; IDENTIFIED BY PASSWORD &apos;*6BB4837EB74329105EE4568DDA7DC67ED2CA2AD9&apos; </span><br><span class="line">GRANT SELECT ON `test`.* TO &apos;long&apos;@&apos;192.168.100.1&apos;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>对该用户在 <em>.</em> 上进行revoke all，再次查看权限，发现权限根本一点变化都没有。因为usage权限无法回收，而select权限是在test.<em>上而非</em>.*上。  </p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">REVOKE ALL ON *.* FROM &apos;long&apos;@&apos;192.168.100.1&apos;;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>要回收test.<em>上的select权限，必须在revoke中指定test.</em>，而不能是 <em>.</em> 。以下两个语句都能回收。  </p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">revoke select on test.* from &apos;long&apos;@&apos;192.168.100.1&apos;;</span><br><span class="line">revoke all on test.* from &apos;long&apos;@&apos;192.168.100.1&apos;;</span><br></pre></td></tr></table></figure>
+<h5 id="删除用户"><a href="#删除用户" class="headerlink" title="删除用户"></a>删除用户</h5><blockquote>
+<p>直接使用drop user命令或者从mysql.user表中删除对应记录。  </p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">drop user user_name1,username2...</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>注意，删除表中用户记录的时候不会从现有用户中回收对该表的权限，当下次再创建同名表的时候，会自动为用户授予该表的权限造成权限外流。  </p>
+</blockquote>
+<blockquote>
+<p>因此，建议使用drop user语句来删除用户。  </p>
+</blockquote>
+<h3 id="设置密码和恢复root密码"><a href="#设置密码和恢复root密码" class="headerlink" title="设置密码和恢复root密码"></a>设置密码和恢复root密码</h3><h5 id="设置密码"><a href="#设置密码" class="headerlink" title="设置密码"></a>设置密码</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(1)grant all on *.* to &apos;root&apos;@&apos;localhost&apos; identified by &apos;123456&apos; with grant option;  </span><br><span class="line">(2)grant usage on *.* to &apos;root&apos;@&apos;localhost&apos; identified by &apos;123456&apos; with grant option;</span><br></pre></td></tr></table></figure>
+<h6 id="使用usage权限表示在不影响现有权限的情况下使用grant来修改密码。"><a href="#使用usage权限表示在不影响现有权限的情况下使用grant来修改密码。" class="headerlink" title="使用usage权限表示在不影响现有权限的情况下使用grant来修改密码。"></a>使用usage权限表示在不影响现有权限的情况下使用grant来修改密码。</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(3)set password [for &apos;root&apos;@&apos;localhost&apos;] =password(&apos;123456&apos;);</span><br></pre></td></tr></table></figure>
+<h6 id="password函数中必须加引号，不写user时是为当前用户修改。"><a href="#password函数中必须加引号，不写user时是为当前用户修改。" class="headerlink" title="password函数中必须加引号，不写user时是为当前用户修改。"></a>password函数中必须加引号，不写user时是为当前用户修改。</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">(4)alter user root@localhost identified by &apos;123456&apos;;  </span><br><span class="line">(5)mysqladmin -uroot -h localhost -p&apos;old_password&apos; password &apos;new_password&apos;;  </span><br><span class="line">(6)update mysql.user set password=password(&apos;123456&apos;) where user=&apos;root&apos; and host=&apos;localhost&apos;;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>其中grant和set password语句可以直接刷新权限表，其他语句需要使用 flush privileges 或其他刷新语句。  </p>
+</blockquote>
+<h5 id="恢复root密码"><a href="#恢复root密码" class="headerlink" title="恢复root密码"></a>恢复root密码</h5><blockquote>
+<p>可以在启动mysql服务时使用mysqld_safe服务程序并指定”–skip-grant-tables”选项表示跳过授权表，这样登陆mysql服务器将不需要任何权限，包括密码认证也不需要，但是同样受限的是不能操作任何权限相关的内容，比如修改权限，刷新授权表等。这通常是mysql管理员密码忘记的时候使用的选项。由于跳过授权表使得mysql服务器极不安全，任何用户都能直接登录服务器，所以通常和”–skip-networking”选项一起使用来禁止来自网络的服务器连接请求，这样只能使用localhost或者127.0.0.1作为host来登录。  </p>
+</blockquote>
+<blockquote>
+<p>另外，使用mysqld_safe启动无授权表的服务前要停止已有的MySQL实例。由于跳过授权表无法操作权限相关内容，所以修改mysql.user表中的管理员账号的密码字段是唯一修改方法。修改密码后记得重启MySQL服务。  </p>
+</blockquote>
+<h6 id="步骤如下："><a href="#步骤如下：" class="headerlink" title="步骤如下："></a>步骤如下：</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">[root@xuexi mysql]# service mysqld stop</span><br><span class="line">[root@xuexi mysql]# mysqld_safe --skip-grant-tables --skip-networking &amp;</span><br><span class="line">[root@xuexi mysql]# mysql</span><br><span class="line">mysql&gt; update mysql.user set password=password(&quot;123456&quot;) where user=&apos;root&apos; and host=&apos;localhost&apos;;</span><br><span class="line">mysql&gt; flush privileges;</span><br><span class="line">mysql&gt; select user,host,password from mysql.user where user=&apos;root&apos; and host=&apos;localhost&apos;;</span><br><span class="line">+------+-----------+-------------------------------------------+</span><br><span class="line">| user | host      | password                                  |</span><br><span class="line">+------+-----------+-------------------------------------------+</span><br><span class="line">| root | localhost | *6BB4837EB74329105EE4568DDA7DC67ED2CA2AD9 |</span><br><span class="line">+------+-----------+-------------------------------------------+</span><br><span class="line">1 row in set</span><br><span class="line">mysql&gt; \q</span><br><span class="line">[root@xuexi mysql]# service mysqld stop</span><br><span class="line">[root@xuexi mysql]# service mysqld start</span><br><span class="line">[root@xuexi mysql]# mysql -uroot -p123456</span><br><span class="line">mysql&gt; \q</span><br></pre></td></tr></table></figure>
+<h6 id="如果要找回多实例的密码，则在mysqld-safe命令中使用-–defaults-file-指定对应的配置文件即可。"><a href="#如果要找回多实例的密码，则在mysqld-safe命令中使用-–defaults-file-指定对应的配置文件即可。" class="headerlink" title="如果要找回多实例的密码，则在mysqld_safe命令中使用 –defaults-file 指定对应的配置文件即可。"></a>如果要找回多实例的密码，则在mysqld_safe命令中使用 –defaults-file 指定对应的配置文件即可。</h6>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2017/05/08/MASQL MariaDB 用户权限管理/" data-id="cjj9vr39b0008t0rb16zv15df" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/">Linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/MYSQL/">MYSQL</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2017/05/15/MYSQL MariaDB 的事务和事务隔离级别/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          MYSQL MariaDB 的事务和事务隔离级别
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2017/04/20/ext 文件系统机制原理/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">ext 文件系统机制原理</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/CA/">CA</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DHCP/">DHCP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DNS/">DNS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/">Linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MYSQL/">MYSQL</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SSH/">SSH</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/TCP-IP/">TCP/IP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/dns/">dns</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mini系统/">mini系统</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rpm/">rpm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/su和sudo/">su和sudo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/基本命令/">基本命令</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/文件系统/">文件系统</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/权限管理/">权限管理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/用户组/">用户组</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/练习题/">练习题</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/自动化安装/">自动化安装</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/进程管理、计划任务/">进程管理、计划任务</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/CA/" style="font-size: 10px;">CA</a> <a href="/tags/DHCP/" style="font-size: 10px;">DHCP</a> <a href="/tags/DNS/" style="font-size: 16.67px;">DNS</a> <a href="/tags/Linux/" style="font-size: 20px;">Linux</a> <a href="/tags/MYSQL/" style="font-size: 16.67px;">MYSQL</a> <a href="/tags/SSH/" style="font-size: 10px;">SSH</a> <a href="/tags/TCP-IP/" style="font-size: 10px;">TCP/IP</a> <a href="/tags/dns/" style="font-size: 10px;">dns</a> <a href="/tags/mini系统/" style="font-size: 10px;">mini系统</a> <a href="/tags/rpm/" style="font-size: 10px;">rpm</a> <a href="/tags/su和sudo/" style="font-size: 10px;">su和sudo</a> <a href="/tags/基本命令/" style="font-size: 10px;">基本命令</a> <a href="/tags/文件系统/" style="font-size: 13.33px;">文件系统</a> <a href="/tags/权限管理/" style="font-size: 10px;">权限管理</a> <a href="/tags/用户组/" style="font-size: 10px;">用户组</a> <a href="/tags/练习题/" style="font-size: 10px;">练习题</a> <a href="/tags/自动化安装/" style="font-size: 10px;">自动化安装</a> <a href="/tags/进程管理、计划任务/" style="font-size: 10px;">进程管理、计划任务</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">June 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">March 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">February 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">January 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">December 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">November 2016</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2017/06/01/介绍 MYSQL的事务日志/">介绍 MYSQL的事务日志</a>
+          </li>
+        
+          <li>
+            <a href="/2017/05/22/MYSQL 数据库的日志介绍/">MYSQL 数据库的日志介绍</a>
+          </li>
+        
+          <li>
+            <a href="/2017/05/15/MYSQL MariaDB 的事务和事务隔离级别/">MYSQL MariaDB 的事务和事务隔离级别</a>
+          </li>
+        
+          <li>
+            <a href="/2017/05/08/MASQL MariaDB 用户权限管理/">MASQL MariaDB 用户权限管理</a>
+          </li>
+        
+          <li>
+            <a href="/2017/04/20/ext 文件系统机制原理/">ext 文件系统机制原理</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2018 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

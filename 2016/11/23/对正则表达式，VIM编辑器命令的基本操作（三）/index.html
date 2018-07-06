@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>对正则表达式，VIM编辑器命令的基本操作 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="正则表达式 正则表达式（REGEXP）是由一类特殊字符和文本字符所编写的模式，其中有些字符（元字符）不表示字符字面的意义，而表示控制或通配的功能。分为两类： 基本正则表达式：BRE 扩展正则表达式： ERE元字符分类：字符匹配，匹配次数，位置锚定，分组。   ######  # 字符匹配： · 表示匹配的单个字符 . 转义，表示（·）的字符本意【】 表示匹配指定范围内的任意单个字符，【】里的·表示">
+<meta name="keywords" content="Linux,基本命令">
+<meta property="og:type" content="article">
+<meta property="og:title" content="对正则表达式，VIM编辑器命令的基本操作">
+<meta property="og:url" content="http://yoursite.com/2016/11/23/对正则表达式，VIM编辑器命令的基本操作（三）/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="正则表达式 正则表达式（REGEXP）是由一类特殊字符和文本字符所编写的模式，其中有些字符（元字符）不表示字符字面的意义，而表示控制或通配的功能。分为两类： 基本正则表达式：BRE 扩展正则表达式： ERE元字符分类：字符匹配，匹配次数，位置锚定，分组。   ######  # 字符匹配： · 表示匹配的单个字符 . 转义，表示（·）的字符本意【】 表示匹配指定范围内的任意单个字符，【】里的·表示">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2018-06-10T12:02:01.688Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="对正则表达式，VIM编辑器命令的基本操作">
+<meta name="twitter:description" content="正则表达式 正则表达式（REGEXP）是由一类特殊字符和文本字符所编写的模式，其中有些字符（元字符）不表示字符字面的意义，而表示控制或通配的功能。分为两类： 基本正则表达式：BRE 扩展正则表达式： ERE元字符分类：字符匹配，匹配次数，位置锚定，分组。   ######  # 字符匹配： · 表示匹配的单个字符 . 转义，表示（·）的字符本意【】 表示匹配指定范围内的任意单个字符，【】里的·表示">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-对正则表达式，VIM编辑器命令的基本操作（三）" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/11/23/对正则表达式，VIM编辑器命令的基本操作（三）/" class="article-date">
+  <time datetime="2016-11-22T16:00:00.000Z" itemprop="datePublished">2016-11-23</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      对正则表达式，VIM编辑器命令的基本操作
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="正则表达式"><a href="#正则表达式" class="headerlink" title="正则表达式"></a>正则表达式</h3><blockquote>
+<h6 id="正则表达式（REGEXP）是由一类特殊字符和文本字符所编写的模式，其中有些字符（元字符）不表示字符字面的意义，而表示控制或通配的功能。"><a href="#正则表达式（REGEXP）是由一类特殊字符和文本字符所编写的模式，其中有些字符（元字符）不表示字符字面的意义，而表示控制或通配的功能。" class="headerlink" title="正则表达式（REGEXP）是由一类特殊字符和文本字符所编写的模式，其中有些字符（元字符）不表示字符字面的意义，而表示控制或通配的功能。"></a>正则表达式（REGEXP）是由一类特殊字符和文本字符所编写的模式，其中有些字符（元字符）不表示字符字面的意义，而表示控制或通配的功能。</h6><p>分为两类： 基本正则表达式：BRE 扩展正则表达式： ERE<br>元字符分类：字符匹配，匹配次数，位置锚定，分组。 </p>
+</blockquote>
+<p>###### </p>
+<h6 id="字符匹配：-·-表示匹配的单个字符"><a href="#字符匹配：-·-表示匹配的单个字符" class="headerlink" title="# 字符匹配： · 表示匹配的单个字符"></a># 字符匹配： · 表示匹配的单个字符</h6><blockquote>
+<p>. 转义，表示（·）的字符本意<br>【】 表示匹配指定范围内的任意单个字符，【】里的·表示本意，不用转义<br>【托字符】 表示匹配指定范围外的任意单个字符<br>【:alnum：】 字母和数字 【:alpha：】 代表任何英文大小写字符<br>【:lower:】 小写字母 【:upper：】 大写字母<br>【:blank：】 空白字符 【:space：】 水平和垂直的空白字符（比blank范围大）<br>【:punct：】 标点符号 </p>
+</blockquote>
+<a id="more"></a>
+<h6 id="匹配次数：-用于在要指定次数的字符后面，是表示前面字符出现的次数。"><a href="#匹配次数：-用于在要指定次数的字符后面，是表示前面字符出现的次数。" class="headerlink" title="匹配次数： 用于在要指定次数的字符后面，是表示前面字符出现的次数。"></a>匹配次数： 用于在要指定次数的字符后面，是表示前面字符出现的次数。</h6><blockquote>
+<p>* 表示匹配前面的字符重复的次数，包括0次<br>·* 任意长度的任意字符<br>\? 匹配前面的字符0次或1次<br>+ 匹配前面的字符至少1次<br>{n} 匹配前面的字n次，是指定m次<br>{n,m} 匹配前面的字符最少n次，最多m次<br>{,n} 匹配前面的字符最多n次<br>{n,} 匹配前面的字符最多n次  </p>
+</blockquote>
+<h6 id="位置锚定：-定位出现的位置。"><a href="#位置锚定：-定位出现的位置。" class="headerlink" title="位置锚定： 定位出现的位置。"></a>位置锚定： 定位出现的位置。</h6><blockquote>
+<p>^ 行首锚定，用于模式的最左侧<br>$ 行尾锚定，用于模式的最右侧<br>> 词尾锚定，用于单词模式的最右侧<br>\&lt; 词首锚定，用于单词模式的最左侧<br>\b 单词的边界  </p>
+</blockquote>
+<blockquote>
+<p>分组：  将一个或多个字符捆绑在一起，当做一个整体进行处理。</p>
+</blockquote>
+<h3 id="二-VIM的基本命令操作"><a href="#二-VIM的基本命令操作" class="headerlink" title="二 VIM的基本命令操作"></a>二 VIM的基本命令操作</h3><h6 id="VIM-的文本编辑器"><a href="#VIM-的文本编辑器" class="headerlink" title="VIM 的文本编辑器"></a>VIM 的文本编辑器</h6><blockquote>
+<p>+# 打开文件后，让光标处于第#的行首<br>-d 可以比较多个文件<br>-m 只读的方式打开文件，避免误操作<br>-e 进入ex模式（编辑模式）<br>三种主要模式<br>命令模式：默认模式<br>插入模式：编辑模式<br>扩展命令模式：ex模式  </p>
+</blockquote>
+<h6 id="可以让命令模式进入插入模式的，按ESC退出的一些操作："><a href="#可以让命令模式进入插入模式的，按ESC退出的一些操作：" class="headerlink" title="可以让命令模式进入插入模式的，按ESC退出的一些操作："></a>可以让命令模式进入插入模式的，按ESC退出的一些操作：</h6><blockquote>
+<p>按 i 光标不懂<br>按 I 光标移动到行首<br>按 a 光标往后移动一个字符<br>按 A 光标移动到本行的行尾<br>按 o 在光标下行切换新行<br>按 O 在光标上行切换新行<br>在命令模式下按： 就进入ex模式了  </p>
+</blockquote>
+<h6 id="在ex模式下："><a href="#在ex模式下：" class="headerlink" title="在ex模式下："></a>在ex模式下：</h6><blockquote>
+<p>Wq 存盘退出 q 退出<br>Q! 强行退出，修改的不算<br>W 空格 跟文件 就可以把VIM的内容传送到文件<br>R 空格 跟文件 就可以把文件的内容读入VIM  </p>
+</blockquote>
+<h6 id="在命令模式下的一些常用的用法："><a href="#在命令模式下的一些常用的用法：" class="headerlink" title="在命令模式下的一些常用的用法："></a>在命令模式下的一些常用的用法：</h6><blockquote>
+<p>字符间的跳动： h 左 l 右 j 下 k 上<br> 前面加上数字# ，配合其他按键进行跳动<br>单词间的跳动： w 跳动到下一个单词的词首<br>e 跳动到下一个单词的词尾<br>b 跳动到前一个单词的词首<br>也可以配合#进行跳动<br>当前页面跳动： H 跳动到当前页面的页首<br>M 跳动到当前页面的中间<br>L 跳动到当前页面的页底  </p>
+</blockquote>
+<h6 id="行首行尾的跳动："><a href="#行首行尾的跳动：" class="headerlink" title="行首行尾的跳动："></a>行首行尾的跳动：</h6><blockquote>
+<p>^ 跳转至行首的第一个非空白字符<br>0 跳转至行首<br>$ 跳转至行尾  </p>
+</blockquote>
+<h6 id="行间移动："><a href="#行间移动：" class="headerlink" title="行间移动："></a>行间移动：</h6><blockquote>
+<p>G 直接跳动到整个文件的最后一行<br>gg 直接跳动到整个文件的第一行<br>一些快捷键： ctrl +f 向文件尾部翻一页<br>Ctrl+b 向文件首部翻一页<br>Ctrl+d 向文件尾部翻半页<br>Ctrl+u 向文件首部翻半页<br>命令模式的字符编辑： x 删除（剪切）光标处的字符  </p>
+<p>#x 前面加上数字，表示删除几个字符<br>Xp 交换光标处字符跟后面字符的位置<br>J 删除当前行后的换行符<br>~ 转换大小写  </p>
+</blockquote>
+<h6 id="替换命令："><a href="#替换命令：" class="headerlink" title="替换命令："></a>替换命令：</h6><blockquote>
+<p>r 替换光标所在处的字符<br>R 切换成REPLACE 模式，批量替换字符<br>删除命令： d 删除字符，可以结合光标跳转字符实现范围删除<br>d$ 删除到行尾<br>d^ 删除到非空白字符行首<br>d0 删除到行首，不包括光标处<br>dd 删除光标所在行 （配合数字批量删除）<br>D 从当前光标处一直删除到行尾  </p>
+</blockquote>
+<h6 id="复制命令："><a href="#复制命令：" class="headerlink" title="复制命令："></a>复制命令：</h6><blockquote>
+<p>（复制完可以按P粘贴）<br>y 复制<br>y$ 复制到行尾<br>y0 复制到行首<br>y^ 复制到非空白字符行首<br>yy 复制光标所在行  </p>
+<p>#yy 配合数字实行多行复制<br>Y 复制整行<br>改变命令： c 修改后切换成插入模式，配合d进行相应操作  </p>
+<p>100i wang [esc] 粘贴wang 100次 复制wang 100次  </p>
+</blockquote>
+<h6 id="扩展命令模式：-（ex）模式"><a href="#扩展命令模式：-（ex）模式" class="headerlink" title="扩展命令模式： （ex）模式"></a>扩展命令模式： （ex）模式</h6><h6 id="地址定界："><a href="#地址定界：" class="headerlink" title="地址定界："></a>地址定界：</h6><blockquote>
+<p>：# 输入数字几，跳到第几行  </p>
+<p>#，#：从第几行到第几行，后配合相应命令<br>· 表示当前行<br>$ 表示最后一行<br>% 表示全文件内容<br>S 在扩展模式下完成查找替换操作<br>格式: s/要查找的内容/替换为的内容/修改符<br>修改符： i 忽略大小写<br>g 修改的全局替换（默认情况只替换每行第一次改的）<br>gc 全局替换时每次前询问  </p>
+</blockquote>
+<h6 id="命令模式下："><a href="#命令模式下：" class="headerlink" title="命令模式下："></a>命令模式下：</h6><blockquote>
+<p>（小写）u 撤销 #u 撤销之前多次修改<br>（大写）U 撤销光标落在此行后所有的更改<br>按ctrl -r 重做最后撤销的更改（倒回去）  </p>
+<p>· 重做前一个操作<br>n. 重做前一个操作N次  </p>
+</blockquote>
+<h6 id="VIM的寄存器"><a href="#VIM的寄存器" class="headerlink" title="VIM的寄存器"></a>VIM的寄存器</h6><blockquote>
+<p>有26个命名的寄存器 （可以在不同窗口进行）<br>名称以a b c ….z 来表示<br>格式： 寄存器放在数字和命令之间<br>如： “ ayy 表示把当前光标所在行复制到a寄存器<br>“ap 表示把a寄存器的内容粘贴  </p>
+</blockquote>
+<h6 id="VIM-“F1-F2”一次处理多个文件"><a href="#VIM-“F1-F2”一次处理多个文件" class="headerlink" title="VIM “F1 F2”一次处理多个文件"></a>VIM “F1 F2”一次处理多个文件</h6><blockquote>
+<p>刚进去默认在第一个文件<br>：next 下一个<br>: prev 前一个<br>: qall 退出所有<br>: wqall 保存退出所有  </p>
+</blockquote>
+<h6 id="VIM-使用多个窗口"><a href="#VIM-使用多个窗口" class="headerlink" title="VIM 使用多个窗口"></a>VIM 使用多个窗口</h6><blockquote>
+<p>VIM -o 上下分屏<br>VIM-O 左右分屏<br>在窗口间来回切换 ctrl+w<br>完成后 wqall  </p>
+</blockquote>
+<h6 id="在VIM里加行号"><a href="#在VIM里加行号" class="headerlink" title="在VIM里加行号"></a>在VIM里加行号</h6><blockquote>
+<p>显示 set nu<br>取消 set nonu<br>要想行号永久有效，必须保存配置文件：（用VIM改）<br>全局：/etc/vimrc 个人：~/.vimrc  </p>
+</blockquote>
+<h6 id="在VIM里设置文本宽"><a href="#在VIM里设置文本宽" class="headerlink" title="在VIM里设置文本宽"></a>在VIM里设置文本宽</h6><blockquote>
+<p>启用 set textwidth =65<br>禁用 set wrapmargin =15  </p>
+</blockquote>
+<h6 id="在VIM里设置光标所在的标识线"><a href="#在VIM里设置光标所在的标识线" class="headerlink" title="在VIM里设置光标所在的标识线"></a>在VIM里设置光标所在的标识线</h6><blockquote>
+<p>启用 set cursorline (cul)<br>禁用 set no cul  </p>
+</blockquote>
+<h5 id="更详细用法请查：VIM-help"><a href="#更详细用法请查：VIM-help" class="headerlink" title="更详细用法请查：VIM help"></a>更详细用法请查：VIM help</h5>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2016/11/23/对正则表达式，VIM编辑器命令的基本操作（三）/" data-id="cjj9vr39x000tt0rb4cdfa2eq" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/">Linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/基本命令/">基本命令</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2016/11/29/Linux 的一些基础练习题/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Linux 的一些基础练习题
+        
+      </div>
+    </a>
+  
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/CA/">CA</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DHCP/">DHCP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DNS/">DNS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/">Linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MYSQL/">MYSQL</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SSH/">SSH</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/TCP-IP/">TCP/IP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/dns/">dns</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mini系统/">mini系统</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rpm/">rpm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/su和sudo/">su和sudo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/基本命令/">基本命令</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/文件系统/">文件系统</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/权限管理/">权限管理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/用户组/">用户组</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/练习题/">练习题</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/自动化安装/">自动化安装</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/进程管理、计划任务/">进程管理、计划任务</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/CA/" style="font-size: 10px;">CA</a> <a href="/tags/DHCP/" style="font-size: 10px;">DHCP</a> <a href="/tags/DNS/" style="font-size: 16.67px;">DNS</a> <a href="/tags/Linux/" style="font-size: 20px;">Linux</a> <a href="/tags/MYSQL/" style="font-size: 16.67px;">MYSQL</a> <a href="/tags/SSH/" style="font-size: 10px;">SSH</a> <a href="/tags/TCP-IP/" style="font-size: 10px;">TCP/IP</a> <a href="/tags/dns/" style="font-size: 10px;">dns</a> <a href="/tags/mini系统/" style="font-size: 10px;">mini系统</a> <a href="/tags/rpm/" style="font-size: 10px;">rpm</a> <a href="/tags/su和sudo/" style="font-size: 10px;">su和sudo</a> <a href="/tags/基本命令/" style="font-size: 10px;">基本命令</a> <a href="/tags/文件系统/" style="font-size: 13.33px;">文件系统</a> <a href="/tags/权限管理/" style="font-size: 10px;">权限管理</a> <a href="/tags/用户组/" style="font-size: 10px;">用户组</a> <a href="/tags/练习题/" style="font-size: 10px;">练习题</a> <a href="/tags/自动化安装/" style="font-size: 10px;">自动化安装</a> <a href="/tags/进程管理、计划任务/" style="font-size: 10px;">进程管理、计划任务</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">June 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">March 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">February 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">January 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">December 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">November 2016</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2017/06/01/介绍 MYSQL的事务日志/">介绍 MYSQL的事务日志</a>
+          </li>
+        
+          <li>
+            <a href="/2017/05/22/MYSQL 数据库的日志介绍/">MYSQL 数据库的日志介绍</a>
+          </li>
+        
+          <li>
+            <a href="/2017/05/15/MYSQL MariaDB 的事务和事务隔离级别/">MYSQL MariaDB 的事务和事务隔离级别</a>
+          </li>
+        
+          <li>
+            <a href="/2017/05/08/MASQL MariaDB 用户权限管理/">MASQL MariaDB 用户权限管理</a>
+          </li>
+        
+          <li>
+            <a href="/2017/04/20/ext 文件系统机制原理/">ext 文件系统机制原理</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2018 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>
