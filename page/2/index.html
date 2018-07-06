@@ -1,180 +1,431 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <meta charset="utf-8">
-  
+    <!-- title -->
 
-  
-  <title>Hexo</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Hexo">
-<meta property="og:url" content="http://yoursite.com/page/2/index.html">
-<meta property="og:site_name" content="Hexo">
-<meta property="og:locale" content="default">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Hexo">
-  
-    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
-  
-  
-    <link rel="icon" href="/favicon.png">
-  
-  
-    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
-  
-  <link rel="stylesheet" href="/css/style.css">
+
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" >
+    <meta name="author" content="John Doe">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="John Doe">
+    <meta name="keywords" content="Hexo | John Doe">
+    <meta name="description" content="">
+    <meta name="Cache-Control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <title>fi3ework&#39;s Studio</title>
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s 1;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+
+</style>
+
+    <link rel="preload" href= /css/style.css?v=20180630 as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    <link rel="stylesheet" href= /css/mobile.css?v=20180630 media="(max-width: 980px)">
+    
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+(function( w ){
+	"use strict";
+	// rel=preload support test
+	if( !w.loadCSS ){
+		w.loadCSS = function(){};
+	}
+	// define on the loadCSS obj
+	var rp = loadCSS.relpreload = {};
+	// rel=preload feature support test
+	// runs once and returns a function for compat purposes
+	rp.support = (function(){
+		var ret;
+		try {
+			ret = w.document.createElement( "link" ).relList.supports( "preload" );
+		} catch (e) {
+			ret = false;
+		}
+		return function(){
+			return ret;
+		};
+	})();
+
+	// if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+	// then change that media back to its intended value on load
+	rp.bindMediaToggle = function( link ){
+		// remember existing media attr for ultimate state, or default to 'all'
+		var finalMedia = link.media || "all";
+
+		function enableStylesheet(){
+			link.media = finalMedia;
+		}
+
+		// bind load handlers to enable media
+		if( link.addEventListener ){
+			link.addEventListener( "load", enableStylesheet );
+		} else if( link.attachEvent ){
+			link.attachEvent( "onload", enableStylesheet );
+		}
+
+		// Set rel and non-applicable media type to start an async request
+		// note: timeout allows this to happen async to let rendering continue in IE
+		setTimeout(function(){
+			link.rel = "stylesheet";
+			link.media = "only x";
+		});
+		// also enable media after 3 seconds,
+		// which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+		setTimeout( enableStylesheet, 3000 );
+	};
+
+	// loop through link elements in DOM
+	rp.poly = function(){
+		// double check this to prevent external calls from running
+		if( rp.support() ){
+			return;
+		}
+		var links = w.document.getElementsByTagName( "link" );
+		for( var i = 0; i < links.length; i++ ){
+			var link = links[ i ];
+			// qualify links to those with rel=preload and as=style attrs
+			if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+				// prevent rerunning on link
+				link.setAttribute( "data-loadcss", true );
+				// bind listeners to toggle media back
+				rp.bindMediaToggle( link );
+			}
+		}
+	};
+
+	// if unsupported, run the polyfill
+	if( !rp.support() ){
+		// run once at least
+		rp.poly();
+
+		// rerun poly on an interval until onload
+		var run = w.setInterval( rp.poly, 500 );
+		if( w.addEventListener ){
+			w.addEventListener( "load", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		} else if( w.attachEvent ){
+			w.attachEvent( "onload", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		}
+	}
+
+
+	// commonjs
+	if( typeof exports !== "undefined" ){
+		exports.loadCSS = loadCSS;
+	}
+	else {
+		w.loadCSS = loadCSS;
+	}
+}( typeof global !== "undefined" ? global : this ) );
+</script>
+
+    <link rel="icon" href= "/assets/favicon.ico" />
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js" as="script" />
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" as="script" />
+    <link rel="preload" href="/scripts/main.js" as="script" />
+    <link rel="preload" as="font" href="/font/Oswald-Regular.ttf" crossorigin>
+    <link rel="preload" as="font" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" crossorigin>
+    
+    <!-- fancybox -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script>
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  -->
+    
 </head>
 
-<body>
-  <div id="container">
-    <div id="wrap">
-      <header id="header">
-  <div id="banner"></div>
-  <div id="header-outer" class="outer">
-    <div id="header-title" class="inner">
-      <h1 id="logo-wrap">
-        <a href="/" id="logo">Hexo</a>
-      </h1>
-      
-    </div>
-    <div id="header-inner" class="inner">
-      <nav id="main-nav">
-        <a id="main-nav-toggle" class="nav-icon"></a>
-        
-          <a class="main-nav-link" href="/">Home</a>
-        
-          <a class="main-nav-link" href="/archives">Archives</a>
-        
-      </nav>
-      <nav id="sub-nav">
-        
-          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
-        
-        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
-      </nav>
-      <div id="search-form-wrap">
-        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
-      </div>
-    </div>
-  </div>
-</header>
-      <div class="outer">
-        <section id="main">
-  
-    <article id="post-搭建DNS 服务，实现主服务器，邮件服务器，泛域名解析，反向解析等" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2017/03/15/搭建DNS 服务，实现主服务器，邮件服务器，泛域名解析，反向解析等/" class="article-date">
-  <time datetime="2017-03-14T16:00:00.000Z" itemprop="datePublished">2017-03-15</time>
-</a>
     
-  </div>
-  <div class="article-inner">
+        <body class="home-body">
     
     
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/03/15/搭建DNS 服务，实现主服务器，邮件服务器，泛域名解析，反向解析等/">搭建DNS 服务，实现主服务器，邮件服务器，泛域名解析，反向解析等</a>
-    </h1>
-  
+<header class="header index-header">
 
-      </header>
+    <div class="read-progress"></div>
+    <div class="header-sidebar-menu">&#xe775;</div>
+    <!-- post页的toggle banner  -->
     
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h4 id="实验-：-搭建DNS-主服务器，现在拿-192-168-30-7-这台主机做主服务器"><a href="#实验-：-搭建DNS-主服务器，现在拿-192-168-30-7-这台主机做主服务器" class="headerlink" title="实验   ：   搭建DNS 主服务器，现在拿 192.168.30.7 这台主机做主服务器"></a>实验   ：   搭建DNS 主服务器，现在拿 192.168.30.7 这台主机做主服务器</h4><h6 id="先装包-yum-install-bind"><a href="#先装包-yum-install-bind" class="headerlink" title="先装包     yum install bind"></a>先装包     yum install bind</h6><h6 id="启动服务-systemctl-start-named"><a href="#启动服务-systemctl-start-named" class="headerlink" title="启动服务    systemctl start named"></a>启动服务    systemctl start named</h6><h6 id="然后修改主配置文件中的内容-vim-etc-named-conf"><a href="#然后修改主配置文件中的内容-vim-etc-named-conf" class="headerlink" title="然后修改主配置文件中的内容    vim /etc/named.conf"></a>然后修改主配置文件中的内容    vim /etc/named.conf</h6><blockquote>
+    <a class="home-link" href=/>fi3ework's Studio.</a>
+</header>
+    <div class="wrapper">
+        <div class="site-intro" style=
+
+
+
+
+
+
+
+
+height:50vh;
+
+>
+    
+    <!-- 主页  -->
+    
+    
+    <!-- 文章页  -->
+            
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/index-bg.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+            fi3ework's Studio.
+            <!-- 文章页  -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+            
+                it's better to burn out than to fade away
+            
+            <!-- 文章页  -->
+            
+        </p>
+        <!-- 文章页meta -->
+        
+    </div>
+</div>
+        <script>
+ 
+  // get user agent
+  var browser = {
+    versions: function () {
+      var u = window.navigator.userAgent;
+      return {
+        userAgent: u,
+        trident: u.indexOf('Trident') > -1, //IE内核
+        presto: u.indexOf('Presto') > -1, //opera内核
+        webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+        gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+        mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+        ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+        android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+        iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+        iPad: u.indexOf('iPad') > -1, //是否为iPad
+        webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+        weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+        uc: u.indexOf('UCBrowser') > -1 //是否为android下的UC浏览器
+      };
+    }()
+  }
+  console.log("userAgent:" + browser.versions.userAgent);
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded');
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document.getElementsByClassName('intro-title')[0].classList.add('intro-fade-in');
+      document.getElementsByClassName('intro-subtitle')[0].classList.add('intro-fade-in');
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in');
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb(){
+    if (browser.versions.uc) {
+      console.log("UCBrowser");
+      fontLoaded();
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular']
+        },
+        loading: function () {  //所有字体开始加载
+          // console.log('loading');
+        },
+        active: function () {  //所有字体已渲染
+          fontLoaded();
+        },
+        inactive: function () { //字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout');
+          fontLoaded();
+        },
+        timeout: 5000 // Set the timeout to two seconds
+      });
+    }
+  }
+
+  function asyncErr(){
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (cb) { o.addEventListener('load', function (e) { cb(null, e); }, false); }
+    if (err) { o.addEventListener('error', function (e) { err(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+
+  var asyncLoadWithFallBack = function(arr, success, reject) {
+      var currReject = function(){
+        reject()
+        arr.shift()
+        if(arr.length)
+          async(arr[0], success, currReject)
+        }
+
+      async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack([
+    "https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js", 
+    "https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js",
+    "/lib/webfontloader.min.js"
+  ], asyncCb, asyncErr)
+</script>        
+        <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+        <div class="container container-unloaded">
+            <main class="main index-page">
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2017/03/15/搭建DNS 服务，实现主服务器，邮件服务器，泛域名解析，反向解析等/" >
+            
+                <span>搭建DNS 服务，实现主服务器，邮件服务器，泛域名解析，反向解析等</span>
+        </a>
+        <div class="abstract-content">
+            <h4 id="实验-：-搭建DNS-主服务器，现在拿-192-168-30-7-这台主机做主服务器"><a href="#实验-：-搭建DNS-主服务器，现在拿-192-168-30-7-这台主机做主服务器" class="headerlink" title="实验   ：   搭建DNS 主服务器，现在拿 192.168.30.7 这台主机做主服务器"></a>实验   ：   搭建DNS 主服务器，现在拿 192.168.30.7 这台主机做主服务器</h4><h6 id="先装包-yum-install-bind"><a href="#先装包-yum-install-bind" class="headerlink" title="先装包     yum install bind"></a>先装包     yum install bind</h6><h6 id="启动服务-systemctl-start-named"><a href="#启动服务-systemctl-start-named" class="headerlink" title="启动服务    systemctl start named"></a>启动服务    systemctl start named</h6><h6 id="然后修改主配置文件中的内容-vim-etc-named-conf"><a href="#然后修改主配置文件中的内容-vim-etc-named-conf" class="headerlink" title="然后修改主配置文件中的内容    vim /etc/named.conf"></a>然后修改主配置文件中的内容    vim /etc/named.conf</h6><blockquote>
 <p> 创建以 magedu.com 的区域数据，一般建议区域数据都存放在  /etc/named.rfc1912.zones 文件中  ，添加内容如下：</p>
 </blockquote>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">zone &quot;magedu.com&quot; IN &#123;  </span><br><span class="line">                    type master;  </span><br><span class="line">                    file &quot;magedu.com.zone&quot;;</span><br><span class="line">&#125;;  </span><br><span class="line">  ##这是主从类型中的主类型，存放名字和IP 的数据库文件</span><br></pre></td></tr></table></figure>
-        
-          <p class="article-more-link">
-            <a href="/2017/03/15/搭建DNS 服务，实现主服务器，邮件服务器，泛域名解析，反向解析等/#more">Read More</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2017/03/15/搭建DNS 服务，实现主服务器，邮件服务器，泛域名解析，反向解析等/" data-id="cjj9vr39z000yt0rbtn2pookn" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/DNS/">DNS</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/">Linux</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-Linux 文件权限管理" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2017/03/12/Linux 文件权限管理/" class="article-date">
-  <time datetime="2017-03-11T16:00:00.000Z" itemprop="datePublished">2017-03-12</time>
-</a>
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/03/15</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
     
-  </div>
-  <div class="article-inner">
+        <a class="post-tag" href="javascript:void(0);" data-tags = "Linux">Linux</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "DNS">DNS</a>
+    
+</div>
+            
+        </div>
+    </article>
     
     
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/03/12/Linux 文件权限管理/">Linux 文件权限管理</a>
-    </h1>
-  
-
-      </header>
     
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h4 id="文件-目录的权限"><a href="#文件-目录的权限" class="headerlink" title="文件/目录的权限"></a>文件/目录的权限</h4><h5 id="文件的权限"><a href="#文件的权限" class="headerlink" title="文件的权限"></a>文件的权限</h5><h6 id="每个文件都有其所有者-u-user-、所属组-g-group-和其他人-o-other-对它的操作权限，a-all则同时代表这3者。权限包括读-r-read-、写-w-write-、执行-x-execute-。在不同类型的文件上读、写、执行权限的体现有所不同，所以目录权限和普通文件权限要区分开来。"><a href="#每个文件都有其所有者-u-user-、所属组-g-group-和其他人-o-other-对它的操作权限，a-all则同时代表这3者。权限包括读-r-read-、写-w-write-、执行-x-execute-。在不同类型的文件上读、写、执行权限的体现有所不同，所以目录权限和普通文件权限要区分开来。" class="headerlink" title="每个文件都有其所有者(u:user)、所属组(g:group)和其他人(o:other)对它的操作权限，a:all则同时代表这3者。权限包括读(r:read)、写(w:write)、执行(x:execute)。在不同类型的文件上读、写、执行权限的体现有所不同，所以目录权限和普通文件权限要区分开来。"></a>每个文件都有其所有者(u:user)、所属组(g:group)和其他人(o:other)对它的操作权限，a:all则同时代表这3者。权限包括读(r:read)、写(w:write)、执行(x:execute)。在不同类型的文件上读、写、执行权限的体现有所不同，所以目录权限和普通文件权限要区分开来。</h6><h5 id="在普通文件上："><a href="#在普通文件上：" class="headerlink" title="在普通文件上："></a>在普通文件上：</h5><blockquote>
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2017/03/12/Linux 文件权限管理/" >
+            
+                <span>Linux 文件权限管理</span>
+        </a>
+        <div class="abstract-content">
+            <h4 id="文件-目录的权限"><a href="#文件-目录的权限" class="headerlink" title="文件/目录的权限"></a>文件/目录的权限</h4><h5 id="文件的权限"><a href="#文件的权限" class="headerlink" title="文件的权限"></a>文件的权限</h5><h6 id="每个文件都有其所有者-u-user-、所属组-g-group-和其他人-o-other-对它的操作权限，a-all则同时代表这3者。权限包括读-r-read-、写-w-write-、执行-x-execute-。在不同类型的文件上读、写、执行权限的体现有所不同，所以目录权限和普通文件权限要区分开来。"><a href="#每个文件都有其所有者-u-user-、所属组-g-group-和其他人-o-other-对它的操作权限，a-all则同时代表这3者。权限包括读-r-read-、写-w-write-、执行-x-execute-。在不同类型的文件上读、写、执行权限的体现有所不同，所以目录权限和普通文件权限要区分开来。" class="headerlink" title="每个文件都有其所有者(u:user)、所属组(g:group)和其他人(o:other)对它的操作权限，a:all则同时代表这3者。权限包括读(r:read)、写(w:write)、执行(x:execute)。在不同类型的文件上读、写、执行权限的体现有所不同，所以目录权限和普通文件权限要区分开来。"></a>每个文件都有其所有者(u:user)、所属组(g:group)和其他人(o:other)对它的操作权限，a:all则同时代表这3者。权限包括读(r:read)、写(w:write)、执行(x:execute)。在不同类型的文件上读、写、执行权限的体现有所不同，所以目录权限和普通文件权限要区分开来。</h6><h5 id="在普通文件上："><a href="#在普通文件上：" class="headerlink" title="在普通文件上："></a>在普通文件上：</h5><blockquote>
 <p>r：可读，可以使用类似cat等命令查看文件内容；读是文件的最基本权限，没有读权限，普通文件的一切操作行为都被限制。<br>
-        
-          <p class="article-more-link">
-            <a href="/2017/03/12/Linux 文件权限管理/#more">Read More</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2017/03/12/Linux 文件权限管理/" data-id="cjj9vr39a0007t0rbr820quvo" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/">Linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/权限管理/">权限管理</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-LINUX系统中用户、组管理" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2017/03/08/LINUX系统中用户、组管理/" class="article-date">
-  <time datetime="2017-03-07T16:00:00.000Z" itemprop="datePublished">2017-03-08</time>
-</a>
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/03/12</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
     
-  </div>
-  <div class="article-inner">
+        <a class="post-tag" href="javascript:void(0);" data-tags = "Linux">Linux</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "权限管理">权限管理</a>
+    
+</div>
+            
+        </div>
+    </article>
     
     
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/03/08/LINUX系统中用户、组管理/">安装管理包：LINUX系统中用户、组管理</a>
-    </h1>
-  
-
-      </header>
     
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h4 id="用户和组的基本概念"><a href="#用户和组的基本概念" class="headerlink" title="用户和组的基本概念"></a>用户和组的基本概念</h4><blockquote>
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2017/03/08/LINUX系统中用户、组管理/" >
+            
+                <span>安装管理包：LINUX系统中用户、组管理</span>
+        </a>
+        <div class="abstract-content">
+            <h4 id="用户和组的基本概念"><a href="#用户和组的基本概念" class="headerlink" title="用户和组的基本概念"></a>用户和组的基本概念</h4><blockquote>
 <p>用户和组是操作系统中一种身份认证资源。  </p>
 </blockquote>
 <blockquote>
@@ -182,49 +433,37 @@
 </blockquote>
 <blockquote>
 <p>每个组也有自己的名称、组唯一编号gid(group id)。一般来说，gid和uid是可以不相同的，但绝大多数都会让它们保持一致，大致属于约定俗成类的概念吧。<br>
-        
-          <p class="article-more-link">
-            <a href="/2017/03/08/LINUX系统中用户、组管理/#more">Read More</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2017/03/08/LINUX系统中用户、组管理/" data-id="cjj9vr3930003t0rbuxo8ppot" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/">Linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/用户组/">用户组</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-搭建DNS服务器，实现主DNS服务器，负责解析一个域" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2017/02/28/搭建DNS服务器，实现主DNS服务器，负责解析一个域/" class="article-date">
-  <time datetime="2017-02-27T16:00:00.000Z" itemprop="datePublished">2017-02-28</time>
-</a>
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/03/08</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
     
-  </div>
-  <div class="article-inner">
+        <a class="post-tag" href="javascript:void(0);" data-tags = "Linux">Linux</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "用户组">用户组</a>
+    
+</div>
+            
+        </div>
+    </article>
     
     
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/02/28/搭建DNS服务器，实现主DNS服务器，负责解析一个域/">搭建DNS服务器，实现主DNS服务器，负责解析一个域</a>
-    </h1>
-  
-
-      </header>
     
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h4 id="搭建DNS服务器，实现主DNS服务器，负责解析一个域"><a href="#搭建DNS服务器，实现主DNS服务器，负责解析一个域" class="headerlink" title="搭建DNS服务器，实现主DNS服务器，负责解析一个域"></a>搭建DNS服务器，实现主DNS服务器，负责解析一个域</h4><blockquote>
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2017/02/28/搭建DNS服务器，实现主DNS服务器，负责解析一个域/" >
+            
+                <span>搭建DNS服务器，实现主DNS服务器，负责解析一个域</span>
+        </a>
+        <div class="abstract-content">
+            <h4 id="搭建DNS服务器，实现主DNS服务器，负责解析一个域"><a href="#搭建DNS服务器，实现主DNS服务器，负责解析一个域" class="headerlink" title="搭建DNS服务器，实现主DNS服务器，负责解析一个域"></a>搭建DNS服务器，实现主DNS服务器，负责解析一个域</h4><blockquote>
 <p>先装包     yum install bind   </p>
 <p>然后查看下包的组成结构     rpm -ql bind </p>
 <p>  /etc/named.conf      这是他的配置文件</p>
@@ -233,283 +472,211 @@
 <p>/usr/sbin/named      主程序文件</p>
 <p>服务名    named.service</p>
 </blockquote>
-        
-          <p class="article-more-link">
-            <a href="/2017/02/28/搭建DNS服务器，实现主DNS服务器，负责解析一个域/#more">Read More</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2017/02/28/搭建DNS服务器，实现主DNS服务器，负责解析一个域/" data-id="cjj9vr3a50018t0rbt4zrwzqn" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/DNS/">DNS</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/">Linux</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-DNS 服务从基础到深入" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2017/02/15/DNS 服务从基础到深入/" class="article-date">
-  <time datetime="2017-02-14T16:00:00.000Z" itemprop="datePublished">2017-02-15</time>
-</a>
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/02/28</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
     
-  </div>
-  <div class="article-inner">
+        <a class="post-tag" href="javascript:void(0);" data-tags = "Linux">Linux</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "DNS">DNS</a>
+    
+</div>
+            
+        </div>
+    </article>
     
     
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/02/15/DNS 服务从基础到深入/">DNS 服务从基础到深入</a>
-    </h1>
-  
-
-      </header>
     
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="一-简介"><a href="#一-简介" class="headerlink" title="一 简介"></a>一 简介</h2><blockquote>
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2017/02/15/DNS 服务从基础到深入/" >
+            
+                <span>DNS 服务从基础到深入</span>
+        </a>
+        <div class="abstract-content">
+            <h2 id="一-简介"><a href="#一-简介" class="headerlink" title="一 简介"></a>一 简介</h2><blockquote>
 <p>DNS是Domain name system的简称，有些地方也称为Domain name server，这东西是一个很大的话题。如果不是要配置DNS服务，只需要理解DNS的解析流程和DNS有关的基本知识即可。如果要配置DNS服务，则可以看完全文。<br>推荐阅读书籍：《DNS &amp; bind》，第四版有中文版，第五版目前只有英文版。  </p>
 </blockquote>
 <h5 id="DNS必懂基础"><a href="#DNS必懂基础" class="headerlink" title="DNS必懂基础"></a>DNS必懂基础</h5>
-        
-          <p class="article-more-link">
-            <a href="/2017/02/15/DNS 服务从基础到深入/#more">Read More</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2017/02/15/DNS 服务从基础到深入/" data-id="cjj9vr38s0000t0rbcrjhsc8u" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/DNS/">DNS</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/">Linux</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-SSH端口转发实验" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2017/02/10/SSH端口转发实验/" class="article-date">
-  <time datetime="2017-02-09T16:00:00.000Z" itemprop="datePublished">2017-02-10</time>
-</a>
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/02/15</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
     
-  </div>
-  <div class="article-inner">
+        <a class="post-tag" href="javascript:void(0);" data-tags = "Linux">Linux</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "DNS">DNS</a>
+    
+</div>
+            
+        </div>
+    </article>
     
     
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/02/10/SSH端口转发实验/">SSH端口转发实验</a>
-    </h1>
-  
-
-      </header>
     
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h4 id="一、SSH端口转发相关概念"><a href="#一、SSH端口转发相关概念" class="headerlink" title="一、SSH端口转发相关概念"></a>一、SSH端口转发相关概念</h4><h4 id="二、实验：模拟SSH本地端口转发"><a href="#二、实验：模拟SSH本地端口转发" class="headerlink" title="二、实验：模拟SSH本地端口转发"></a>二、实验：模拟SSH本地端口转发</h4><h4 id="三、实验：模拟SSH远程端口转发"><a href="#三、实验：模拟SSH远程端口转发" class="headerlink" title="三、实验：模拟SSH远程端口转发"></a>三、实验：模拟SSH远程端口转发</h4><h4 id="四、实验：模拟SSH动态端口转发"><a href="#四、实验：模拟SSH动态端口转发" class="headerlink" title="四、实验：模拟SSH动态端口转发"></a>四、实验：模拟SSH动态端口转发</h4><h5 id="一、SSH端口转发相关概念-1"><a href="#一、SSH端口转发相关概念-1" class="headerlink" title="一、SSH端口转发相关概念"></a>一、SSH端口转发相关概念</h5><blockquote>
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2017/02/10/SSH端口转发实验/" >
+            
+                <span>SSH端口转发实验</span>
+        </a>
+        <div class="abstract-content">
+            <h4 id="一、SSH端口转发相关概念"><a href="#一、SSH端口转发相关概念" class="headerlink" title="一、SSH端口转发相关概念"></a>一、SSH端口转发相关概念</h4><h4 id="二、实验：模拟SSH本地端口转发"><a href="#二、实验：模拟SSH本地端口转发" class="headerlink" title="二、实验：模拟SSH本地端口转发"></a>二、实验：模拟SSH本地端口转发</h4><h4 id="三、实验：模拟SSH远程端口转发"><a href="#三、实验：模拟SSH远程端口转发" class="headerlink" title="三、实验：模拟SSH远程端口转发"></a>三、实验：模拟SSH远程端口转发</h4><h4 id="四、实验：模拟SSH动态端口转发"><a href="#四、实验：模拟SSH动态端口转发" class="headerlink" title="四、实验：模拟SSH动态端口转发"></a>四、实验：模拟SSH动态端口转发</h4><h5 id="一、SSH端口转发相关概念-1"><a href="#一、SSH端口转发相关概念-1" class="headerlink" title="一、SSH端口转发相关概念"></a>一、SSH端口转发相关概念</h5><blockquote>
 <p>   在上一节我们知道，SSH会自动加密和解密所有SSH客户端和服务器之间的网络数据。<br>   但是，SSH还同时<br>提供了一个非常有用的功能，这就是端口转发。它能够将其他TCP端口的网络数据通过安全的SSH协议</p>
 </blockquote>
 <blockquote>
 <p>转发，例如：Telnet，SMTP等这些TCP应用都能从中受益，避免了用户名，密码以及隐私信息的明文传<br>输。而与此同时，如果在你的工作环境中防火墙限制了一些网络端口的使用，但是允许SSH的连接，那么<br>端口转发功能也能够将TCP端口转发来使用SSH进行通信。</p>
 </blockquote>
-        
-          <p class="article-more-link">
-            <a href="/2017/02/10/SSH端口转发实验/#more">Read More</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2017/02/10/SSH端口转发实验/" data-id="cjj9vr39k000gt0rb28e3xo4f" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/">Linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/SSH/">SSH</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-实现PXE自动安装" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2017/02/08/实现PXE自动安装/" class="article-date">
-  <time datetime="2017-02-07T16:00:00.000Z" itemprop="datePublished">2017-02-08</time>
-</a>
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/02/10</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
     
-  </div>
-  <div class="article-inner">
+        <a class="post-tag" href="javascript:void(0);" data-tags = "Linux">Linux</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "SSH">SSH</a>
+    
+</div>
+            
+        </div>
+    </article>
     
     
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/02/08/实现PXE自动安装/">实现PXE自动安装</a>
-    </h1>
-  
-
-      </header>
     
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="实现PXE自动安装"><a href="#实现PXE自动安装" class="headerlink" title="实现PXE自动安装"></a>实现PXE自动安装</h2><h3 id="1、基础网络建设与搭建DHCP服务"><a href="#1、基础网络建设与搭建DHCP服务" class="headerlink" title="1、基础网络建设与搭建DHCP服务"></a>1、基础网络建设与搭建DHCP服务</h3><h5 id="配置静态IP地址并重起网卡"><a href="#配置静态IP地址并重起网卡" class="headerlink" title="配置静态IP地址并重起网卡"></a>配置静态IP地址并重起网卡</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">cat /etc/sysconfig/network-scripts/ifcfg-eth0   </span><br><span class="line">DEVICE=eth0  </span><br><span class="line">TYPE=Ethernet  </span><br><span class="line">ONBOOT=yes  </span><br><span class="line">NM_CONTROLLED=yes  </span><br><span class="line">BOOTPROTO=static  </span><br><span class="line">IPADDR=10.0.0.4  </span><br><span class="line">NETMASK=255.255.255.0  </span><br><span class="line">GATEWAY=10.0.0.2</span><br></pre></td></tr></table></figure>
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2017/02/08/实现PXE自动安装/" >
+            
+                <span>实现PXE自动安装</span>
+        </a>
+        <div class="abstract-content">
+            <h2 id="实现PXE自动安装"><a href="#实现PXE自动安装" class="headerlink" title="实现PXE自动安装"></a>实现PXE自动安装</h2><h3 id="1、基础网络建设与搭建DHCP服务"><a href="#1、基础网络建设与搭建DHCP服务" class="headerlink" title="1、基础网络建设与搭建DHCP服务"></a>1、基础网络建设与搭建DHCP服务</h3><h5 id="配置静态IP地址并重起网卡"><a href="#配置静态IP地址并重起网卡" class="headerlink" title="配置静态IP地址并重起网卡"></a>配置静态IP地址并重起网卡</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">cat /etc/sysconfig/network-scripts/ifcfg-eth0   </span><br><span class="line">DEVICE=eth0  </span><br><span class="line">TYPE=Ethernet  </span><br><span class="line">ONBOOT=yes  </span><br><span class="line">NM_CONTROLLED=yes  </span><br><span class="line">BOOTPROTO=static  </span><br><span class="line">IPADDR=10.0.0.4  </span><br><span class="line">NETMASK=255.255.255.0  </span><br><span class="line">GATEWAY=10.0.0.2</span><br></pre></td></tr></table></figure>
 <blockquote>
 <p>/etc/init.d/network restart<br>ifconfig eth0</p>
 </blockquote>
 <h5 id="2）安装配置DHCP服务"><a href="#2）安装配置DHCP服务" class="headerlink" title="2）安装配置DHCP服务"></a>2）安装配置DHCP服务</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">yum -y install dhcp  </span><br><span class="line">vim /etc/dhcp/dhcpd.conf  </span><br><span class="line">default-lease-time 600;  </span><br><span class="line">max-lease-time 7200;  </span><br><span class="line">ddns-update-style none;  </span><br><span class="line">option domain-name-servers 202.106.0.20;  </span><br><span class="line">#DNS地址可配置2个用逗号分隔  </span><br><span class="line">ignore client-updates;</span><br></pre></td></tr></table></figure>
-        
-          <p class="article-more-link">
-            <a href="/2017/02/08/实现PXE自动安装/#more">Read More</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2017/02/08/实现PXE自动安装/" data-id="cjj9vr39v000rt0rbw9spkzm8" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/">Linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/自动化安装/">自动化安装</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-rpm管理包 和 yum管理包(1)" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2017/02/01/rpm管理包 和 yum管理包(1)/" class="article-date">
-  <time datetime="2017-01-31T16:00:00.000Z" itemprop="datePublished">2017-02-01</time>
-</a>
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/02/08</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
     
-  </div>
-  <div class="article-inner">
+        <a class="post-tag" href="javascript:void(0);" data-tags = "Linux">Linux</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "自动化安装">自动化安装</a>
+    
+</div>
+            
+        </div>
+    </article>
     
     
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/02/01/rpm管理包 和 yum管理包(1)/">安装管理包：rpm包和yum包</a>
-    </h1>
-  
-
-      </header>
     
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h4 id="包基础知识"><a href="#包基础知识" class="headerlink" title="包基础知识"></a>包基础知识</h4><h5 id="包名称"><a href="#包名称" class="headerlink" title="包名称"></a>包名称</h5><blockquote>
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2017/02/01/rpm管理包 和 yum管理包(1)/" >
+            
+                <span>安装管理包：rpm包和yum包</span>
+        </a>
+        <div class="abstract-content">
+            <h4 id="包基础知识"><a href="#包基础知识" class="headerlink" title="包基础知识"></a>包基础知识</h4><h5 id="包名称"><a href="#包名称" class="headerlink" title="包名称"></a>包名称</h5><blockquote>
 <p>在rhel/centos/fedora上，包的名称以rpm结尾，分为二进制包和源码包。源码包以”.src.rpm”结尾，它是未编译过的包，可以自行进行编译或者用其制作自己的二进制rpm包，非”.src.rpm”结尾的包都是二进制包，都是已经编译完成的，安装rpm包的过程实际上就是将包中的文件复制到Linux上，有可能还会在复制文件的前后执行一些命令，如创建一个必要的用户，删除非必要文件等。<br>
-        
-          <p class="article-more-link">
-            <a href="/2017/02/01/rpm管理包 和 yum管理包(1)/#more">Read More</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2017/02/01/rpm管理包 和 yum管理包(1)/" data-id="cjj9vr39p000kt0rbvv9axyo1" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/">Linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/rpm/">rpm</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-搭建CA" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2017/01/20/搭建CA/" class="article-date">
-  <time datetime="2017-01-19T16:00:00.000Z" itemprop="datePublished">2017-01-20</time>
-</a>
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/02/01</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
     
-  </div>
-  <div class="article-inner">
+        <a class="post-tag" href="javascript:void(0);" data-tags = "Linux">Linux</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "rpm">rpm</a>
+    
+</div>
+            
+        </div>
+    </article>
     
     
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/01/20/搭建CA/">如何搭建CA（向CA申请证书）</a>
-    </h1>
-  
-
-      </header>
     
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="系统中搭建CA"><a href="#系统中搭建CA" class="headerlink" title="系统中搭建CA"></a>系统中搭建CA</h2><h3 id="CA的配置文件"><a href="#CA的配置文件" class="headerlink" title="CA的配置文件"></a>CA的配置文件</h3><blockquote>
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2017/01/20/搭建CA/" >
+            
+                <span>如何搭建CA（向CA申请证书）</span>
+        </a>
+        <div class="abstract-content">
+            <h2 id="系统中搭建CA"><a href="#系统中搭建CA" class="headerlink" title="系统中搭建CA"></a>系统中搭建CA</h2><h3 id="CA的配置文件"><a href="#CA的配置文件" class="headerlink" title="CA的配置文件"></a>CA的配置文件</h3><blockquote>
 <p>vim /etc/pki/tls/openssl.cnf</p>
 <p>默认 CA_default  （可建多个）</p>
 </blockquote>
 <blockquote>
 <p>[ CA_default ]</p>
 <p>dir             = /etc/pki/CA      # Where everything is kept  CA的工作目录<br>
-        
-          <p class="article-more-link">
-            <a href="/2017/01/20/搭建CA/#more">Read More</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2017/01/20/搭建CA/" data-id="cjj9vr39y000vt0rbik3rhizf" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CA/">CA</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/">Linux</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-自制一个mini 的Linux系统" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2017/01/08/自制一个mini 的Linux系统/" class="article-date">
-  <time datetime="2017-01-07T16:00:00.000Z" itemprop="datePublished">2017-01-08</time>
-</a>
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/01/20</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
     
-  </div>
-  <div class="article-inner">
+        <a class="post-tag" href="javascript:void(0);" data-tags = "Linux">Linux</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "CA">CA</a>
+    
+</div>
+            
+        </div>
+    </article>
     
     
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/01/08/自制一个mini 的Linux系统/">自制一个mini 的Linux系统</a>
-    </h1>
-  
-
-      </header>
     
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="步骤概略："><a href="#步骤概略：" class="headerlink" title="步骤概略："></a>步骤概略：</h3><blockquote>
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2017/01/08/自制一个mini 的Linux系统/" >
+            
+                <span>自制一个mini 的Linux系统</span>
+        </a>
+        <div class="abstract-content">
+            <h3 id="步骤概略："><a href="#步骤概略：" class="headerlink" title="步骤概略："></a>步骤概略：</h3><blockquote>
 <p>　　　　　　（1）划分一块磁盘，用来装系统</p>
 <p>（2）给硬盘划分至少两个分区，一个为boot引导分区，一个为/根分区</p>
 <p>（3）为分区创建文件系统，并挂载到两个不同目录</p>
@@ -519,133 +686,762 @@
 <p>（7）移植bash等命令到根目录下</p>
 <p>（8）启动测试</p>
 </blockquote>
-        
-          <p class="article-more-link">
-            <a href="/2017/01/08/自制一个mini 的Linux系统/#more">Read More</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2017/01/08/自制一个mini 的Linux系统/" data-id="cjj9vr3a30015t0rb762t18n3" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/">Linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/mini系统/">mini系统</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-
-
-  <nav id="page-nav">
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/01/08</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
     
-    <a class="extend prev" rel="prev" href="/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/3/">Next &raquo;</a>
-  </nav>
-
-</section>
+        <a class="post-tag" href="javascript:void(0);" data-tags = "Linux">Linux</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "mini系统">mini系统</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    <!-- paginator  -->
+    
+    <nav class="page-nav">
+        <a class="extend prev" rel="prev" href="/">&#60; PREV</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/3/">NEXT &#62;</a>
+    </nav>
+    
+</main>
+            <!-- profile -->
+            
+            <div class="profile">
+    <img class="profile-avatar" src= /avatar/Misaka.jpg >
+    <div class="profile-name">fi3ework</div>
+    
+    <div class="profile-signature">
+        witness me
+    </div>
+    
+    
+    <div class="profile-social">
         
-          <aside id="sidebar">
-  
+    
+        
+            
+                <a href="mailto:12345@qq.com" class="iconfont-archer email" title=email ></a>
+            
+        
+    
+        
+            
+                <a href="//github.com/fi3ework" class="iconfont-archer github" target="_blank" title=github></a>
+            
+        
+    
+        
+            
+                <span class="iconfont-archer wechat" title=wechat>
+                  
+                  <img class="profile-qr" src="/assets/example_qr.png" />
+                </span>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
     
 
-  
+    </div>
     
-  <div class="widget-wrap">
-    <h3 class="widget-title">Tags</h3>
-    <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/CA/">CA</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DHCP/">DHCP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DNS/">DNS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/">Linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MYSQL/">MYSQL</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SSH/">SSH</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/TCP-IP/">TCP/IP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/dns/">dns</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mini系统/">mini系统</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rpm/">rpm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/su和sudo/">su和sudo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/基本命令/">基本命令</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/文件系统/">文件系统</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/权限管理/">权限管理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/用户组/">用户组</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/练习题/">练习题</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/自动化安装/">自动化安装</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/进程管理、计划任务/">进程管理、计划任务</a></li></ul>
-    </div>
-  </div>
-
-
-  
     
-  <div class="widget-wrap">
-    <h3 class="widget-title">Tag Cloud</h3>
-    <div class="widget tagcloud">
-      <a href="/tags/CA/" style="font-size: 10px;">CA</a> <a href="/tags/DHCP/" style="font-size: 10px;">DHCP</a> <a href="/tags/DNS/" style="font-size: 16.67px;">DNS</a> <a href="/tags/Linux/" style="font-size: 20px;">Linux</a> <a href="/tags/MYSQL/" style="font-size: 16.67px;">MYSQL</a> <a href="/tags/SSH/" style="font-size: 10px;">SSH</a> <a href="/tags/TCP-IP/" style="font-size: 10px;">TCP/IP</a> <a href="/tags/dns/" style="font-size: 10px;">dns</a> <a href="/tags/mini系统/" style="font-size: 10px;">mini系统</a> <a href="/tags/rpm/" style="font-size: 10px;">rpm</a> <a href="/tags/su和sudo/" style="font-size: 10px;">su和sudo</a> <a href="/tags/基本命令/" style="font-size: 10px;">基本命令</a> <a href="/tags/文件系统/" style="font-size: 13.33px;">文件系统</a> <a href="/tags/权限管理/" style="font-size: 10px;">权限管理</a> <a href="/tags/用户组/" style="font-size: 10px;">用户组</a> <a href="/tags/练习题/" style="font-size: 10px;">练习题</a> <a href="/tags/自动化安装/" style="font-size: 10px;">自动化安装</a> <a href="/tags/进程管理、计划任务/" style="font-size: 10px;">进程管理、计划任务</a>
-    </div>
-  </div>
-
-  
+        <div class="friends">
+            <div>FRIENDS</div>
+            
+                
+                    <span>
+                        <a href= //www.baidu.com target="_black">friendA</a>
+                    </span>
+                
+            
+                
+                    <span>
+                        <a href= //www.google.com target="_black">friendB</a>
+                    </span>
+                
+            
+                
+            
+        </div>
     
-  <div class="widget-wrap">
-    <h3 class="widget-title">Archives</h3>
-    <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">June 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">March 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">February 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">January 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">December 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">November 2016</a></li></ul>
-    </div>
-  </div>
-
-
-  
     
-  <div class="widget-wrap">
-    <h3 class="widget-title">Recent Posts</h3>
-    <div class="widget">
-      <ul>
+        <div class="about-me">
+            <a href = "/about" >ABOUT ME</a>
+        </div>
+    
+</div>
+            
+        </div>
+        <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+    <div class="social">
         
-          <li>
-            <a href="/2017/06/01/介绍 MYSQL的事务日志/">介绍 MYSQL的事务日志</a>
-          </li>
+    
         
-          <li>
-            <a href="/2017/05/22/MYSQL 数据库的日志介绍/">MYSQL 数据库的日志介绍</a>
-          </li>
+            
+                <a href="mailto:12345@qq.com" class="iconfont-archer email" title=email ></a>
+            
         
-          <li>
-            <a href="/2017/05/15/MYSQL MariaDB 的事务和事务隔离级别/">MYSQL MariaDB 的事务和事务隔离级别</a>
-          </li>
+    
         
-          <li>
-            <a href="/2017/05/08/MASQL MariaDB 用户权限管理/">MASQL MariaDB 用户权限管理</a>
-          </li>
+            
+                <a href="//github.com/fi3ework" class="iconfont-archer github" target="_blank" title=github></a>
+            
         
-          <li>
-            <a href="/2017/04/20/ext 文件系统机制原理/">ext 文件系统机制原理</a>
-          </li>
+    
         
-      </ul>
-    </div>
-  </div>
+            
+                <span class="iconfont-archer wechat" title=wechat>
+                  
+                  <img class="profile-qr" src="/assets/example_qr.png" />
+                </span>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
 
-  
-</aside>
-        
-      </div>
-      <footer id="footer">
-  
-  <div class="outer">
-    <div id="footer-info" class="inner">
-      &copy; 2018 John Doe<br>
-      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
     </div>
-  </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- 不蒜子  -->
+    
+    <div class="busuanzi-container">
+    
+     
+    <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+    
+    </div>
+    
 </footer>
     </div>
-    <nav id="mobile-nav">
-  
-    <a href="/" class="mobile-nav-link">Home</a>
-  
-    <a href="/archives" class="mobile-nav-link">Archives</a>
-  
-</nav>
+    <!-- toc -->
     
-
-<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
-
-
-  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
-  <script src="/fancybox/jquery.fancybox.pack.js"></script>
-
-
-<script src="/js/script.js"></script>
-
-
-
+    <div class="back-top iconfont-archer">&#xe639;</div>
+    <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+          <div class="sidebar-panel-archives">
+    <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 24
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+    
+    
+    
+    <div class="archive-year"> 2017 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/01</span><a class="archive-post-title" href= "/2017/06/01/介绍 MYSQL的事务日志/" >介绍 MYSQL的事务日志</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/22</span><a class="archive-post-title" href= "/2017/05/22/MYSQL 数据库的日志介绍/" >MYSQL 数据库的日志介绍</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/15</span><a class="archive-post-title" href= "/2017/05/15/MYSQL MariaDB 的事务和事务隔离级别/" >MYSQL MariaDB 的事务和事务隔离级别</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/08</span><a class="archive-post-title" href= "/2017/05/08/MASQL MariaDB 用户权限管理/" >MASQL MariaDB 用户权限管理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/20</span><a class="archive-post-title" href= "/2017/04/20/ext 文件系统机制原理/" >ext 文件系统机制原理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/15</span><a class="archive-post-title" href= "/2017/04/15/Linux分区信息与管理文件系统/" >Linux分区信息与管理文件系统</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/10</span><a class="archive-post-title" href= "/2017/04/10/DHCP 服务/" >DHCP服务</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/01</span><a class="archive-post-title" href= "/2017/04/01/Linux系统中su 和 sudo 的用法/" >Linux系统中su 和 sudo 的用法</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/22</span><a class="archive-post-title" href= "/2017/03/22/实现DNS服务主从复制/" >实现DNS服务主从复制</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/20</span><a class="archive-post-title" href= "/2017/03/20/搭建DNS互联网架构服务器(一）/" >搭建DNS互联网架构服务器</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/15</span><a class="archive-post-title" href= "/2017/03/15/搭建DNS 服务，实现主服务器，邮件服务器，泛域名解析，反向解析等/" >搭建DNS 服务，实现主服务器，邮件服务器，泛域名解析，反向解析等</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/12</span><a class="archive-post-title" href= "/2017/03/12/Linux 文件权限管理/" >Linux 文件权限管理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/08</span><a class="archive-post-title" href= "/2017/03/08/LINUX系统中用户、组管理/" >安装管理包：LINUX系统中用户、组管理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/28</span><a class="archive-post-title" href= "/2017/02/28/搭建DNS服务器，实现主DNS服务器，负责解析一个域/" >搭建DNS服务器，实现主DNS服务器，负责解析一个域</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/15</span><a class="archive-post-title" href= "/2017/02/15/DNS 服务从基础到深入/" >DNS 服务从基础到深入</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/10</span><a class="archive-post-title" href= "/2017/02/10/SSH端口转发实验/" >SSH端口转发实验</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/08</span><a class="archive-post-title" href= "/2017/02/08/实现PXE自动安装/" >实现PXE自动安装</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/01</span><a class="archive-post-title" href= "/2017/02/01/rpm管理包 和 yum管理包(1)/" >安装管理包：rpm包和yum包</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/20</span><a class="archive-post-title" href= "/2017/01/20/搭建CA/" >如何搭建CA（向CA申请证书）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/08</span><a class="archive-post-title" href= "/2017/01/08/自制一个mini 的Linux系统/" >自制一个mini 的Linux系统</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2016 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/20</span><a class="archive-post-title" href= "/2016/12/20/进程管理和计划任务的知识点()/" >进程管理与计划任务的知识点</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/08</span><a class="archive-post-title" href= "/2016/12/08/TCP、IP协议三次握手与四次握手流程解析（）/" >TCP、IP协议三次握手与四次握手流程解析</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/29</span><a class="archive-post-title" href= "/2016/11/29/Linux 的一些基础练习题/" >Linux 的一些基础练习题</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/23</span><a class="archive-post-title" href= "/2016/11/23/对正则表达式，VIM编辑器命令的基本操作（三）/" >对正则表达式，VIM编辑器命令的基本操作</a>
+        </li>
+    
+    </div>
   </div>
-</body>
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+    
+        <span class="sidebar-tag-name" data-tags="Linux"><span class="iconfont-archer">&#xe606;</span>Linux</span>
+    
+        <span class="sidebar-tag-name" data-tags="DHCP"><span class="iconfont-archer">&#xe606;</span>DHCP</span>
+    
+        <span class="sidebar-tag-name" data-tags="用户组"><span class="iconfont-archer">&#xe606;</span>用户组</span>
+    
+        <span class="sidebar-tag-name" data-tags="权限管理"><span class="iconfont-archer">&#xe606;</span>权限管理</span>
+    
+        <span class="sidebar-tag-name" data-tags="DNS"><span class="iconfont-archer">&#xe606;</span>DNS</span>
+    
+        <span class="sidebar-tag-name" data-tags="su和sudo"><span class="iconfont-archer">&#xe606;</span>su和sudo</span>
+    
+        <span class="sidebar-tag-name" data-tags="练习题"><span class="iconfont-archer">&#xe606;</span>练习题</span>
+    
+        <span class="sidebar-tag-name" data-tags="文件系统"><span class="iconfont-archer">&#xe606;</span>文件系统</span>
+    
+        <span class="sidebar-tag-name" data-tags="MYSQL"><span class="iconfont-archer">&#xe606;</span>MYSQL</span>
+    
+        <span class="sidebar-tag-name" data-tags="SSH"><span class="iconfont-archer">&#xe606;</span>SSH</span>
+    
+        <span class="sidebar-tag-name" data-tags="TCP/IP"><span class="iconfont-archer">&#xe606;</span>TCP/IP</span>
+    
+        <span class="sidebar-tag-name" data-tags="rpm"><span class="iconfont-archer">&#xe606;</span>rpm</span>
+    
+        <span class="sidebar-tag-name" data-tags="自动化安装"><span class="iconfont-archer">&#xe606;</span>自动化安装</span>
+    
+        <span class="sidebar-tag-name" data-tags="基本命令"><span class="iconfont-archer">&#xe606;</span>基本命令</span>
+    
+        <span class="sidebar-tag-name" data-tags="CA"><span class="iconfont-archer">&#xe606;</span>CA</span>
+    
+        <span class="sidebar-tag-name" data-tags="dns"><span class="iconfont-archer">&#xe606;</span>dns</span>
+    
+        <span class="sidebar-tag-name" data-tags="mini系统"><span class="iconfont-archer">&#xe606;</span>mini系统</span>
+    
+        <span class="sidebar-tag-name" data-tags="进程管理、计划任务"><span class="iconfont-archer">&#xe606;</span>进程管理、计划任务</span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+    缺失模块。<br/>
+    1、请确保node版本大于6.2<br/>
+    2、在博客根目录（注意不是archer根目录）执行以下命令：<br/>
+    <span style="color: #f75357; font-size: 1rem; line-height: 2rem;">npm i hexo-generator-json-content --save</span><br/>
+    3、在根目录_config.yml里添加配置：
+    <pre style="color: #787878; font-size: 0.6rem;">
+jsonContent:
+  meta: false
+  pages: false
+  posts:
+    title: true
+    date: true
+    path: true
+    text: false
+    raw: false
+    content: false
+    slug: false
+    updated: false
+    comments: false
+    link: false
+    permalink: false
+    excerpt: false
+    categories: true
+    tags: true</pre>
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+    </div>
+</div> 
+    <script>
+    var siteMeta = {
+        root: "/",
+        author: "John Doe"
+    }
+</script>
+    <!-- CDN failover -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ === 'undefined')
+        {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js">\x3C/script>')
+        }
+    </script>
+    <script src="/scripts/main.js"></script>
+    <!-- algolia -->
+    
+    <!-- busuanzi  -->
+    
+    <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+    <!-- CNZZ  -->
+    
+    </div>
+    <!-- async load share.js -->
+     
+    </body>
 </html>
+
+
