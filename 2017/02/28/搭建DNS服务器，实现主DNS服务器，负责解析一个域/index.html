@@ -1,0 +1,1150 @@
+<!DOCTYPE html>
+<html>
+    <!-- title -->
+
+
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" >
+    <meta name="author" content="John Doe">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="John Doe">
+    <meta name="keywords" content="Hexo | John Doe">
+    <meta name="description" content="">
+    <meta name="Cache-Control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <title>搭建DNS服务器，实现主DNS服务器，负责解析一个域 · fi3ework&#39;s Studio</title>
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s 1;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+
+</style>
+
+    <link rel="preload" href= /css/style.css?v=20180630 as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    <link rel="stylesheet" href= /css/mobile.css?v=20180630 media="(max-width: 980px)">
+    
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+(function( w ){
+	"use strict";
+	// rel=preload support test
+	if( !w.loadCSS ){
+		w.loadCSS = function(){};
+	}
+	// define on the loadCSS obj
+	var rp = loadCSS.relpreload = {};
+	// rel=preload feature support test
+	// runs once and returns a function for compat purposes
+	rp.support = (function(){
+		var ret;
+		try {
+			ret = w.document.createElement( "link" ).relList.supports( "preload" );
+		} catch (e) {
+			ret = false;
+		}
+		return function(){
+			return ret;
+		};
+	})();
+
+	// if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+	// then change that media back to its intended value on load
+	rp.bindMediaToggle = function( link ){
+		// remember existing media attr for ultimate state, or default to 'all'
+		var finalMedia = link.media || "all";
+
+		function enableStylesheet(){
+			link.media = finalMedia;
+		}
+
+		// bind load handlers to enable media
+		if( link.addEventListener ){
+			link.addEventListener( "load", enableStylesheet );
+		} else if( link.attachEvent ){
+			link.attachEvent( "onload", enableStylesheet );
+		}
+
+		// Set rel and non-applicable media type to start an async request
+		// note: timeout allows this to happen async to let rendering continue in IE
+		setTimeout(function(){
+			link.rel = "stylesheet";
+			link.media = "only x";
+		});
+		// also enable media after 3 seconds,
+		// which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+		setTimeout( enableStylesheet, 3000 );
+	};
+
+	// loop through link elements in DOM
+	rp.poly = function(){
+		// double check this to prevent external calls from running
+		if( rp.support() ){
+			return;
+		}
+		var links = w.document.getElementsByTagName( "link" );
+		for( var i = 0; i < links.length; i++ ){
+			var link = links[ i ];
+			// qualify links to those with rel=preload and as=style attrs
+			if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+				// prevent rerunning on link
+				link.setAttribute( "data-loadcss", true );
+				// bind listeners to toggle media back
+				rp.bindMediaToggle( link );
+			}
+		}
+	};
+
+	// if unsupported, run the polyfill
+	if( !rp.support() ){
+		// run once at least
+		rp.poly();
+
+		// rerun poly on an interval until onload
+		var run = w.setInterval( rp.poly, 500 );
+		if( w.addEventListener ){
+			w.addEventListener( "load", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		} else if( w.attachEvent ){
+			w.attachEvent( "onload", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		}
+	}
+
+
+	// commonjs
+	if( typeof exports !== "undefined" ){
+		exports.loadCSS = loadCSS;
+	}
+	else {
+		w.loadCSS = loadCSS;
+	}
+}( typeof global !== "undefined" ? global : this ) );
+</script>
+
+    <link rel="icon" href= "/assets/favicon.ico" />
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js" as="script" />
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" as="script" />
+    <link rel="preload" href="/scripts/main.js" as="script" />
+    <link rel="preload" as="font" href="/font/Oswald-Regular.ttf" crossorigin>
+    <link rel="preload" as="font" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" crossorigin>
+    
+    <!-- fancybox -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script>
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  -->
+    
+</head>
+
+    
+        <body class="post-body">
+    
+    
+<header class="header">
+
+    <div class="read-progress"></div>
+    <div class="header-sidebar-menu">&#xe775;</div>
+    <!-- post页的toggle banner  -->
+    
+    <div class="banner">
+            <div class="blog-title">
+                <a href="/" >fi3ework&#39;s Studio.</a>
+            </div>
+            <div class="post-title">
+                <a href="#" class="post-name">搭建DNS服务器，实现主DNS服务器，负责解析一个域</a>
+            </div>
+    </div>
+    
+    <a class="home-link" href=/>fi3ework's Studio.</a>
+</header>
+    <div class="wrapper">
+        <div class="site-intro" style=
+
+
+
+
+
+
+
+
+height:50vh;
+
+>
+    
+    <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
+            
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+            搭建DNS服务器，实现主DNS服务器，负责解析一个域
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+            
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class= post-intro-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "Linux">Linux</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "DNS">DNS</a>
+    
+</div>
+                
+                
+                    <div class="post-intro-read">
+                        <span>Word count: <span class="post-count">1,210</span> / Reading time: <span class="post-count">5 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                    <span class="post-intro-time">2017/02/28</span>
+                    
+                    <span class="shareWrapper">
+                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
+                        <span class="shareText">Share</span>
+                        <ul class="shareList">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        
+    </div>
+</div> 
+        <script>
+ 
+  // get user agent
+  var browser = {
+    versions: function () {
+      var u = window.navigator.userAgent;
+      return {
+        userAgent: u,
+        trident: u.indexOf('Trident') > -1, //IE内核
+        presto: u.indexOf('Presto') > -1, //opera内核
+        webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+        gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+        mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+        ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+        android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+        iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+        iPad: u.indexOf('iPad') > -1, //是否为iPad
+        webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+        weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+        uc: u.indexOf('UCBrowser') > -1 //是否为android下的UC浏览器
+      };
+    }()
+  }
+  console.log("userAgent:" + browser.versions.userAgent);
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded');
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document.getElementsByClassName('intro-title')[0].classList.add('intro-fade-in');
+      document.getElementsByClassName('intro-subtitle')[0].classList.add('intro-fade-in');
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in');
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb(){
+    if (browser.versions.uc) {
+      console.log("UCBrowser");
+      fontLoaded();
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular']
+        },
+        loading: function () {  //所有字体开始加载
+          // console.log('loading');
+        },
+        active: function () {  //所有字体已渲染
+          fontLoaded();
+        },
+        inactive: function () { //字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout');
+          fontLoaded();
+        },
+        timeout: 5000 // Set the timeout to two seconds
+      });
+    }
+  }
+
+  function asyncErr(){
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (cb) { o.addEventListener('load', function (e) { cb(null, e); }, false); }
+    if (err) { o.addEventListener('error', function (e) { err(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+
+  var asyncLoadWithFallBack = function(arr, success, reject) {
+      var currReject = function(){
+        reject()
+        arr.shift()
+        if(arr.length)
+          async(arr[0], success, currReject)
+        }
+
+      async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack([
+    "https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js", 
+    "https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js",
+    "/lib/webfontloader.min.js"
+  ], asyncCb, asyncErr)
+</script>        
+        <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+        <div class="container container-unloaded">
+            <main class="main post-page">
+    <article class="article-entry">
+        <h4 id="搭建DNS服务器，实现主DNS服务器，负责解析一个域"><a href="#搭建DNS服务器，实现主DNS服务器，负责解析一个域" class="headerlink" title="搭建DNS服务器，实现主DNS服务器，负责解析一个域"></a>搭建DNS服务器，实现主DNS服务器，负责解析一个域</h4><blockquote>
+<p>先装包     yum install bind   </p>
+<p>然后查看下包的组成结构     rpm -ql bind </p>
+<p>  /etc/named.conf      这是他的配置文件</p>
+<p>/var/named     这是存放名字跟IP的数据库</p>
+<p>/var/log/named.log     这是存放日志的</p>
+<p>/usr/sbin/named      主程序文件</p>
+<p>服务名    named.service</p>
+</blockquote>
+<a id="more"></a>
+<h6 id="一般做实验时，先把主配置文件复制一份，避免实验失败造成服务不可用。"><a href="#一般做实验时，先把主配置文件复制一份，避免实验失败造成服务不可用。" class="headerlink" title="一般做实验时，先把主配置文件复制一份，避免实验失败造成服务不可用。"></a>一般做实验时，先把主配置文件复制一份，避免实验失败造成服务不可用。</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cp /etc/named.conf&#123;,.bak&#125; -a</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>  ##注意任何配置文件复制时一定要加 -a ，保留他的原有属性。  </p>
+</blockquote>
+<h6 id="复制完后启动服务并设定开机自动启动"><a href="#复制完后启动服务并设定开机自动启动" class="headerlink" title="复制完后启动服务并设定开机自动启动"></a>复制完后启动服务并设定开机自动启动</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">systemctl start named   </span><br><span class="line">systemctl enable named</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>服务起来后对应的端口也相对起来了 ，他应该是两个端口  udp53   tcp53</p>
+</blockquote>
+<blockquote>
+<p>接下来对配置文件进行修改  vim /etc/named.conf  </p>
+</blockquote>
+<blockquote>
+<p>在里面创建 以 magedu.com  结尾的区域的数据 ，同时在里面定义类型以及区域数据库的路径。<br>但是在这个配置文件中，有一个专门存放域的文件   /etc/named.rfc1912.zones        ,所以建议一般把添加的域都存放在这个文件中。不过两个文件都可以存放。  </p>
+</blockquote>
+<h6 id="现在来修改-etc-named-rfc1912-zones-这个文件，这个文件里面存放了大量的区域信息，我们就可以参考里面的格式进行添加。"><a href="#现在来修改-etc-named-rfc1912-zones-这个文件，这个文件里面存放了大量的区域信息，我们就可以参考里面的格式进行添加。" class="headerlink" title="现在来修改  /etc/named.rfc1912.zones    这个文件，这个文件里面存放了大量的区域信息，我们就可以参考里面的格式进行添加。"></a>现在来修改  /etc/named.rfc1912.zones    这个文件，这个文件里面存放了大量的区域信息，我们就可以参考里面的格式进行添加。</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">zone &quot;magedu.com&quot; IN &#123;  </span><br><span class="line">                    type master;  </span><br><span class="line">                    file &quot;magedu.com.zone&quot;;</span><br><span class="line">&#125;;  </span><br><span class="line">  ##这是主从类型中的主类型，存放名字和IP 的数据库文件</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p> 接下来就要创建刚才定义的那个数据库文件，但是刚才也没写这个文件的路径，那么这个文件创建在哪个路径下呢？    在主配置文件中已经有了严格定义，要求这个文件存放在  /var/named  文件中，这个文件就是专门存放数据库文件的。</p>
+</blockquote>
+<blockquote>
+<p>所以现在先  cd  进入  /var/named   目录下，然后创建文件   touch magedu.com.zone   ,<br>但是这个文件里的内容有严格要求，我们直接写或许会出错。不过这个目录下已经有了很多文件，我们可以仿照其他文件来书写。</p>
+</blockquote>
+<blockquote>
+<p>  现在我们先复制一份目录下原来的文件并改名，在原来的文件内容上进行修改，改成我们需要的就可以。</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">知识点：    SOA  中的五个时间段分别是：   </span><br><span class="line">                            1（serial）  版本号  ，每次修改后都要加一，否则从服务器不能匹配。  </span><br><span class="line">                             2(refresh)  从服务器跟主服务器的拉取时间，这个时间也是根据版本号的增加而变化。  </span><br><span class="line">                             3(retry)  表示如果从服务器跟主服务器匹配时出错后的重试时间。  </span><br><span class="line">                              4(expire)  过期时间，表示从服务器从主服务器上抓下来数据后，后续无法再同步，那么从服务器就会在这块定的时间以后过期，无法继续供客户使用。  </span><br><span class="line">                              5(minimum)   缓存器上的缓存时间。</span><br></pre></td></tr></table></figure>
+<pre><code>cp named.localhost magedu.com.zone
+</code></pre><h6 id="复制完后进行修改-vim-magedu-com-zone"><a href="#复制完后进行修改-vim-magedu-com-zone" class="headerlink" title="复制完后进行修改         vim magedu.com.zone"></a>复制完后进行修改         vim magedu.com.zone</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">$TTL 1D</span><br><span class="line">   @     IN   SOA    master.magedu.com.        admin.magedu.com.  (  </span><br><span class="line">                                                                                     0                 ; serial  </span><br><span class="line">                                                                                    1D                ; refresh           </span><br><span class="line">                                                                                    1H                ; retry  </span><br><span class="line">                                                                                    1W               ; expire  </span><br><span class="line">                                                                                     3H  )            ; minimum  </span><br><span class="line">                         NS        master  </span><br><span class="line"> master            A           192.168.30.101  </span><br><span class="line">  www                  A         192.168.20.7</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">写完后，然后重新加载服务，让配置文件生效。  </span><br><span class="line">systemctl reload named          或者     rndc reload</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>到此服务基本上就搭完了，就可以来测试了。</p>
+</blockquote>
+<blockquote>
+<p>host  <a href="http://www.magedu.com" target="_blank" rel="noopener">www.magedu.com</a> 192.168.30.7<br>测试可能会出现连接不上的问题，首先看下权限对不对，一定要保证所属组是named 。   如果不是，就执行命令给加上。 </p>
+<p>chgrp  named magedu.com.zone  </p>
+</blockquote>
+<h6 id="如果还不能连接，就在看下主配置文件"><a href="#如果还不能连接，就在看下主配置文件" class="headerlink" title="如果还不能连接，就在看下主配置文件"></a>如果还不能连接，就在看下主配置文件</h6><p>vim /etc/named.conf   </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">要把 options 中的的这两行都注释掉。  </span><br><span class="line"> #listen-on port 53 &#123; locklhost; &#125;;      </span><br><span class="line">#allow-query     &#123; localhost;any; &#125;;</span><br></pre></td></tr></table></figure>
+<h6 id="然后在-rndc-reload-重新加载"><a href="#然后在-rndc-reload-重新加载" class="headerlink" title="然后在 rndc reload  重新加载"></a>然后在 rndc reload  重新加载</h6><blockquote>
+<p>在用命令 dig <a href="http://www.magedu.com" target="_blank" rel="noopener">www.magedu.com</a> @192.168.30.7   来测，如果能测出来说明成功  </p>
+<p>但是这还没完，因为刚才在数据库文件中添加 www 是192.168.30.7  ，所以他应该是一个外部服务器，所以现在模拟一个外部服务器，在 30.7 上安装httpd 服务器，然后构建外部服务界面。  </p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo welcome to Magedu &gt; /var/www/html/index.html</span><br></pre></td></tr></table></figure>
+<h6 id="启动服务-systemctl-restart-httpd"><a href="#启动服务-systemctl-restart-httpd" class="headerlink" title="启动服务     systemctl restart httpd"></a>启动服务     systemctl restart httpd</h6><blockquote>
+<p>添加完后拿一台主机的浏览器测试，但这台主机的DNS 要指向搭建的那台DNS服务器。如：</p>
+</blockquote>
+<blockquote>
+<p>在这台主机的网卡配置文件中添加      DNS1=192.168.30.101 </p>
+</blockquote>
+<blockquote>
+<p>然后重启服务生效<br>添加完后可以查看下  /etc/resolv.conf 文件中DNS记录添加上没  </p>
+</blockquote>
+<blockquote>
+<p>最后打开浏览器 输入   <a href="http://www.magedu.com" target="_blank" rel="noopener">www.magedu.com</a> 连接就可以了</p>
+</blockquote>
+
+    </article>
+    <!-- license  -->
+    
+        <div class="license-wrapper">
+            <p>原文作者: <a href="http://yoursite.com">John Doe</a>
+            <p>原文链接: <a href="http://yoursite.com/2017/02/28/搭建DNS服务器，实现主DNS服务器，负责解析一个域/">http://yoursite.com/2017/02/28/搭建DNS服务器，实现主DNS服务器，负责解析一个域/</a>
+            <p>发表日期: <a href="http://yoursite.com/2017/02/28/搭建DNS服务器，实现主DNS服务器，负责解析一个域/">February 28th 2017, 12:00:00 am</a>
+            <p>版权声明: 本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+        </div>
+    
+    <!-- paginator  -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+                <div class="nextSlogan">Next Post</div>
+                <a href= "/2017/03/08/LINUX系统中用户、组管理/" title= 安装管理包：LINUX系统中用户、组管理 >
+                    <div class="nextTitle">安装管理包：LINUX系统中用户、组管理</div>
+                </a>
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href= "/2017/02/15/DNS 服务从基础到深入/" title= DNS 服务从基础到深入 >
+                    <div class="prevTitle">DNS 服务从基础到深入</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+<!-- City版安装代码已完成 -->
+    
+    
+    <!--PC和WAP自适应版-->
+
+    <!--PC版-->
+
+
+    
+    
+
+    <!-- 评论 -->
+</main>
+            <!-- profile -->
+            
+        </div>
+        <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+    <div class="social">
+        
+    
+        
+            
+                <a href="mailto:12345@qq.com" class="iconfont-archer email" title=email ></a>
+            
+        
+    
+        
+            
+                <a href="//github.com/fi3ework" class="iconfont-archer github" target="_blank" title=github></a>
+            
+        
+    
+        
+            
+                <span class="iconfont-archer wechat" title=wechat>
+                  
+                  <img class="profile-qr" src="/assets/example_qr.png" />
+                </span>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+    </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- 不蒜子  -->
+    
+</footer>
+    </div>
+    <!-- toc -->
+    
+    <div class="toc-wrapper" style=
+    
+
+
+
+
+
+
+
+top:50vh;
+
+    >
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#搭建DNS服务器，实现主DNS服务器，负责解析一个域"><span class="toc-number">1.</span> <span class="toc-text">搭建DNS服务器，实现主DNS服务器，负责解析一个域</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#一般做实验时，先把主配置文件复制一份，避免实验失败造成服务不可用。"><span class="toc-number">1.0.1.</span> <span class="toc-text">一般做实验时，先把主配置文件复制一份，避免实验失败造成服务不可用。</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#复制完后启动服务并设定开机自动启动"><span class="toc-number">1.0.2.</span> <span class="toc-text">复制完后启动服务并设定开机自动启动</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#现在来修改-etc-named-rfc1912-zones-这个文件，这个文件里面存放了大量的区域信息，我们就可以参考里面的格式进行添加。"><span class="toc-number">1.0.3.</span> <span class="toc-text">现在来修改  /etc/named.rfc1912.zones    这个文件，这个文件里面存放了大量的区域信息，我们就可以参考里面的格式进行添加。</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#复制完后进行修改-vim-magedu-com-zone"><span class="toc-number">1.0.4.</span> <span class="toc-text">复制完后进行修改         vim magedu.com.zone</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#如果还不能连接，就在看下主配置文件"><span class="toc-number">1.0.5.</span> <span class="toc-text">如果还不能连接，就在看下主配置文件</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#然后在-rndc-reload-重新加载"><span class="toc-number">1.0.6.</span> <span class="toc-text">然后在 rndc reload  重新加载</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#启动服务-systemctl-restart-httpd"><span class="toc-number">1.0.7.</span> <span class="toc-text">启动服务     systemctl restart httpd</span></a></li></ol></li></ol></li></ol>
+    </div>
+    
+    <div class="back-top iconfont-archer">&#xe639;</div>
+    <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+          <div class="sidebar-panel-archives">
+    <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 24
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+    
+    
+    
+    <div class="archive-year"> 2017 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/01</span><a class="archive-post-title" href= "/2017/06/01/介绍 MYSQL的事务日志/" >介绍 MYSQL的事务日志</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/22</span><a class="archive-post-title" href= "/2017/05/22/MYSQL 数据库的日志介绍/" >MYSQL 数据库的日志介绍</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/15</span><a class="archive-post-title" href= "/2017/05/15/MYSQL MariaDB 的事务和事务隔离级别/" >MYSQL MariaDB 的事务和事务隔离级别</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/08</span><a class="archive-post-title" href= "/2017/05/08/MASQL MariaDB 用户权限管理/" >MASQL MariaDB 用户权限管理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/20</span><a class="archive-post-title" href= "/2017/04/20/ext 文件系统机制原理/" >ext 文件系统机制原理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/15</span><a class="archive-post-title" href= "/2017/04/15/Linux分区信息与管理文件系统/" >Linux分区信息与管理文件系统</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/10</span><a class="archive-post-title" href= "/2017/04/10/DHCP 服务/" >DHCP服务</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/01</span><a class="archive-post-title" href= "/2017/04/01/Linux系统中su 和 sudo 的用法/" >Linux系统中su 和 sudo 的用法</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/22</span><a class="archive-post-title" href= "/2017/03/22/实现DNS服务主从复制/" >实现DNS服务主从复制</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/20</span><a class="archive-post-title" href= "/2017/03/20/搭建DNS互联网架构服务器(一）/" >搭建DNS互联网架构服务器</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/15</span><a class="archive-post-title" href= "/2017/03/15/搭建DNS 服务，实现主服务器，邮件服务器，泛域名解析，反向解析等/" >搭建DNS 服务，实现主服务器，邮件服务器，泛域名解析，反向解析等</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/12</span><a class="archive-post-title" href= "/2017/03/12/Linux 文件权限管理/" >Linux 文件权限管理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/08</span><a class="archive-post-title" href= "/2017/03/08/LINUX系统中用户、组管理/" >安装管理包：LINUX系统中用户、组管理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/28</span><a class="archive-post-title" href= "/2017/02/28/搭建DNS服务器，实现主DNS服务器，负责解析一个域/" >搭建DNS服务器，实现主DNS服务器，负责解析一个域</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/15</span><a class="archive-post-title" href= "/2017/02/15/DNS 服务从基础到深入/" >DNS 服务从基础到深入</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/10</span><a class="archive-post-title" href= "/2017/02/10/SSH端口转发实验/" >SSH端口转发实验</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/08</span><a class="archive-post-title" href= "/2017/02/08/实现PXE自动安装/" >实现PXE自动安装</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/01</span><a class="archive-post-title" href= "/2017/02/01/rpm管理包 和 yum管理包(1)/" >安装管理包：rpm包和yum包</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/20</span><a class="archive-post-title" href= "/2017/01/20/搭建CA/" >如何搭建CA（向CA申请证书）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/08</span><a class="archive-post-title" href= "/2017/01/08/自制一个mini 的Linux系统/" >自制一个mini 的Linux系统</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2016 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/20</span><a class="archive-post-title" href= "/2016/12/20/进程管理和计划任务的知识点()/" >进程管理与计划任务的知识点</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/08</span><a class="archive-post-title" href= "/2016/12/08/TCP、IP协议三次握手与四次握手流程解析（）/" >TCP、IP协议三次握手与四次握手流程解析</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/29</span><a class="archive-post-title" href= "/2016/11/29/Linux 的一些基础练习题/" >Linux 的一些基础练习题</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/23</span><a class="archive-post-title" href= "/2016/11/23/对正则表达式，VIM编辑器命令的基本操作（三）/" >对正则表达式，VIM编辑器命令的基本操作</a>
+        </li>
+    
+    </div>
+  </div>
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+    
+        <span class="sidebar-tag-name" data-tags="Linux"><span class="iconfont-archer">&#xe606;</span>Linux</span>
+    
+        <span class="sidebar-tag-name" data-tags="DNS"><span class="iconfont-archer">&#xe606;</span>DNS</span>
+    
+        <span class="sidebar-tag-name" data-tags="DHCP"><span class="iconfont-archer">&#xe606;</span>DHCP</span>
+    
+        <span class="sidebar-tag-name" data-tags="权限管理"><span class="iconfont-archer">&#xe606;</span>权限管理</span>
+    
+        <span class="sidebar-tag-name" data-tags="用户组"><span class="iconfont-archer">&#xe606;</span>用户组</span>
+    
+        <span class="sidebar-tag-name" data-tags="练习题"><span class="iconfont-archer">&#xe606;</span>练习题</span>
+    
+        <span class="sidebar-tag-name" data-tags="su和sudo"><span class="iconfont-archer">&#xe606;</span>su和sudo</span>
+    
+        <span class="sidebar-tag-name" data-tags="MYSQL"><span class="iconfont-archer">&#xe606;</span>MYSQL</span>
+    
+        <span class="sidebar-tag-name" data-tags="文件系统"><span class="iconfont-archer">&#xe606;</span>文件系统</span>
+    
+        <span class="sidebar-tag-name" data-tags="TCP/IP"><span class="iconfont-archer">&#xe606;</span>TCP/IP</span>
+    
+        <span class="sidebar-tag-name" data-tags="SSH"><span class="iconfont-archer">&#xe606;</span>SSH</span>
+    
+        <span class="sidebar-tag-name" data-tags="自动化安装"><span class="iconfont-archer">&#xe606;</span>自动化安装</span>
+    
+        <span class="sidebar-tag-name" data-tags="基本命令"><span class="iconfont-archer">&#xe606;</span>基本命令</span>
+    
+        <span class="sidebar-tag-name" data-tags="rpm"><span class="iconfont-archer">&#xe606;</span>rpm</span>
+    
+        <span class="sidebar-tag-name" data-tags="CA"><span class="iconfont-archer">&#xe606;</span>CA</span>
+    
+        <span class="sidebar-tag-name" data-tags="dns"><span class="iconfont-archer">&#xe606;</span>dns</span>
+    
+        <span class="sidebar-tag-name" data-tags="mini系统"><span class="iconfont-archer">&#xe606;</span>mini系统</span>
+    
+        <span class="sidebar-tag-name" data-tags="进程管理、计划任务"><span class="iconfont-archer">&#xe606;</span>进程管理、计划任务</span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+    缺失模块。<br/>
+    1、请确保node版本大于6.2<br/>
+    2、在博客根目录（注意不是archer根目录）执行以下命令：<br/>
+    <span style="color: #f75357; font-size: 1rem; line-height: 2rem;">npm i hexo-generator-json-content --save</span><br/>
+    3、在根目录_config.yml里添加配置：
+    <pre style="color: #787878; font-size: 0.6rem;">
+jsonContent:
+  meta: false
+  pages: false
+  posts:
+    title: true
+    date: true
+    path: true
+    text: false
+    raw: false
+    content: false
+    slug: false
+    updated: false
+    comments: false
+    link: false
+    permalink: false
+    excerpt: false
+    categories: true
+    tags: true</pre>
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+    </div>
+</div> 
+    <script>
+    var siteMeta = {
+        root: "/",
+        author: "John Doe"
+    }
+</script>
+    <!-- CDN failover -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ === 'undefined')
+        {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js">\x3C/script>')
+        }
+    </script>
+    <script src="/scripts/main.js"></script>
+    <!-- algolia -->
+    
+    <!-- busuanzi  -->
+    
+    <!-- CNZZ  -->
+    
+    </div>
+    <!-- async load share.js -->
+    
+        <script src="/scripts/share.js" async></script>    
+     
+    </body>
+</html>
+
+

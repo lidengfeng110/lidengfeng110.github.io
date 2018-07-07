@@ -1,0 +1,1292 @@
+<!DOCTYPE html>
+<html>
+    <!-- title -->
+
+
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" >
+    <meta name="author" content="John Doe">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="John Doe">
+    <meta name="keywords" content="Hexo | John Doe">
+    <meta name="description" content="">
+    <meta name="Cache-Control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <title>SSH端口转发实验 · fi3ework&#39;s Studio</title>
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s 1;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+
+</style>
+
+    <link rel="preload" href= /css/style.css?v=20180630 as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    <link rel="stylesheet" href= /css/mobile.css?v=20180630 media="(max-width: 980px)">
+    
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+(function( w ){
+	"use strict";
+	// rel=preload support test
+	if( !w.loadCSS ){
+		w.loadCSS = function(){};
+	}
+	// define on the loadCSS obj
+	var rp = loadCSS.relpreload = {};
+	// rel=preload feature support test
+	// runs once and returns a function for compat purposes
+	rp.support = (function(){
+		var ret;
+		try {
+			ret = w.document.createElement( "link" ).relList.supports( "preload" );
+		} catch (e) {
+			ret = false;
+		}
+		return function(){
+			return ret;
+		};
+	})();
+
+	// if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+	// then change that media back to its intended value on load
+	rp.bindMediaToggle = function( link ){
+		// remember existing media attr for ultimate state, or default to 'all'
+		var finalMedia = link.media || "all";
+
+		function enableStylesheet(){
+			link.media = finalMedia;
+		}
+
+		// bind load handlers to enable media
+		if( link.addEventListener ){
+			link.addEventListener( "load", enableStylesheet );
+		} else if( link.attachEvent ){
+			link.attachEvent( "onload", enableStylesheet );
+		}
+
+		// Set rel and non-applicable media type to start an async request
+		// note: timeout allows this to happen async to let rendering continue in IE
+		setTimeout(function(){
+			link.rel = "stylesheet";
+			link.media = "only x";
+		});
+		// also enable media after 3 seconds,
+		// which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+		setTimeout( enableStylesheet, 3000 );
+	};
+
+	// loop through link elements in DOM
+	rp.poly = function(){
+		// double check this to prevent external calls from running
+		if( rp.support() ){
+			return;
+		}
+		var links = w.document.getElementsByTagName( "link" );
+		for( var i = 0; i < links.length; i++ ){
+			var link = links[ i ];
+			// qualify links to those with rel=preload and as=style attrs
+			if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+				// prevent rerunning on link
+				link.setAttribute( "data-loadcss", true );
+				// bind listeners to toggle media back
+				rp.bindMediaToggle( link );
+			}
+		}
+	};
+
+	// if unsupported, run the polyfill
+	if( !rp.support() ){
+		// run once at least
+		rp.poly();
+
+		// rerun poly on an interval until onload
+		var run = w.setInterval( rp.poly, 500 );
+		if( w.addEventListener ){
+			w.addEventListener( "load", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		} else if( w.attachEvent ){
+			w.attachEvent( "onload", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		}
+	}
+
+
+	// commonjs
+	if( typeof exports !== "undefined" ){
+		exports.loadCSS = loadCSS;
+	}
+	else {
+		w.loadCSS = loadCSS;
+	}
+}( typeof global !== "undefined" ? global : this ) );
+</script>
+
+    <link rel="icon" href= "/assets/favicon.ico" />
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js" as="script" />
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" as="script" />
+    <link rel="preload" href="/scripts/main.js" as="script" />
+    <link rel="preload" as="font" href="/font/Oswald-Regular.ttf" crossorigin>
+    <link rel="preload" as="font" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" crossorigin>
+    
+    <!-- fancybox -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script>
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  -->
+    
+</head>
+
+    
+        <body class="post-body">
+    
+    
+<header class="header">
+
+    <div class="read-progress"></div>
+    <div class="header-sidebar-menu">&#xe775;</div>
+    <!-- post页的toggle banner  -->
+    
+    <div class="banner">
+            <div class="blog-title">
+                <a href="/" >fi3ework&#39;s Studio.</a>
+            </div>
+            <div class="post-title">
+                <a href="#" class="post-name">SSH端口转发实验</a>
+            </div>
+    </div>
+    
+    <a class="home-link" href=/>fi3ework's Studio.</a>
+</header>
+    <div class="wrapper">
+        <div class="site-intro" style=
+
+
+
+
+
+
+
+
+height:50vh;
+
+>
+    
+    <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
+            
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+            SSH端口转发实验
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+            
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class= post-intro-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "Linux">Linux</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "SSH">SSH</a>
+    
+</div>
+                
+                
+                    <div class="post-intro-read">
+                        <span>Word count: <span class="post-count">2,395</span> / Reading time: <span class="post-count">10 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                    <span class="post-intro-time">2017/02/10</span>
+                    
+                    <span class="shareWrapper">
+                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
+                        <span class="shareText">Share</span>
+                        <ul class="shareList">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        
+    </div>
+</div> 
+        <script>
+ 
+  // get user agent
+  var browser = {
+    versions: function () {
+      var u = window.navigator.userAgent;
+      return {
+        userAgent: u,
+        trident: u.indexOf('Trident') > -1, //IE内核
+        presto: u.indexOf('Presto') > -1, //opera内核
+        webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+        gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+        mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+        ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+        android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+        iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+        iPad: u.indexOf('iPad') > -1, //是否为iPad
+        webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+        weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+        uc: u.indexOf('UCBrowser') > -1 //是否为android下的UC浏览器
+      };
+    }()
+  }
+  console.log("userAgent:" + browser.versions.userAgent);
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded');
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document.getElementsByClassName('intro-title')[0].classList.add('intro-fade-in');
+      document.getElementsByClassName('intro-subtitle')[0].classList.add('intro-fade-in');
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in');
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb(){
+    if (browser.versions.uc) {
+      console.log("UCBrowser");
+      fontLoaded();
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular']
+        },
+        loading: function () {  //所有字体开始加载
+          // console.log('loading');
+        },
+        active: function () {  //所有字体已渲染
+          fontLoaded();
+        },
+        inactive: function () { //字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout');
+          fontLoaded();
+        },
+        timeout: 5000 // Set the timeout to two seconds
+      });
+    }
+  }
+
+  function asyncErr(){
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (cb) { o.addEventListener('load', function (e) { cb(null, e); }, false); }
+    if (err) { o.addEventListener('error', function (e) { err(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+
+  var asyncLoadWithFallBack = function(arr, success, reject) {
+      var currReject = function(){
+        reject()
+        arr.shift()
+        if(arr.length)
+          async(arr[0], success, currReject)
+        }
+
+      async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack([
+    "https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js", 
+    "https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js",
+    "/lib/webfontloader.min.js"
+  ], asyncCb, asyncErr)
+</script>        
+        <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+        <div class="container container-unloaded">
+            <main class="main post-page">
+    <article class="article-entry">
+        <h4 id="一、SSH端口转发相关概念"><a href="#一、SSH端口转发相关概念" class="headerlink" title="一、SSH端口转发相关概念"></a>一、SSH端口转发相关概念</h4><h4 id="二、实验：模拟SSH本地端口转发"><a href="#二、实验：模拟SSH本地端口转发" class="headerlink" title="二、实验：模拟SSH本地端口转发"></a>二、实验：模拟SSH本地端口转发</h4><h4 id="三、实验：模拟SSH远程端口转发"><a href="#三、实验：模拟SSH远程端口转发" class="headerlink" title="三、实验：模拟SSH远程端口转发"></a>三、实验：模拟SSH远程端口转发</h4><h4 id="四、实验：模拟SSH动态端口转发"><a href="#四、实验：模拟SSH动态端口转发" class="headerlink" title="四、实验：模拟SSH动态端口转发"></a>四、实验：模拟SSH动态端口转发</h4><h5 id="一、SSH端口转发相关概念-1"><a href="#一、SSH端口转发相关概念-1" class="headerlink" title="一、SSH端口转发相关概念"></a>一、SSH端口转发相关概念</h5><blockquote>
+<p>   在上一节我们知道，SSH会自动加密和解密所有SSH客户端和服务器之间的网络数据。<br>   但是，SSH还同时<br>提供了一个非常有用的功能，这就是端口转发。它能够将其他TCP端口的网络数据通过安全的SSH协议</p>
+</blockquote>
+<blockquote>
+<p>转发，例如：Telnet，SMTP等这些TCP应用都能从中受益，避免了用户名，密码以及隐私信息的明文传<br>输。而与此同时，如果在你的工作环境中防火墙限制了一些网络端口的使用，但是允许SSH的连接，那么<br>端口转发功能也能够将TCP端口转发来使用SSH进行通信。</p>
+</blockquote>
+ <a id="more"></a>
+<h6 id="SSH端口转发提供的功能主要有："><a href="#SSH端口转发提供的功能主要有：" class="headerlink" title="SSH端口转发提供的功能主要有："></a>SSH端口转发提供的功能主要有：</h6><blockquote>
+<p>1.加密SSH Client端至SSH Server端之间的数据</p>
+<p>2.突破防火墙的限制完成一些之前无法建立的TCP连接</p>
+</blockquote>
+<h6 id="SSH端口转发提供的类型有："><a href="#SSH端口转发提供的类型有：" class="headerlink" title="SSH端口转发提供的类型有："></a>SSH端口转发提供的类型有：</h6><blockquote>
+<p>本地转发</p>
+<p>远程转发</p>
+<p>动态转发</p>
+<p>X协议转发</p>
+</blockquote>
+<h6 id="本地转发："><a href="#本地转发：" class="headerlink" title="本地转发："></a>本地转发：</h6><blockquote>
+<p>当外网用户想要临时访问公司内部的不安全TCP协议服务器时，由于防火墙限制无法直接访问，但可利用<br>先SSH连接至公司内网的SSH服务器在转发至不安全的TCP协议服务器。由于作为转发的SSH服务器与要访<br>问的不安全TCP协议服务器在同一网络环境内，故这种连接就叫本地转发。</p>
+</blockquote>
+<h6 id="格式："><a href="#格式：" class="headerlink" title="格式："></a>格式：</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh -L localprot:remotehost:remotehostport  sshserver</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>localprot：指定本机端口</p>
+<p>remotehost：指定远程不安全协议的服务器地址</p>
+<p>remotehostport：远程不安全协议的服务器地址端口</p>
+<p>sshserver：SSH服务器地址</p>
+</blockquote>
+<h6 id="options："><a href="#options：" class="headerlink" title="options："></a>options：</h6><blockquote>
+<p>-f      后台启用</p>
+<p>-N    不打开远程shell，处于等待状态</p>
+<p>-g     启用网关功能</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">示例：</span><br><span class="line"></span><br><span class="line">ssh -L 9527:telnetsrv:23  -N sshsrv</span><br><span class="line"></span><br><span class="line">telnet 127.0.0.1 9527</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>当访问本机的9527端口时，被加密后转发到sshsrv的ssh服务，再解密被转发到telnetsrv:23</p>
+</blockquote>
+<h6 id="大致流程："><a href="#大致流程：" class="headerlink" title="大致流程："></a>大致流程：</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Data &lt;–&gt; localhost:9527 &lt;–&gt;localhost:xxxxx &lt;–&gt; sshsrv:22 &lt;–&gt;sshsrv:yyyyy &lt;–&gt; telnetsrv:23</span><br></pre></td></tr></table></figure>
+<h5 id="远程转发："><a href="#远程转发：" class="headerlink" title="远程转发："></a>远程转发：</h5><blockquote>
+<p>与本地端口转发相比，我们将SSH服务器与Client访问端的位置对调，将与不安全TCP协议服务器同一内网<br>的主机作为Client，将外部网络主机作为SSH服务器做为端口转发。由于作为转发的SSH服务器处在外部网<br>络环境中，故这种连接就叫远程转发。</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">格式：</span><br><span class="line"></span><br><span class="line">ssh -R sshserverport:remotehost:remotehostport sshserver</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>sshserverport：指定SSH服务器端口</p>
+<p>remotehost：指定远程不安全协议的服务器地址</p>
+<p>remotehost:remotehostport：指定远程不安全协议的服务器端口</p>
+<p>sshserver：SSH服务器地址</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">示例：</span><br><span class="line"></span><br><span class="line">ssh -R 9527:telnetsrv:23 -N sshsrv</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>让sshsrv侦听9527端口的访问，如有访问，就加密后通过ssh服务转发请求到本机ssh客户端，再由本机解密后转发到telnetsrv:23</p>
+</blockquote>
+<h6 id="大致流程：-1"><a href="#大致流程：-1" class="headerlink" title="大致流程："></a>大致流程：</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Data &lt;–&gt; sshsrv:9527 &lt;–&gt; sshsrv:22 &lt;–&gt; localhost:xxxxx &lt;–&gt; localhost:yyyyy &lt;–&gt; telnetsrv:23</span><br></pre></td></tr></table></figure>
+<h5 id="动态端口转发："><a href="#动态端口转发：" class="headerlink" title="动态端口转发："></a>动态端口转发：</h5><blockquote>
+<p>在之前我们已经了解了本地转发，以及远程转发，但它们实现的前提都是要求有一个固定的应用服务端端口  。<br>  但在某些场景下，例如用浏览器浏览网页，是没有固定端口的，这时就需要利用到动态的端口转<br>发。比如说，当用firefox访问Internet时，本机的1080端口作为代理服务器，firefox的访问请求被转发到<br>sshserver上，由sshserver替代访问Internet</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh -D 1080 root@sshserver</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>在本机firefox设置socketproxy:127.0.0.1:1080</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl –socks5  127.0.0.1:1080  http://www.qq.com</span><br></pre></td></tr></table></figure>
+<h6 id="X协议转发："><a href="#X协议转发：" class="headerlink" title="X协议转发："></a>X协议转发：</h6><blockquote>
+<p>所有图形化应用程序都是X客户程序</p>
+<p>能够通过tcp/ip连接远程X服务器</p>
+<p>数据没有加密机，但是它通过ssh连接隧道安全进行</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh -X user@remotehost gedit</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>remotehost主机上的gedit工具，将会显示在本机的X服务器上</p>
+<p>传输的数据将通过ssh连接加密</p>
+</blockquote>
+<h6 id="相关文件："><a href="#相关文件：" class="headerlink" title="相关文件："></a>相关文件：</h6><blockquote>
+<p>/var/log/secure               存放日志</p>
+<p>/etc/ssh/sshd_config      SSH服务配置文件</p>
+</blockquote>
+<h6 id="Port-22-端口"><a href="#Port-22-端口" class="headerlink" title="#Port 22           端口"></a>#Port 22           端口</h6><pre><code>生产中一般第一步先改端口号
+
+如Port 9527  
+</code></pre><blockquote>
+<p>定义公钥、私钥存放文件名，位置</p>
+</blockquote>
+<p>H<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">ostKey /etc/ssh/ssh_host_rsa_key</span><br><span class="line"></span><br><span class="line">#HostKey /etc/ssh/ssh_host_dsa_key</span><br><span class="line"></span><br><span class="line">HostKey /etc/ssh/ssh_host_ecdsa_key</span><br><span class="line"></span><br><span class="line">HostKey /etc/ssh/ssh_host_ed25519_key</span><br><span class="line"></span><br><span class="line">日志设置选项，日志存放在/var/log/secure</span><br></pre></td></tr></table></figure></p>
+<h1 id="Logging"><a href="#Logging" class="headerlink" title="Logging"></a>Logging</h1><blockquote>
+<p>#SyslogFacility AUTH</p>
+<p>SyslogFacility AUTHPRIV</p>
+<p>#LogLevel INFO</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">#LoginGraceTime 2m              不输入密码最大时间端口</span><br><span class="line"></span><br><span class="line">#PermitRootLogin yes            生产中一般改成no，普通用户连接su切换</span><br><span class="line"></span><br><span class="line">#StrictModes yes             检查文件权限</span><br><span class="line"></span><br><span class="line">#MaxAuthTries 6                      密码登录最大验证次数</span><br><span class="line"></span><br><span class="line">#MaxSessions 10                      单个会话能开的最大克隆数</span><br><span class="line"></span><br><span class="line"> </span><br><span class="line"></span><br><span class="line">PasswordAuthentication yes  是否允许基于口令登录方式，no表示禁止</span><br><span class="line"></span><br><span class="line"> </span><br><span class="line"></span><br><span class="line">#ClientAliveInterval 0              连接后不操作最大时间，单位：秒</span><br><span class="line"></span><br><span class="line">#ClientAliveCountMax 3                  连接环不操作最大时间次数</span><br></pre></td></tr></table></figure>
+<pre><code>生产中一般要修改AliveInterval 30
+
+                 AliveCountMax 3   
+
+表示连接后不进行任何操作30S，3次后自动断开连接
+</code></pre><h6 id="ShowPatchLevel-no"><a href="#ShowPatchLevel-no" class="headerlink" title="#ShowPatchLevel no"></a>#ShowPatchLevel no</h6><h6 id="UseDNS-no"><a href="#UseDNS-no" class="headerlink" title="UseDNS no"></a>UseDNS no</h6><blockquote>
+<p>是否使用DNS反向解析，关闭可提高连接速度</p>
+</blockquote>
+<blockquote>
+<p>#MaxStartups<br>10:30:100                 最大并发连接数，默认10</p>
+</blockquote>
+<h6 id="限制可登录用户的办法："><a href="#限制可登录用户的办法：" class="headerlink" title="限制可登录用户的办法："></a>限制可登录用户的办法：</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">AllowUsers user1 user2 user3</span><br><span class="line"></span><br><span class="line">DenyUsers</span><br><span class="line"></span><br><span class="line">AllowGroups</span><br><span class="line"></span><br><span class="line">DenyGroups</span><br></pre></td></tr></table></figure>
+<h6 id="SSH服务的最佳实践配置："><a href="#SSH服务的最佳实践配置：" class="headerlink" title="SSH服务的最佳实践配置："></a>SSH服务的最佳实践配置：</h6><blockquote>
+<p>建议使用非默认端口</p>
+<p>禁止使用protocol version 1</p>
+<p>限制可登录用户</p>
+<p>设定空闲会话超时时长</p>
+<p>利用防火墙设置ssh访问策略</p>
+<p>仅监听特定的IP地址</p>
+</blockquote>
+<h6 id="基于口令认证时，使用强密码策略"><a href="#基于口令认证时，使用强密码策略" class="headerlink" title="基于口令认证时，使用强密码策略"></a>基于口令认证时，使用强密码策略</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tr -dc A-Za-z0-9_ &lt; /dev/urandom | head -c 30| xargs</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>使用基于密钥的认证</p>
+<p>禁止使用空密码</p>
+<p>禁止root用户直接登录</p>
+<p>限制ssh的访问频度和并发在线数</p>
+<p>经常分析日志</p>
+</blockquote>
+<h4 id="二、实验：模拟SSH本地端口转发-1"><a href="#二、实验：模拟SSH本地端口转发-1" class="headerlink" title="二、实验：模拟SSH本地端口转发"></a>二、实验：模拟SSH本地端口转发</h4><blockquote>
+<p>应用场景：当外部客户端想要访问公司内网的Telnet服务器时，由于防火墙限制无法直接访问，可使用<br>SSH本地端口转发实现：</p>
+</blockquote>
+<h6 id="前期准备："><a href="#前期准备：" class="headerlink" title="前期准备："></a>前期准备：</h6><blockquote>
+<p>以三台CentOS模拟机作为服务器及主机，主机名网络配置如下：</p>
+<p>客户端：192.168.30.133</p>
+<p>SSH服务器：192.168.30.158</p>
+<p>telnet服务器：192.168.30.160</p>
+</blockquote>
+<h6 id="telnet服务器端操作："><a href="#telnet服务器端操作：" class="headerlink" title="telnet服务器端操作："></a>telnet服务器端操作：</h6><blockquote>
+<p>一、安装telnet-server包，系统默认未安装</p>
+<p>二、防火墙禁止远程客户端访问：</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">iptables  -A  INPUT  -s  192.168.30.133  -j  REJECT</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>为了防止之前防火墙策略干扰，最好先清空下防火墙策略：</p>
+</blockquote>
+<p>iptables  -K<br><img src="http://www.178linux.com/wp-content/uploads/2018/05/%E9%98%B2%E7%81%AB%E5%A2%99.png" alt="image"></p>
+<p>防火墙</p>
+<blockquote>
+<p>此时作为Clinet的192.168.30.133已经ping不通作为telnet服务器的192.168.30.160<br><img src="http://www.178linux.com/wp-content/uploads/2018/05/ping%E4%B8%8D%E9%80%9A.png" alt="image"></p>
+</blockquote>
+<blockquote>
+<p>ping不通</p>
+</blockquote>
+<h6 id="三、开启telnet-server服务"><a href="#三、开启telnet-server服务" class="headerlink" title="三、开启telnet-server服务"></a>三、开启telnet-server服务</h6><blockquote>
+<p>CentOS6：</p>
+<p>service  xinted  start                       开启xinted进程</p>
+<p>chkconfig  telnet  on                        开启telnet服务</p>
+<p>service  xinted  restart                   重启xinted服务</p>
+<p>重启xinetd</p>
+</blockquote>
+<p><img src="http://www.178linux.com/wp-content/uploads/2018/05/%E9%87%8D%E5%90%AFxinetd.png" alt="image"></p>
+<blockquote>
+<p>CentOS7：</p>
+<p>systemctl start telnet-scoket</p>
+</blockquote>
+<h6 id="客户端操作："><a href="#客户端操作：" class="headerlink" title="客户端操作："></a>客户端操作：</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh -L 9527:192.168.30.17:23 [-Nf] 192.168.30.6</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>加-Nf选项将后台执行，关闭时只能通过kill关闭进程</p>
+<p>telnet 127.0.0.1 9527</p>
+<p>提示输入用户名，密码；默认不让root账户使用SSH端口转发登录<br><img src="http://www.178linux.com/wp-content/uploads/2018/05/%E7%99%BB%E5%BD%95%E6%88%90%E5%8A%9F.png" alt="image"></p>
+</blockquote>
+<h6 id="登录成功"><a href="#登录成功" class="headerlink" title="登录成功"></a>登录成功</h6><h6 id="三、实验：模拟SSH远程端口转发-1"><a href="#三、实验：模拟SSH远程端口转发-1" class="headerlink" title="三、实验：模拟SSH远程端口转发"></a>三、实验：模拟SSH远程端口转发</h6><blockquote>
+<p>应用场景：当外部有工程师想要临时访问内部telnet服务器时，作为系统管理员，我们可以将对方主机作<br>为SSH服务器进行端口转发，让其临时可访问公司的telnet服务器。</p>
+</blockquote>
+<h6 id="前期准备：-1"><a href="#前期准备：-1" class="headerlink" title="前期准备："></a>前期准备：</h6><h6 id="以三台CentOS模拟机作为服务器及主机，主机名及网络配置如下："><a href="#以三台CentOS模拟机作为服务器及主机，主机名及网络配置如下：" class="headerlink" title="以三台CentOS模拟机作为服务器及主机，主机名及网络配置如下："></a>以三台CentOS模拟机作为服务器及主机，主机名及网络配置如下：</h6><p>Internet：192.168.30.133</p>
+<p>lanserver：192.168.30.158</p>
+<p>telnet服务器：192.168.30.160</p>
+<h6 id="lanserver端操作："><a href="#lanserver端操作：" class="headerlink" title="lanserver端操作："></a>lanserver端操作：</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh -R 9527:192.168.30.17:23 [-Nf] 192.168.30.7</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>加-Nf选项将后台执行，关闭时只能通过kill关闭进程<br><img src="http://www.178linux.com/wp-content/uploads/2018/05/lanserver%E5%91%BD%E4%BB%A4.png" alt="image"><br>lanserver命令</p>
+</blockquote>
+<h6 id="Internet端操作："><a href="#Internet端操作：" class="headerlink" title="Internet端操作："></a>Internet端操作：</h6><p>telnet 127.0.0.1 9527<br><img src="http://www.178linux.com/wp-content/uploads/2018/05/telnet%E6%88%90%E5%8A%9F.png" alt="image"><br>telnet成功</p>
+<h6 id="四、实验：模拟SSH动态端口转发-1"><a href="#四、实验：模拟SSH动态端口转发-1" class="headerlink" title="四、实验：模拟SSH动态端口转发"></a>四、实验：模拟SSH动态端口转发</h6><blockquote>
+<p>应用场景：在某些场景中，用浏览器浏览网页，是没有固定端口的，这时就需要利用到动态的端口转<br>发。下面我们模拟用一台虚拟机模拟google网站，用Internet主机通过代理服务器proxy访问google模拟机</p>
+</blockquote>
+<h6 id="前期准备：-2"><a href="#前期准备：-2" class="headerlink" title="前期准备："></a>前期准备：</h6><blockquote>
+<p>以三台CentOS模拟机作为服务器及主机，主机名及网络配置如下：</p>
+<p>Internet：192.168.30.133</p>
+<p>proxy：192.168.30.158</p>
+<p>google：192.168.30.160</p>
+</blockquote>
+<h6 id="google模拟服务器操作："><a href="#google模拟服务器操作：" class="headerlink" title="google模拟服务器操作："></a>google模拟服务器操作：</h6><blockquote>
+<p>开启http服务，模拟网页内容：</p>
+<p>CentOS6：</p>
+<p>service httpd start</p>
+<p>CentOS7：</p>
+<p>systemctl start  httpd</p>
+</blockquote>
+<p>echo <a href="http://www.google.com" target="_blank" rel="noopener">www.google.com</a> &gt; /var/www/html/index.html<br><img src="http://www.178linux.com/wp-content/uploads/2018/05/internet.png" alt="image"><br>internet</p>
+<p>此时访问192.168.30.160，正常网页内容显示如下:<br><img src="http://www.178linux.com/wp-content/uploads/2018/05/gogole.png" alt="image"></p>
+<h6 id="gogole"><a href="#gogole" class="headerlink" title="gogole"></a>gogole</h6><blockquote>
+<p>Internet端操作：</p>
+<p>此时在Internet端我们是无法访问google服务器的<br><img src="http://www.178linux.com/wp-content/uploads/2018/05/%E6%97%A0%E6%B3%95%E6%89%93%E5%BC%80.png" alt="image"><br>无法打开</p>
+</blockquote>
+<p>使用proxy的1080端口作为动态转发：</p>
+<p>ssh -D 1080 <a href="mailto:root@192.168.30.158" target="_blank" rel="noopener">root@192.168.30.158</a><br><img src="http://www.178linux.com/wp-content/uploads/2018/05/%E7%99%BB%E5%BD%95%E4%BB%A3%E7%90%86.png" alt="image"><br>登录代理</p>
+<blockquote>
+<p>接下来我们可以通过图形界面或者字符界面来尝试访问：</p>
+</blockquote>
+<h6 id="图形界面："><a href="#图形界面：" class="headerlink" title="图形界面："></a>图形界面：</h6><blockquote>
+<p>打开firefox浏览器，按以下顺序操作：</p>
+</blockquote>
+<p>–<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;preferences–&gt;advanced–&gt;network–setting–manual proxy configuration</span><br><span class="line">–&gt;SOCKS Host:127.0.0.1</span><br></pre></td></tr></table></figure></p>
+<p><img src="http://www.178linux.com/wp-content/uploads/2018/05/%E8%AE%BE%E7%BD%AE%E7%81%AB%E7%8B%90.png" alt="image"><br>设置火狐</p>
+<h6 id="现在再次尝试访问192-168-30-160的google模拟服务器，发现可以正常访问了！"><a href="#现在再次尝试访问192-168-30-160的google模拟服务器，发现可以正常访问了！" class="headerlink" title="现在再次尝试访问192.168.30.160的google模拟服务器，发现可以正常访问了！"></a>现在再次尝试访问192.168.30.160的google模拟服务器，发现可以正常访问了！</h6><p><img src="http://www.178linux.com/wp-content/uploads/2018/05/%E8%AE%BF%E9%97%AE%E6%88%90%E5%8A%9F.png" alt="image"><br>访问成功</p>
+<blockquote>
+<p>字符界面：</p>
+<p>在字符界面我们可执行下面的命令来进行访问：<br><img src="http://www.178linux.com/wp-content/uploads/2018/05/%E5%AD%97%E7%AC%A6%E7%95%8C%E9%9D%A2%E7%99%BB%E5%BD%95.png" alt="image"><br>curl -socks5 127.0.0.1:1080 192.168.30.17</p>
+</blockquote>
+<h6 id="字符界面登录"><a href="#字符界面登录" class="headerlink" title="字符界面登录"></a>字符界面登录</h6>
+    </article>
+    <!-- license  -->
+    
+        <div class="license-wrapper">
+            <p>原文作者: <a href="http://yoursite.com">John Doe</a>
+            <p>原文链接: <a href="http://yoursite.com/2017/02/10/SSH端口转发实验/">http://yoursite.com/2017/02/10/SSH端口转发实验/</a>
+            <p>发表日期: <a href="http://yoursite.com/2017/02/10/SSH端口转发实验/">February 10th 2017, 12:00:00 am</a>
+            <p>版权声明: 本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+        </div>
+    
+    <!-- paginator  -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+                <div class="nextSlogan">Next Post</div>
+                <a href= "/2017/02/15/DNS 服务从基础到深入/" title= DNS 服务从基础到深入 >
+                    <div class="nextTitle">DNS 服务从基础到深入</div>
+                </a>
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href= "/2017/02/08/实现PXE自动安装/" title= 实现PXE自动安装 >
+                    <div class="prevTitle">实现PXE自动安装</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+<!-- City版安装代码已完成 -->
+    
+    
+    <!--PC和WAP自适应版-->
+
+    <!--PC版-->
+
+
+    
+    
+
+    <!-- 评论 -->
+</main>
+            <!-- profile -->
+            
+        </div>
+        <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+    <div class="social">
+        
+    
+        
+            
+                <a href="mailto:12345@qq.com" class="iconfont-archer email" title=email ></a>
+            
+        
+    
+        
+            
+                <a href="//github.com/fi3ework" class="iconfont-archer github" target="_blank" title=github></a>
+            
+        
+    
+        
+            
+                <span class="iconfont-archer wechat" title=wechat>
+                  
+                  <img class="profile-qr" src="/assets/example_qr.png" />
+                </span>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+    </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- 不蒜子  -->
+    
+</footer>
+    </div>
+    <!-- toc -->
+    
+    <div class="toc-wrapper" style=
+    
+
+
+
+
+
+
+
+top:50vh;
+
+    >
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#一、SSH端口转发相关概念"><span class="toc-number">1.</span> <span class="toc-text">一、SSH端口转发相关概念</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#二、实验：模拟SSH本地端口转发"><span class="toc-number">2.</span> <span class="toc-text">二、实验：模拟SSH本地端口转发</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#三、实验：模拟SSH远程端口转发"><span class="toc-number">3.</span> <span class="toc-text">三、实验：模拟SSH远程端口转发</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#四、实验：模拟SSH动态端口转发"><span class="toc-number">4.</span> <span class="toc-text">四、实验：模拟SSH动态端口转发</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#一、SSH端口转发相关概念-1"><span class="toc-number">4.1.</span> <span class="toc-text">一、SSH端口转发相关概念</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#SSH端口转发提供的功能主要有："><span class="toc-number">4.1.1.</span> <span class="toc-text">SSH端口转发提供的功能主要有：</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#SSH端口转发提供的类型有："><span class="toc-number">4.1.2.</span> <span class="toc-text">SSH端口转发提供的类型有：</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#本地转发："><span class="toc-number">4.1.3.</span> <span class="toc-text">本地转发：</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#格式："><span class="toc-number">4.1.4.</span> <span class="toc-text">格式：</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#options："><span class="toc-number">4.1.5.</span> <span class="toc-text">options：</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#大致流程："><span class="toc-number">4.1.6.</span> <span class="toc-text">大致流程：</span></a></li></ol></li><li class="toc-item toc-level-5"><a class="toc-link" href="#远程转发："><span class="toc-number">4.2.</span> <span class="toc-text">远程转发：</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#大致流程：-1"><span class="toc-number">4.2.1.</span> <span class="toc-text">大致流程：</span></a></li></ol></li><li class="toc-item toc-level-5"><a class="toc-link" href="#动态端口转发："><span class="toc-number">4.3.</span> <span class="toc-text">动态端口转发：</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#X协议转发："><span class="toc-number">4.3.1.</span> <span class="toc-text">X协议转发：</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#相关文件："><span class="toc-number">4.3.2.</span> <span class="toc-text">相关文件：</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#Port-22-端口"><span class="toc-number">4.3.3.</span> <span class="toc-text">#Port 22           端口</span></a></li></ol></li></ol></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Logging"><span class="toc-number"></span> <span class="toc-text">Logging</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#ShowPatchLevel-no"><span class="toc-number">0.0.1.</span> <span class="toc-text">#ShowPatchLevel no</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#UseDNS-no"><span class="toc-number">0.0.2.</span> <span class="toc-text">UseDNS no</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#限制可登录用户的办法："><span class="toc-number">0.0.3.</span> <span class="toc-text">限制可登录用户的办法：</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#SSH服务的最佳实践配置："><span class="toc-number">0.0.4.</span> <span class="toc-text">SSH服务的最佳实践配置：</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#基于口令认证时，使用强密码策略"><span class="toc-number">0.0.5.</span> <span class="toc-text">基于口令认证时，使用强密码策略</span></a></li></ol></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#二、实验：模拟SSH本地端口转发-1"><span class="toc-number">1.</span> <span class="toc-text">二、实验：模拟SSH本地端口转发</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#前期准备："><span class="toc-number">1.0.1.</span> <span class="toc-text">前期准备：</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#telnet服务器端操作："><span class="toc-number">1.0.2.</span> <span class="toc-text">telnet服务器端操作：</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#三、开启telnet-server服务"><span class="toc-number">1.0.3.</span> <span class="toc-text">三、开启telnet-server服务</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#客户端操作："><span class="toc-number">1.0.4.</span> <span class="toc-text">客户端操作：</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#登录成功"><span class="toc-number">1.0.5.</span> <span class="toc-text">登录成功</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#三、实验：模拟SSH远程端口转发-1"><span class="toc-number">1.0.6.</span> <span class="toc-text">三、实验：模拟SSH远程端口转发</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#前期准备：-1"><span class="toc-number">1.0.7.</span> <span class="toc-text">前期准备：</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#以三台CentOS模拟机作为服务器及主机，主机名及网络配置如下："><span class="toc-number">1.0.8.</span> <span class="toc-text">以三台CentOS模拟机作为服务器及主机，主机名及网络配置如下：</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#lanserver端操作："><span class="toc-number">1.0.9.</span> <span class="toc-text">lanserver端操作：</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#Internet端操作："><span class="toc-number">1.0.10.</span> <span class="toc-text">Internet端操作：</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#四、实验：模拟SSH动态端口转发-1"><span class="toc-number">1.0.11.</span> <span class="toc-text">四、实验：模拟SSH动态端口转发</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#前期准备：-2"><span class="toc-number">1.0.12.</span> <span class="toc-text">前期准备：</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#google模拟服务器操作："><span class="toc-number">1.0.13.</span> <span class="toc-text">google模拟服务器操作：</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#gogole"><span class="toc-number">1.0.14.</span> <span class="toc-text">gogole</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#图形界面："><span class="toc-number">1.0.15.</span> <span class="toc-text">图形界面：</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#现在再次尝试访问192-168-30-160的google模拟服务器，发现可以正常访问了！"><span class="toc-number">1.0.16.</span> <span class="toc-text">现在再次尝试访问192.168.30.160的google模拟服务器，发现可以正常访问了！</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#字符界面登录"><span class="toc-number">1.0.17.</span> <span class="toc-text">字符界面登录</span></a></li></ol></li></ol></li></ol>
+    </div>
+    
+    <div class="back-top iconfont-archer">&#xe639;</div>
+    <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+          <div class="sidebar-panel-archives">
+    <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 24
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+    
+    
+    
+    <div class="archive-year"> 2017 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/01</span><a class="archive-post-title" href= "/2017/06/01/介绍 MYSQL的事务日志/" >介绍 MYSQL的事务日志</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/22</span><a class="archive-post-title" href= "/2017/05/22/MYSQL 数据库的日志介绍/" >MYSQL 数据库的日志介绍</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/15</span><a class="archive-post-title" href= "/2017/05/15/MYSQL MariaDB 的事务和事务隔离级别/" >MYSQL MariaDB 的事务和事务隔离级别</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/08</span><a class="archive-post-title" href= "/2017/05/08/MASQL MariaDB 用户权限管理/" >MASQL MariaDB 用户权限管理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/20</span><a class="archive-post-title" href= "/2017/04/20/ext 文件系统机制原理/" >ext 文件系统机制原理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/15</span><a class="archive-post-title" href= "/2017/04/15/Linux分区信息与管理文件系统/" >Linux分区信息与管理文件系统</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/10</span><a class="archive-post-title" href= "/2017/04/10/DHCP 服务/" >DHCP服务</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/01</span><a class="archive-post-title" href= "/2017/04/01/Linux系统中su 和 sudo 的用法/" >Linux系统中su 和 sudo 的用法</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/22</span><a class="archive-post-title" href= "/2017/03/22/实现DNS服务主从复制/" >实现DNS服务主从复制</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/20</span><a class="archive-post-title" href= "/2017/03/20/搭建DNS互联网架构服务器(一）/" >搭建DNS互联网架构服务器</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/15</span><a class="archive-post-title" href= "/2017/03/15/搭建DNS 服务，实现主服务器，邮件服务器，泛域名解析，反向解析等/" >搭建DNS 服务，实现主服务器，邮件服务器，泛域名解析，反向解析等</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/12</span><a class="archive-post-title" href= "/2017/03/12/Linux 文件权限管理/" >Linux 文件权限管理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/08</span><a class="archive-post-title" href= "/2017/03/08/LINUX系统中用户、组管理/" >安装管理包：LINUX系统中用户、组管理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/28</span><a class="archive-post-title" href= "/2017/02/28/搭建DNS服务器，实现主DNS服务器，负责解析一个域/" >搭建DNS服务器，实现主DNS服务器，负责解析一个域</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/15</span><a class="archive-post-title" href= "/2017/02/15/DNS 服务从基础到深入/" >DNS 服务从基础到深入</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/10</span><a class="archive-post-title" href= "/2017/02/10/SSH端口转发实验/" >SSH端口转发实验</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/08</span><a class="archive-post-title" href= "/2017/02/08/实现PXE自动安装/" >实现PXE自动安装</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/01</span><a class="archive-post-title" href= "/2017/02/01/rpm管理包 和 yum管理包(1)/" >安装管理包：rpm包和yum包</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/20</span><a class="archive-post-title" href= "/2017/01/20/搭建CA/" >如何搭建CA（向CA申请证书）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/08</span><a class="archive-post-title" href= "/2017/01/08/自制一个mini 的Linux系统/" >自制一个mini 的Linux系统</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2016 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/20</span><a class="archive-post-title" href= "/2016/12/20/进程管理和计划任务的知识点()/" >进程管理与计划任务的知识点</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/08</span><a class="archive-post-title" href= "/2016/12/08/TCP、IP协议三次握手与四次握手流程解析（）/" >TCP、IP协议三次握手与四次握手流程解析</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/29</span><a class="archive-post-title" href= "/2016/11/29/Linux 的一些基础练习题/" >Linux 的一些基础练习题</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/23</span><a class="archive-post-title" href= "/2016/11/23/对正则表达式，VIM编辑器命令的基本操作（三）/" >对正则表达式，VIM编辑器命令的基本操作</a>
+        </li>
+    
+    </div>
+  </div>
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+    
+        <span class="sidebar-tag-name" data-tags="Linux"><span class="iconfont-archer">&#xe606;</span>Linux</span>
+    
+        <span class="sidebar-tag-name" data-tags="DNS"><span class="iconfont-archer">&#xe606;</span>DNS</span>
+    
+        <span class="sidebar-tag-name" data-tags="DHCP"><span class="iconfont-archer">&#xe606;</span>DHCP</span>
+    
+        <span class="sidebar-tag-name" data-tags="权限管理"><span class="iconfont-archer">&#xe606;</span>权限管理</span>
+    
+        <span class="sidebar-tag-name" data-tags="用户组"><span class="iconfont-archer">&#xe606;</span>用户组</span>
+    
+        <span class="sidebar-tag-name" data-tags="练习题"><span class="iconfont-archer">&#xe606;</span>练习题</span>
+    
+        <span class="sidebar-tag-name" data-tags="su和sudo"><span class="iconfont-archer">&#xe606;</span>su和sudo</span>
+    
+        <span class="sidebar-tag-name" data-tags="MYSQL"><span class="iconfont-archer">&#xe606;</span>MYSQL</span>
+    
+        <span class="sidebar-tag-name" data-tags="文件系统"><span class="iconfont-archer">&#xe606;</span>文件系统</span>
+    
+        <span class="sidebar-tag-name" data-tags="TCP/IP"><span class="iconfont-archer">&#xe606;</span>TCP/IP</span>
+    
+        <span class="sidebar-tag-name" data-tags="SSH"><span class="iconfont-archer">&#xe606;</span>SSH</span>
+    
+        <span class="sidebar-tag-name" data-tags="自动化安装"><span class="iconfont-archer">&#xe606;</span>自动化安装</span>
+    
+        <span class="sidebar-tag-name" data-tags="基本命令"><span class="iconfont-archer">&#xe606;</span>基本命令</span>
+    
+        <span class="sidebar-tag-name" data-tags="rpm"><span class="iconfont-archer">&#xe606;</span>rpm</span>
+    
+        <span class="sidebar-tag-name" data-tags="CA"><span class="iconfont-archer">&#xe606;</span>CA</span>
+    
+        <span class="sidebar-tag-name" data-tags="dns"><span class="iconfont-archer">&#xe606;</span>dns</span>
+    
+        <span class="sidebar-tag-name" data-tags="mini系统"><span class="iconfont-archer">&#xe606;</span>mini系统</span>
+    
+        <span class="sidebar-tag-name" data-tags="进程管理、计划任务"><span class="iconfont-archer">&#xe606;</span>进程管理、计划任务</span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+    缺失模块。<br/>
+    1、请确保node版本大于6.2<br/>
+    2、在博客根目录（注意不是archer根目录）执行以下命令：<br/>
+    <span style="color: #f75357; font-size: 1rem; line-height: 2rem;">npm i hexo-generator-json-content --save</span><br/>
+    3、在根目录_config.yml里添加配置：
+    <pre style="color: #787878; font-size: 0.6rem;">
+jsonContent:
+  meta: false
+  pages: false
+  posts:
+    title: true
+    date: true
+    path: true
+    text: false
+    raw: false
+    content: false
+    slug: false
+    updated: false
+    comments: false
+    link: false
+    permalink: false
+    excerpt: false
+    categories: true
+    tags: true</pre>
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+    </div>
+</div> 
+    <script>
+    var siteMeta = {
+        root: "/",
+        author: "John Doe"
+    }
+</script>
+    <!-- CDN failover -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ === 'undefined')
+        {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js">\x3C/script>')
+        }
+    </script>
+    <script src="/scripts/main.js"></script>
+    <!-- algolia -->
+    
+    <!-- busuanzi  -->
+    
+    <!-- CNZZ  -->
+    
+    </div>
+    <!-- async load share.js -->
+    
+        <script src="/scripts/share.js" async></script>    
+     
+    </body>
+</html>
+
+
