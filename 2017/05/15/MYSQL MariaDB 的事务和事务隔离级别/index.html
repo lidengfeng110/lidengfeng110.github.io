@@ -1,0 +1,1462 @@
+<!DOCTYPE html>
+<html>
+    <!-- title -->
+
+
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" >
+    <meta name="author" content="John Doe">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="John Doe">
+    <meta name="keywords" content="Hexo | John Doe">
+    <meta name="description" content="">
+    <meta name="Cache-Control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <title>MYSQL MariaDB 的事务和事务隔离级别 · 李登峰</title>
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s 1;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+
+</style>
+
+    <link rel="preload" href= /css/style.css?v=20180630 as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    <link rel="stylesheet" href= /css/mobile.css?v=20180630 media="(max-width: 980px)">
+    
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+(function( w ){
+	"use strict";
+	// rel=preload support test
+	if( !w.loadCSS ){
+		w.loadCSS = function(){};
+	}
+	// define on the loadCSS obj
+	var rp = loadCSS.relpreload = {};
+	// rel=preload feature support test
+	// runs once and returns a function for compat purposes
+	rp.support = (function(){
+		var ret;
+		try {
+			ret = w.document.createElement( "link" ).relList.supports( "preload" );
+		} catch (e) {
+			ret = false;
+		}
+		return function(){
+			return ret;
+		};
+	})();
+
+	// if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+	// then change that media back to its intended value on load
+	rp.bindMediaToggle = function( link ){
+		// remember existing media attr for ultimate state, or default to 'all'
+		var finalMedia = link.media || "all";
+
+		function enableStylesheet(){
+			link.media = finalMedia;
+		}
+
+		// bind load handlers to enable media
+		if( link.addEventListener ){
+			link.addEventListener( "load", enableStylesheet );
+		} else if( link.attachEvent ){
+			link.attachEvent( "onload", enableStylesheet );
+		}
+
+		// Set rel and non-applicable media type to start an async request
+		// note: timeout allows this to happen async to let rendering continue in IE
+		setTimeout(function(){
+			link.rel = "stylesheet";
+			link.media = "only x";
+		});
+		// also enable media after 3 seconds,
+		// which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+		setTimeout( enableStylesheet, 3000 );
+	};
+
+	// loop through link elements in DOM
+	rp.poly = function(){
+		// double check this to prevent external calls from running
+		if( rp.support() ){
+			return;
+		}
+		var links = w.document.getElementsByTagName( "link" );
+		for( var i = 0; i < links.length; i++ ){
+			var link = links[ i ];
+			// qualify links to those with rel=preload and as=style attrs
+			if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+				// prevent rerunning on link
+				link.setAttribute( "data-loadcss", true );
+				// bind listeners to toggle media back
+				rp.bindMediaToggle( link );
+			}
+		}
+	};
+
+	// if unsupported, run the polyfill
+	if( !rp.support() ){
+		// run once at least
+		rp.poly();
+
+		// rerun poly on an interval until onload
+		var run = w.setInterval( rp.poly, 500 );
+		if( w.addEventListener ){
+			w.addEventListener( "load", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		} else if( w.attachEvent ){
+			w.attachEvent( "onload", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		}
+	}
+
+
+	// commonjs
+	if( typeof exports !== "undefined" ){
+		exports.loadCSS = loadCSS;
+	}
+	else {
+		w.loadCSS = loadCSS;
+	}
+}( typeof global !== "undefined" ? global : this ) );
+</script>
+
+    <link rel="icon" href= "/assets/favicon.ico" />
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js" as="script" />
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" as="script" />
+    <link rel="preload" href="/scripts/main.js" as="script" />
+    <link rel="preload" as="font" href="/font/Oswald-Regular.ttf" crossorigin>
+    <link rel="preload" as="font" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" crossorigin>
+    
+    <!-- fancybox -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script>
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  -->
+    
+</head>
+
+    
+        <body class="post-body">
+    
+    
+<header class="header">
+
+    <div class="read-progress"></div>
+    <div class="header-sidebar-menu">&#xe775;</div>
+    <!-- post页的toggle banner  -->
+    
+    <div class="banner">
+            <div class="blog-title">
+                <a href="/" >博客</a>
+            </div>
+            <div class="post-title">
+                <a href="#" class="post-name">MYSQL MariaDB 的事务和事务隔离级别</a>
+            </div>
+    </div>
+    
+    <a class="home-link" href=/>博客</a>
+</header>
+    <div class="wrapper">
+        <div class="site-intro" style=
+
+
+
+
+
+
+
+
+height:50vh;
+
+>
+    
+    <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
+            
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+            MYSQL MariaDB 的事务和事务隔离级别
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+            
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class= post-intro-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "Linux">Linux</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "MYSQL">MYSQL</a>
+    
+</div>
+                
+                
+                    <div class="post-intro-read">
+                        <span>Word count: <span class="post-count">5,644</span> / Reading time: <span class="post-count">22 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                    <span class="post-intro-time">2017/05/15</span>
+                    
+                    <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                        <span class="iconfont-archer">&#xe602;</span>
+                        <span id="busuanzi_value_page_pv"></span>
+                    </span>
+                    
+                    <span class="shareWrapper">
+                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
+                        <span class="shareText">Share</span>
+                        <ul class="shareList">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        
+    </div>
+</div> 
+        <script>
+ 
+  // get user agent
+  var browser = {
+    versions: function () {
+      var u = window.navigator.userAgent;
+      return {
+        userAgent: u,
+        trident: u.indexOf('Trident') > -1, //IE内核
+        presto: u.indexOf('Presto') > -1, //opera内核
+        webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+        gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+        mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+        ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+        android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+        iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+        iPad: u.indexOf('iPad') > -1, //是否为iPad
+        webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+        weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+        uc: u.indexOf('UCBrowser') > -1 //是否为android下的UC浏览器
+      };
+    }()
+  }
+  console.log("userAgent:" + browser.versions.userAgent);
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded');
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document.getElementsByClassName('intro-title')[0].classList.add('intro-fade-in');
+      document.getElementsByClassName('intro-subtitle')[0].classList.add('intro-fade-in');
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in');
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb(){
+    if (browser.versions.uc) {
+      console.log("UCBrowser");
+      fontLoaded();
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular']
+        },
+        loading: function () {  //所有字体开始加载
+          // console.log('loading');
+        },
+        active: function () {  //所有字体已渲染
+          fontLoaded();
+        },
+        inactive: function () { //字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout');
+          fontLoaded();
+        },
+        timeout: 5000 // Set the timeout to two seconds
+      });
+    }
+  }
+
+  function asyncErr(){
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (cb) { o.addEventListener('load', function (e) { cb(null, e); }, false); }
+    if (err) { o.addEventListener('error', function (e) { err(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+
+  var asyncLoadWithFallBack = function(arr, success, reject) {
+      var currReject = function(){
+        reject()
+        arr.shift()
+        if(arr.length)
+          async(arr[0], success, currReject)
+        }
+
+      async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack([
+    "https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js", 
+    "https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js",
+    "/lib/webfontloader.min.js"
+  ], asyncCb, asyncErr)
+</script>        
+        <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+        <div class="container container-unloaded">
+            <main class="main post-page">
+    <article class="article-entry">
+        <h3 id="事务特性"><a href="#事务特性" class="headerlink" title="事务特性"></a>事务特性</h3><h6 id="事务具有ACID特性：原子性-A-atomicity-、一致性-C-consistency-、隔离性-I-isolation-、持久性-D-durabulity-。"><a href="#事务具有ACID特性：原子性-A-atomicity-、一致性-C-consistency-、隔离性-I-isolation-、持久性-D-durabulity-。" class="headerlink" title="事务具有ACID特性：原子性(A,atomicity)、一致性(C,consistency)、隔离性(I,isolation)、持久性(D,durabulity)。"></a>事务具有ACID特性：原子性(A,atomicity)、一致性(C,consistency)、隔离性(I,isolation)、持久性(D,durabulity)。</h6><h6 id="原子性：事务内的所有操作要么都执行，要么都不执行。"><a href="#原子性：事务内的所有操作要么都执行，要么都不执行。" class="headerlink" title="原子性：事务内的所有操作要么都执行，要么都不执行。"></a>原子性：事务内的所有操作要么都执行，要么都不执行。</h6><h6 id="一致性：事务开始和结束前后，数据都满足数据一致性约束，而不是经过事务控制之后数据变得不满足条件或业务规则。"><a href="#一致性：事务开始和结束前后，数据都满足数据一致性约束，而不是经过事务控制之后数据变得不满足条件或业务规则。" class="headerlink" title="一致性：事务开始和结束前后，数据都满足数据一致性约束，而不是经过事务控制之后数据变得不满足条件或业务规则。"></a>一致性：事务开始和结束前后，数据都满足数据一致性约束，而不是经过事务控制之后数据变得不满足条件或业务规则。</h6><h6 id="隔离性：事务之间不能互影响，它们必须完全的各行其道，互不可见。"><a href="#隔离性：事务之间不能互影响，它们必须完全的各行其道，互不可见。" class="headerlink" title="隔离性：事务之间不能互影响，它们必须完全的各行其道，互不可见。"></a>隔离性：事务之间不能互影响，它们必须完全的各行其道，互不可见。</h6><a id="more"></a>
+<h6 id="持久性：事务完成后，该事务内涉及的数据必须持久性的写入磁盘保证其持久性。当然，这是从事务的角度来考虑的的持久性，从操作系统故障或硬件故障来说，这是不一定的。"><a href="#持久性：事务完成后，该事务内涉及的数据必须持久性的写入磁盘保证其持久性。当然，这是从事务的角度来考虑的的持久性，从操作系统故障或硬件故障来说，这是不一定的。" class="headerlink" title="持久性：事务完成后，该事务内涉及的数据必须持久性的写入磁盘保证其持久性。当然，这是从事务的角度来考虑的的持久性，从操作系统故障或硬件故障来说，这是不一定的。"></a>持久性：事务完成后，该事务内涉及的数据必须持久性的写入磁盘保证其持久性。当然，这是从事务的角度来考虑的的持久性，从操作系统故障或硬件故障来说，这是不一定的。</h6><h3 id="事务分类"><a href="#事务分类" class="headerlink" title="事务分类"></a>事务分类</h3><blockquote>
+<p>扁平事务<br>带保存点的扁平事务<br>链事务<br>嵌套事务<br>分布式事务  </p>
+</blockquote>
+<h5 id="扁平事务"><a href="#扁平事务" class="headerlink" title="扁平事务"></a>扁平事务</h5><blockquote>
+<p>即最常见的事务。由begin开始，commit或rollback结束，中间的所有操作要么都回滚要么都提交。扁平事务在生产环境中占绝大多数使用情况。因此每一种数据库产品都支持扁平事务。  </p>
+</blockquote>
+<blockquote>
+<p>扁平事务的缺点在于无法回滚或提交一部分，只能全部回滚或全部提交，所以就有了”带有保存点”的扁平事务。  </p>
+</blockquote>
+<h5 id="带有保存点的扁平事务"><a href="#带有保存点的扁平事务" class="headerlink" title="带有保存点的扁平事务"></a>带有保存点的扁平事务</h5><h6 id="通过在事务内部的某个位置使用savepoint，将来可以在事务中回滚到此位置。"><a href="#通过在事务内部的某个位置使用savepoint，将来可以在事务中回滚到此位置。" class="headerlink" title="通过在事务内部的某个位置使用savepoint，将来可以在事务中回滚到此位置。"></a>通过在事务内部的某个位置使用savepoint，将来可以在事务中回滚到此位置。</h6><blockquote>
+<p>MariaDB/MySQL中设置保存点的命令为:  </p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">savepoint [savepoint_name]</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>回滚到指定保存点的命令为：  </p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rollback to savepoint_name</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>删除一个保存点的命令为：  </p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">release savepoint savepoint_name</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>实际上，扁平事务也是有保存点的，只不过它只有一个隐式的保存点，且自动建立在事务开始的位置，因此扁平事务只能回滚到事务开始处。  </p>
+</blockquote>
+<h5 id="链式事务"><a href="#链式事务" class="headerlink" title="链式事务"></a>链式事务</h5><blockquote>
+<p>链式事务是保存点扁平事务的变种。它在一个事务提交的时候自动隐式的将上下文传给下一个事务，也就是说一个事务的提交和下一个事务的开始是原子性的，下一个事务可以看到上一个事务的处理结果。通俗地说，就是事务的提交和事务的开始是链接式下去的。  </p>
+</blockquote>
+<blockquote>
+<p>这样的事务类型，在提交事务的时候，会释放要提交事务内所有的锁和要提交事务内所有的保存点。因此链式事务只能回滚到当前所在事务的保存点，而不能回滚到已提交的事务中的保存点。  </p>
+</blockquote>
+<h5 id="嵌套事务"><a href="#嵌套事务" class="headerlink" title="嵌套事务"></a>嵌套事务</h5><blockquote>
+<p>嵌套事务由一个顶层事务控制所有的子事务。子事务的提交完成后不会真的提交，而是等到顶层事务提交才真正的提交。  </p>
+</blockquote>
+<h6 id="关于嵌套事务的机制，主要有以下3个结论："><a href="#关于嵌套事务的机制，主要有以下3个结论：" class="headerlink" title="关于嵌套事务的机制，主要有以下3个结论："></a>关于嵌套事务的机制，主要有以下3个结论：</h6><blockquote>
+<p>回滚内部事务的同时会回滚到外部事务的起始点。  </p>
+<p>事务提交时从内向外依次提交。  </p>
+<p>回滚外部事务的同时会回滚所有事务，包括已提交的内部事务。因为只提交内部事务时没有真的提交。 </p>
+</blockquote>
+<h6 id="不管怎么样，最好少用嵌套事务。且MariaDB-MySQL不原生态支持嵌套事务-SQL-Server支持-。"><a href="#不管怎么样，最好少用嵌套事务。且MariaDB-MySQL不原生态支持嵌套事务-SQL-Server支持-。" class="headerlink" title="不管怎么样，最好少用嵌套事务。且MariaDB/MySQL不原生态支持嵌套事务(SQL Server支持)。"></a>不管怎么样，最好少用嵌套事务。且MariaDB/MySQL不原生态支持嵌套事务(SQL Server支持)。</h6><h5 id="分布式事务"><a href="#分布式事务" class="headerlink" title="分布式事务"></a>分布式事务</h5><h6 id="将多个服务器上的事务-节点-组合形成一个遵循事务特性-acid-的分布式事务。"><a href="#将多个服务器上的事务-节点-组合形成一个遵循事务特性-acid-的分布式事务。" class="headerlink" title="将多个服务器上的事务(节点)组合形成一个遵循事务特性(acid)的分布式事务。"></a>将多个服务器上的事务(节点)组合形成一个遵循事务特性(acid)的分布式事务。</h6><blockquote>
+<p>例如在工行atm机转账到建行用户。工行atm机所在数据库是一个事务节点A，建行数据库是一个事务节点B，仅靠工行atm机是无法完成转账工作的，因为它控制不了建行的事务。所以它们组成一个分布式事务：  </p>
+</blockquote>
+<blockquote>
+<p>1.atm机发出转账口令。<br>2.atm机从工行用户减少N元。<br>3.在建行用户增加N元。<br>4.在atm机上返回转账成功或失败。  </p>
+</blockquote>
+<blockquote>
+<p>上面涉及了两个事务节点，这些事务节点之间的事务必须同时具有acid属性，要么所有的事务都成功，要么所有的事务都失败，不能只成功atm机的事务，而建行的事务失败。  </p>
+</blockquote>
+<blockquote>
+<p>MariaDB/MySQL的分布式事务使用两段式提交协议(2-phase commit,2PC)。最重要的是，MySQL 5.7.7之前，MySQL对分布式事务的支持一直都不完善(第一阶段提交后不会写binlog，导致宕机丢失日志)，这个问题持续时间长达数十年，直到MySQL 5.7.7，才完美支持分布式事务。相关内容可参考网上一篇文章：<a href="https://www.linuxidc.com/Linux/2016-02/128053.htm。遗憾的是，MariaDB至今" target="_blank" rel="noopener">https://www.linuxidc.com/Linux/2016-02/128053.htm。遗憾的是，MariaDB至今</a>(MariaDB 10.3.6)都没有解决这个问题。  </p>
+</blockquote>
+<h5 id="事务控制语句"><a href="#事务控制语句" class="headerlink" title="事务控制语句"></a>事务控制语句</h5><blockquote>
+<p>begin 和 start transaction表示显式开启一个事务。它们之间并没有什么区别，但是在存储过程中，begin会被识别成begin…end的语句块，所以存储过程只能使用start transaction来显式开启一个事务。  </p>
+</blockquote>
+<blockquote>
+<p>commit 和 commit work用于提交一个事务。  </p>
+</blockquote>
+<blockquote>
+<p>rollbac 和 rollback work用于回滚一个事务。  </p>
+</blockquote>
+<blockquote>
+<p>savepoint identifier表示在事务中创建一个保存点。一个事务中允许存在多个保存点。  </p>
+</blockquote>
+<blockquote>
+<p>release savepoint identifier表示删除一个保存点。当要删除的保存点不存在的时候会抛出异常。  </p>
+</blockquote>
+<blockquote>
+<p>rollback to savepoint表示回滚到指定的保存点，回滚到保存点后，该保存点之后的所有操纵都被回滚。注意，rollback to不会结束事务，只是回到某一个保存点的状态。  </p>
+</blockquote>
+<blockquote>
+<p>set transaction用来设置事务的隔离级别。可设置的隔离级别有read uncommitted/read committed/repeatable read/serializable。  </p>
+</blockquote>
+<blockquote>
+<p>commit与commit work以及rollback与rollback work作用是一样的。但是他们的作用却和变量  </p>
+</blockquote>
+<blockquote>
+<p>completion_type的值有关。</p>
+</blockquote>
+<p><img src="https://images2018.cnblogs.com/blog/733013/201805/733013-20180506104848672-2109792794.png" alt="image"></p>
+<p>######<br>例如将completion_type设置为1，进行测试。  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; set completion_type=1;</span><br><span class="line">mysql&gt; begin;</span><br><span class="line">mysql&gt; insert into ttt values(1000);</span><br><span class="line">mysql&gt; commit work;</span><br><span class="line">mysql&gt; insert into ttt values(2000);</span><br><span class="line">mysql&gt; rollback;</span><br><span class="line">mysql&gt; select * from ttt where id&gt;=1000;</span><br><span class="line">+------+</span><br><span class="line">| id   |</span><br><span class="line">+------+</span><br><span class="line">| 1000 |</span><br><span class="line">+------+</span><br><span class="line">1 row in set (0.00 sec)</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>begin开始事务后，插入了值为1000的记录，commit work了一次，然后再插入了值为2000的记录后rollback，查询结果结果中只显示了1000，而没有2000，因为commit work提交后自动又开启了一个事务，使用rollback会回滚该事务。  </p>
+</blockquote>
+<h6 id="将completion-type设置为2，进行测试。"><a href="#将completion-type设置为2，进行测试。" class="headerlink" title="将completion_type设置为2，进行测试。"></a>将completion_type设置为2，进行测试。</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; set completion_type=2;</span><br><span class="line">mysql&gt; begin;</span><br><span class="line">mysql&gt; insert into ttt select 1000;</span><br><span class="line">mysql&gt; commit;</span><br></pre></td></tr></table></figure>
+<h6 id="提交后，再查询或者进行其他操作，结果提示已经和MariaDB-MySQL服务器断开连接了。"><a href="#提交后，再查询或者进行其他操作，结果提示已经和MariaDB-MySQL服务器断开连接了。" class="headerlink" title="提交后，再查询或者进行其他操作，结果提示已经和MariaDB/MySQL服务器断开连接了。"></a>提交后，再查询或者进行其他操作，结果提示已经和MariaDB/MySQL服务器断开连接了。</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; select * from ttt;</span><br><span class="line">ERROR 2006 (HY000): MySQL server has gone away</span><br><span class="line">No connection. Trying to reconnect...</span><br></pre></td></tr></table></figure>
+<h3 id="显式事务的次数统计"><a href="#显式事务的次数统计" class="headerlink" title="显式事务的次数统计"></a>显式事务的次数统计</h3><h6 id="通过全局状态变量com-commit和com-rollback可以查看当前已经显式提交和显式回滚事务的次数。还可以看到回滚到保存点的次数。"><a href="#通过全局状态变量com-commit和com-rollback可以查看当前已经显式提交和显式回滚事务的次数。还可以看到回滚到保存点的次数。" class="headerlink" title="通过全局状态变量com_commit和com_rollback可以查看当前已经显式提交和显式回滚事务的次数。还可以看到回滚到保存点的次数。"></a>通过全局状态变量com_commit和com_rollback可以查看当前已经显式提交和显式回滚事务的次数。还可以看到回滚到保存点的次数。</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; show global status like &quot;%com_commit%&quot;;</span><br><span class="line">+---------------+-------+</span><br><span class="line">| Variable_name | Value |</span><br><span class="line">+---------------+-------+</span><br><span class="line">| Com_commit    | 14    |</span><br><span class="line">+---------------+-------+</span><br><span class="line">mysql&gt; show global status like &quot;%com_rollback%&quot;;</span><br><span class="line">+---------------------------+-------+</span><br><span class="line">| Variable_name             | Value |</span><br><span class="line">+---------------------------+-------+</span><br><span class="line">| Com_rollback              | 24    |</span><br><span class="line">| Com_rollback_to_savepoint | 0     |</span><br><span class="line">+---------------------------+-------+</span><br></pre></td></tr></table></figure>
+<h3 id="一致性非锁定读-快照查询"><a href="#一致性非锁定读-快照查询" class="headerlink" title="一致性非锁定读(快照查询)"></a>一致性非锁定读(快照查询)</h3><blockquote>
+<p>在innodb存储引擎中，存在一种数据查询方式：快照查询。因为查询的是快照数据，所以查询时不申请共享锁。  </p>
+</blockquote>
+<blockquote>
+<p>当进行一致性非锁定读查询的时候，查询操作不会去等待记录上的独占锁释放，而是直接去读取快照数据。快照数据是通过undo段来实现的，因此它基本不会产生开销。显然，通过这种方式，可以极大的提高读并发性。<br><img src="https://images2018.cnblogs.com/blog/733013/201805/733013-20180506105838093-1299081173.png" alt="image"></p>
+</blockquote>
+<blockquote>
+<p>快照数据其实是行版本数据，一个行记录可能会存在多个行版本，并发时这种读取行版本的方式称为多版本并发控制(MVCC)。在隔离级别为read committed和repeatable read时，采取的查询方式就是一致性非锁定读方式。但是，不同的隔离级别下，读取行版本的方式是不一样的。在后面介绍对应的隔离级别时会作出说明。  </p>
+<p>下面是在innodb默认的隔离级别是repeatable read下的实验，该隔离级别下，事务总是在开启的时候获取最新的行版本，并一直持有该版本直到事务结束。更多的”一致性非锁定读”见后文说明read committed和repeatable read部分。  </p>
+</blockquote>
+<h6 id="当前示例表ttt的记录如下："><a href="#当前示例表ttt的记录如下：" class="headerlink" title="当前示例表ttt的记录如下："></a>当前示例表ttt的记录如下：</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; select * from ttt;</span><br><span class="line">+------+</span><br><span class="line">| id   |</span><br><span class="line">+------+</span><br><span class="line">|    1 |</span><br><span class="line">|    2 |</span><br><span class="line">+------+</span><br></pre></td></tr></table></figure>
+<h6 id="在会话1执行："><a href="#在会话1执行：" class="headerlink" title="在会话1执行："></a>在会话1执行：</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; begin;</span><br><span class="line">mysql&gt; update ttt set id=100 where id=1</span><br></pre></td></tr></table></figure>
+<h6 id="在会话2中执行："><a href="#在会话2中执行：" class="headerlink" title="在会话2中执行："></a>在会话2中执行：</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; begin;</span><br><span class="line">mysql&gt; select * from ttt;</span><br><span class="line">+------+</span><br><span class="line">| id   |</span><br><span class="line">+------+</span><br><span class="line">|    1 |</span><br><span class="line">|    2 |</span><br><span class="line">+------+</span><br></pre></td></tr></table></figure>
+<h6 id="查询的结果和预期的一样，来自开启事务前最新提交的行版本数据。"><a href="#查询的结果和预期的一样，来自开启事务前最新提交的行版本数据。" class="headerlink" title="查询的结果和预期的一样，来自开启事务前最新提交的行版本数据。"></a>查询的结果和预期的一样，来自开启事务前最新提交的行版本数据。</h6><blockquote>
+<p>回到会话1提交事务：  </p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; commit;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>再回到会话2中查询：   </p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; select * from ttt;</span><br><span class="line">+------+</span><br><span class="line">| id   |</span><br><span class="line">+------+</span><br><span class="line">|    1 |</span><br><span class="line">|    2 |</span><br><span class="line">+------+</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>再次去会话1更新该记录：  </p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; begin;</span><br><span class="line">mysql&gt; update ttt set id=1000 where id=100;</span><br><span class="line">mysql&gt; commit;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>再回到会话2执行查询：  </p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; select * from ttt;</span><br><span class="line">+------+</span><br><span class="line">| id   |</span><br><span class="line">+------+</span><br><span class="line">|    1 |</span><br><span class="line">|    2 |</span><br><span class="line">+------+</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>这就是repeatable read隔离级别下的一致性非锁定读的特性。  </p>
+<p>当然，MySQL也支持一致性锁定读的方式。  </p>
+</blockquote>
+<h3 id="一致性锁定读"><a href="#一致性锁定读" class="headerlink" title="一致性锁定读"></a>一致性锁定读</h3><blockquote>
+<p>在隔离级别为read committed和repeatable read时，采取的查询方式就是一致性非锁定读方式。但是在某些情况下，需要人为的对读操作进行加锁。MySQL中对这种方式的支持是通过在select语句后加上lock in share mode或者for update。  </p>
+</blockquote>
+<blockquote>
+<p>select … from … where … lock in share mode;  </p>
+</blockquote>
+<blockquote>
+<p>select …from … where … for update;  </p>
+</blockquote>
+<blockquote>
+<p>使用lock in share mode会对select语句要查询的记录加上一个共享锁(S)，使用for update语句会对select语句要查询的记录加上独占锁(X)。  </p>
+</blockquote>
+<blockquote>
+<p>另外，对于一致性非锁定读操作，即使要查询的记录已经被for update加上了独占锁，也一样可以读取，就和纯粹的update加的锁一样，只不过此时读取的是快照数据而已。  </p>
+</blockquote>
+<h3 id="事务隔离级别"><a href="#事务隔离级别" class="headerlink" title="事务隔离级别"></a>事务隔离级别</h3><blockquote>
+<p>SQL标准定义了4中隔离级别：read uncommitted、read committed、repeatable read、serializable。  </p>
+</blockquote>
+<blockquote>
+<p>MariaDB/MySQL也支持这4种隔离级别。但是要注意的是，MySQL中实现的隔离级别和SQL Server实现的隔离级别在同级别上有些差别。在后面有必要说明地方会给出它们的差异之处。  </p>
+<p> MariaDB/MySQL中默认的隔离级别是repeatable read，SQL Server和oracle的默认隔离级别都是read committed。  </p>
+</blockquote>
+<blockquote>
+<p>事务特性(ACID)中的隔离性(I,isolation)就是隔离级别，它通过锁来实现。也就是说，设置不同的隔离级别，其本质只是控制不同的锁行为。例如操作是否申请锁，什么时候申请锁，申请的锁是立刻释放还是持久持有直到事务结束才释放等。  </p>
+</blockquote>
+<h5 id="设置和查看事务隔离级别"><a href="#设置和查看事务隔离级别" class="headerlink" title="设置和查看事务隔离级别"></a>设置和查看事务隔离级别</h5><blockquote>
+<p>隔离级别是基于会话设置的，当然也可以基于全局进行设置，设置为全局时，不会影响当前会话的级别。设置的方法是：  </p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">set [global | session] transaction isolation level &#123;type&#125;</span><br><span class="line">type:</span><br><span class="line">    read uncommitted | read committed | repeatable read | serializable</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>或者直接修改变量值也可以：  </p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">set @@global.tx_isolation = &apos;read-uncommitted&apos; | &apos;read-committed&apos; | &apos;repeatable-read&apos; | &apos;serializable&apos;</span><br><span class="line">set @@session.tx_isolation = &apos;read-uncommitted&apos; | &apos;read-committed&apos; | &apos;repeatable-read&apos; | &apos;serializable&apos;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>查看当前会话的隔离级别方法如下：  </p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; select @@tx_isolation;</span><br><span class="line">mysql&gt; select @@global.tx_isolation;</span><br><span class="line">mysql&gt; select @@tx_isolation;select @@global.tx_isolation;</span><br><span class="line">+-----------------+</span><br><span class="line">| @@tx_isolation  |</span><br><span class="line">+-----------------+</span><br><span class="line">| REPEATABLE-READ |</span><br><span class="line">+-----------------+</span><br><span class="line">+-----------------------+</span><br><span class="line">| @@global.tx_isolation |</span><br><span class="line">+-----------------------+</span><br><span class="line">| REPEATABLE-READ       |</span><br><span class="line">+-----------------------+</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>注意，事务隔离级别的设置只需在需要的一端设置，不用在两边会话都设置。例如想要让会话2的查询加锁，则只需在会话2上设置serializable，在会话1设置的serializable对会话2是没有影响的，这和SQL Server中一样。但是，MariaDB/MySQL除了serializable隔离级别，其他的隔离级别都默认会读取旧的行版本，所以查询永远不会造成阻塞。而SQL Server中只有基于快照的两种隔离级别才会读取行版本，所以在4种标准的隔离级别下，如果查询加的S锁被阻塞，查询会进入锁等待。  </p>
+</blockquote>
+<blockquote>
+<p>在MariaDB/MySQL中不会出现更新丢失的问题，因为独占锁一直持有直到事务结束。当1个会话开启事务A修改某记录，另一个会话也开启事务B修改该记录，该修改被阻塞，当事务A提交后，事务B中的更新立刻执行成功，但是执行成功后查询却发现数据并没有随着事务B的想法而改变，因为这时候事务B更新的那条记录已经不是原来的记录了。但是事务A回滚的话，事务B是可以正常更新的，但这没有丢失更新。  </p>
+</blockquote>
+<h5 id="read-uncommitted"><a href="#read-uncommitted" class="headerlink" title="read uncommitted"></a>read uncommitted</h5><blockquote>
+<p>该级别称为未提交读，即允许读取未提交的数据。  </p>
+</blockquote>
+<blockquote>
+<p>在该隔离级别下，读数据的时候不会申请读锁，所以也不会出现查询被阻塞的情况。  </p>
+</blockquote>
+<blockquote>
+<p>在会话1执行：  </p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">create table ttt(id int);</span><br><span class="line">insert into ttt select 1;</span><br><span class="line">insert into ttt select 2;</span><br><span class="line">begin;</span><br><span class="line">update ttt set id=10 where id=1;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>如果会话1的隔离级别不是默认的，那么在执行update的过程中，可能会遇到以下错误：  </p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ERROR 1665 (HY000): Cannot execute statement: impossible to write to binary log since BINLOG_FORMAT = STATEMENT and at least one table uses a storage engine limited to row-based logging. InnoDB is limited to row-logging when transaction isolation level is READ COMMITTED or READ UNCOMMITTED.</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>这是read committed和read uncommitted两个隔离级别只允许row格式的二进制日志记录格式。而当前的二进制日志格式记录方式为statement时就会报错。要解决这个问题，只要将格式设置为row或者mixed即可。</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">set @@session.binlog_format=row;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>在会话2执行：  </p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">set transaction isolation level read uncommitted;</span><br><span class="line">select * from ttt;</span><br><span class="line">+------+</span><br><span class="line">| id   |</span><br><span class="line">+------+</span><br><span class="line">|   10 |</span><br><span class="line">|    2 |</span><br><span class="line">+------+</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>发现查询的结果是update后的数据，但是这个数据是会话1未提交的数据。这是脏读的问题，即读取了未提交的脏数据。  </p>
+</blockquote>
+<blockquote>
+<p>如果此时会话1进行了回滚操作，那么会话2上查询的结果又变成了id=1。  </p>
+</blockquote>
+<blockquote>
+<p>在会话1上执行：  </p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rollback;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>在会话2上查询：  </p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; select * from ttt;</span><br><span class="line">+------+</span><br><span class="line">| id   |</span><br><span class="line">+------+</span><br><span class="line">|    1 |</span><br><span class="line">|    2 |</span><br><span class="line">+------+</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>这是读不一致问题。即同一个会话中对同一条记录的读取结果不一致。  </p>
+</blockquote>
+<blockquote>
+<p>read uncommitted一般不会在生产环境中使用，因为问题太多，会导致脏读、丢失的更新、幻影读、读不一致的问题。但由于不申请读锁，从理论上来说，它的并发性是最佳的。所以在某些特殊情况下还是会考虑使用该级别。  </p>
+</blockquote>
+<blockquote>
+<p>要解决脏读、读不一致问题，只需在查询记录的时候加上共享锁即可。这样在其他事务更新数据的时候就无法查询到更新前的记录。这就是read commmitted隔离级别。  </p>
+</blockquote>
+<h5 id="read-committed"><a href="#read-committed" class="headerlink" title="read committed"></a>read committed</h5><blockquote>
+<p>对于熟悉SQL Server的人来说，在说明这个隔离级别之前，必须先给个提醒：MariaDB/MySQL中的提交读和SQL Server中的提交读完全不一样，MariaDB/MySQL中该级别基本类似于SQL Server中基于快照的提交读。  </p>
+</blockquote>
+<blockquote>
+<p>在SQL Server中，提交读的查询会申请共享锁，并且在查询结束的一刻立即释放共享锁，如果要查询的记录正好被独占锁锁住，则会进入锁等待，而没有被独占锁锁住的记录则可以正常查询。SQL Server中基于快照的提交读实现的是语句级的事务一致性，每执行一次操作事务序列号加1，并且每次查询的结果都是最新提交的行版本快照。   </p>
+</blockquote>
+<blockquote>
+<p>也就是说，MariaDB/MySQL中read committed级别总是会读取最新提交的行版本。这在MySQL的innodb中算是一个术语:”一致性非锁定读”，即只读取快照数据，不加共享锁。这在前文已经说明过。  </p>
+</blockquote>
+<blockquote>
+<p>MariaDB/MySQL中的read committed隔离级别下，除非是要检查外键约束或者唯一性约束需要用到gap lock算法，其他时候都不会用到。也就是说在此隔离级别下，一般来说只会对行进行锁定，不会锁定范围，所以会导致幻影读问题。  </p>
+</blockquote>
+<blockquote>
+<p>这里要演示的就是在该级别下，会不断的读取最新提交的行版本数据。  </p>
+</blockquote>
+<h6 id="当前示例表ttt的记录如下：-1"><a href="#当前示例表ttt的记录如下：-1" class="headerlink" title="当前示例表ttt的记录如下："></a>当前示例表ttt的记录如下：</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; select * from ttt;</span><br><span class="line">+------+</span><br><span class="line">| id   |</span><br><span class="line">+------+</span><br><span class="line">|    1 |</span><br><span class="line">|    2 |</span><br><span class="line">+------+</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>在会话1中执行：  </p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">begin;update ttt set id=100 where id=1;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>在会话2中执行：  </p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">set @@session.tx_isolation=&apos;read-committed&apos;;</span><br><span class="line">begin;</span><br><span class="line">select * from ttt;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>  会话2中查询得到的结果为id=1，因为查询的是最新提交的快照数据，而最新提交的快照数据就是id=1。 </p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">+------+</span><br><span class="line">| id   |</span><br><span class="line">+------+</span><br><span class="line">|    1 |</span><br><span class="line">|    2 |</span><br><span class="line">+------+</span><br></pre></td></tr></table></figure>
+<h6 id="现在将会话1中的事务提交。"><a href="#现在将会话1中的事务提交。" class="headerlink" title="现在将会话1中的事务提交。"></a>现在将会话1中的事务提交。</h6><blockquote>
+<p>在会话1中执行：  </p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">commit;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>在会话2中查询记录：  </p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">select * from ttt;</span><br><span class="line">+------+</span><br><span class="line">| id   |</span><br><span class="line">+------+</span><br><span class="line">|  100 |</span><br><span class="line">|    2 |</span><br><span class="line">+------+</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>结果为id=100，因为这个值是最新提交的。  </p>
+<p>再次在会话1中修改该值并提交事务。  </p>
+</blockquote>
+<blockquote>
+<p>在会话1中执行：  </p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">begin;update ttt set id=1000 where id=100;commit;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>在会话2中执行：  </p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">select * from ttt;</span><br><span class="line">+------+</span><br><span class="line">| id   |</span><br><span class="line">+------+</span><br><span class="line">| 1000 |</span><br><span class="line">|    2 |</span><br><span class="line">+------+</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>发现结果变成了1000，因为1000是最新提交的数据。  </p>
+</blockquote>
+<blockquote>
+<p>read committed隔离级别的行版本读取特性，在和repeatable read隔离级别比较后就很容易理解。  </p>
+</blockquote>
+<h5 id="repeatable-read"><a href="#repeatable-read" class="headerlink" title="repeatable read"></a>repeatable read</h5><blockquote>
+<p>同样是和上面一样的废话，对于熟悉SQL Server的人来说，在说明这个隔离级别之前，必须先给个提醒：MariaDB/MySQL中的重复读和SQL Server中的重复读完全不一样，MariaDB/MySQL中该级别基本类似于SQL Server中快照隔离级别。  </p>
+</blockquote>
+<blockquote>
+<p>在SQL Server中，重复读的查询会申请共享锁，并且在查询结束的一刻不释放共享锁，而是持有到事务结束。所以会造成比较严重的读写并发问题。SQL Server中快照隔离级别实现的是事务级的事务一致性，每次事务开启的时候获取最新的已提交行版本，只要事务不结束，读取的记录将一直是该行版本中的数据，不管其他事务是否已经提交过对应的数据了。但是SQL Server中的快照隔离会有更新冲突：当检测到两边都想要更新同一记录时，会检测出更新冲突，这样会提前结束事务(进行的是回滚操作)而不用再显式地commit或者rollback。  </p>
+</blockquote>
+<blockquote>
+<p>也就是说，MariaDB/MySQL中repeatable read级别总是会在事务开启的时候读取最新提交的行版本，并将该行版本一直持有到事务结束。但是MySQL中的repeatable read级别下不会像SQL Server一样出现更新冲突的问题。  </p>
+</blockquote>
+<blockquote>
+<p>前文说过read committed隔离级别下，读取数据时总是会去获取最新已提交的行版本。这是这两个隔离级别在”一致性非锁定读”上的区别。  </p>
+</blockquote>
+<blockquote>
+<p>另外，MariaDB/MySQL中的repeatable read的加锁方式是next-key lock算法，它会进行范围锁定。这就避免了幻影读的问题(官方手册上说无法避免)。在标准SQL中定义的隔离级别中，需要达到serializable级别才能避免幻影读问题，也就是说MariaDB/MySQL中的repeatable read隔离级别已经达到了其他数据库产品(如SQL Server)的serializable级别，而且SQL Server中的serializable加范围锁时，在有索引的时候式锁范围比较不可控(你不知道范围锁锁住哪些具体的范围)，而在MySQL中是可以判断锁定范围的(见innodb锁算法)。  </p>
+</blockquote>
+<blockquote>
+<p>这里要演示的就是在该级别下，读取的行版本数据是不随提交而改变的。  </p>
+</blockquote>
+<h6 id="当前示例表ttt的记录如下：-2"><a href="#当前示例表ttt的记录如下：-2" class="headerlink" title="当前示例表ttt的记录如下："></a>当前示例表ttt的记录如下：</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; select * from ttt;</span><br><span class="line">+------+</span><br><span class="line">| id   |</span><br><span class="line">+------+</span><br><span class="line">|    1 |</span><br><span class="line">|    2 | </span><br><span class="line">+------+</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>在会话1执行：  </p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">begin;update ttt set id=100 where id=1</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>在会话2中执行：  </p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">set @@session.tx_isolation=&apos;repeatable-read&apos;;</span><br><span class="line">begin;select * from ttt;</span><br><span class="line">+------+</span><br><span class="line">| id   |</span><br><span class="line">+------+</span><br><span class="line">|    1 |</span><br><span class="line">|    2 |</span><br><span class="line">+------+</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>查询的结果和预期的一样，来自开启事务前最新提交的行版本数据  </p>
+</blockquote>
+<blockquote>
+<p>回到会话1提交事务：  </p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">commit;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>再回到会话2中查询：  </p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">select * from ttt;</span><br><span class="line">+------+</span><br><span class="line">| id   |</span><br><span class="line">+------+</span><br><span class="line">|    1 |</span><br><span class="line">|    2 |</span><br><span class="line">+------+</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>再次去会话1更新该记录：   </p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">begin;update ttt set id=1000 where id=100;commit;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>再回到会话2执行查询：  </p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">select * from ttt;</span><br><span class="line">+------+</span><br><span class="line">| id   |</span><br><span class="line">+------+</span><br><span class="line">|    1 |</span><br><span class="line">|    2 |</span><br><span class="line">+------+</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>发现结果根本就不会改变，因为会话2开启事务时获取的行版本的id=1，所以之后读取的一直都是id=1所在的行版本。  </p>
+</blockquote>
+<h5 id="serializable"><a href="#serializable" class="headerlink" title="serializable"></a>serializable</h5><blockquote>
+<p>在SQL Server中，serializable隔离级别会将查询申请的共享锁持有到事务结束，且申请的锁是范围锁，范围锁的情况根据表有无索引而不同：无索引时锁定整个表，有索引时锁定某些范围，至于锁定哪些具体的范围我发现是不可控的(至少我无法推测和计算)。这样就避免了幻影读的问题。  </p>
+</blockquote>
+<blockquote>
+<p>这种问题在MariaDB/MySQL中的repeatable read级别就已经实现了，MariaDB/MySQL中的next-key锁算法在加范围锁时也分有无索引：无索引时加锁整个表(实际上不是表而是无穷大区间的行记录)，有索引时加锁部分可控的范围。  </p>
+</blockquote>
+<blockquote>
+<p>MariaDB/MySQL中的serializable其实类似于repeatable read，只不过所有的select语句会自动在后面加上lock in share mode。也就是说会对所有的读进行加锁，而不是读取行版本的快照数据，也就不再支持”一致性非锁定读”。这样就实现了串行化的事务隔离：每一个事务必须等待前一个事务(哪怕是只有查询的事务)结束后才能进行哪怕只是查询的操作。  </p>
+</blockquote>
+<h6 id="这个隔离级别对并发性来说，显然是有点太严格了。"><a href="#这个隔离级别对并发性来说，显然是有点太严格了。" class="headerlink" title="这个隔离级别对并发性来说，显然是有点太严格了。"></a>这个隔离级别对并发性来说，显然是有点太严格了。</h6>
+    </article>
+    <!-- license  -->
+    
+        <div class="license-wrapper">
+            <p>原文作者: <a href="http://yoursite.com">John Doe</a>
+            <p>原文链接: <a href="http://yoursite.com/2017/05/15/MYSQL MariaDB 的事务和事务隔离级别/">http://yoursite.com/2017/05/15/MYSQL MariaDB 的事务和事务隔离级别/</a>
+            <p>发表日期: <a href="http://yoursite.com/2017/05/15/MYSQL MariaDB 的事务和事务隔离级别/">May 15th 2017, 12:00:00 am</a>
+            <p>版权声明: 本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+        </div>
+    
+    <!-- paginator  -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+                <div class="nextSlogan">Next Post</div>
+                <a href= "/2017/05/22/MYSQL 数据库的日志介绍/" title= MYSQL 数据库的日志介绍 >
+                    <div class="nextTitle">MYSQL 数据库的日志介绍</div>
+                </a>
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href= "/2017/05/08/MASQL MariaDB 用户权限管理/" title= MASQL MariaDB 用户权限管理 >
+                    <div class="prevTitle">MASQL MariaDB 用户权限管理</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+<!-- City版安装代码已完成 -->
+    
+    
+    <!--PC和WAP自适应版-->
+
+    <!--PC版-->
+
+
+    
+    
+
+    <!-- 评论 -->
+</main>
+            <!-- profile -->
+            
+        </div>
+        <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+    <div class="social">
+        
+    
+        
+            
+                <a href="mailto:1020846215@qq.com" class="iconfont-archer email" title=email ></a>
+            
+        
+    
+        
+            
+                <a href="//github.com/fi3ework" class="iconfont-archer github" target="_blank" title=github></a>
+            
+        
+    
+        
+            
+                <span class="iconfont-archer wechat" title=wechat>
+                  
+                  <img class="profile-qr" src="/assets/example_qr.png" />
+                </span>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+    </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- 不蒜子  -->
+    
+    <div class="busuanzi-container">
+    
+     
+    <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+    
+    </div>
+    
+</footer>
+    </div>
+    <!-- toc -->
+    
+    <div class="toc-wrapper" style=
+    
+
+
+
+
+
+
+
+top:50vh;
+
+    >
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#事务特性"><span class="toc-number">1.</span> <span class="toc-text">事务特性</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#事务具有ACID特性：原子性-A-atomicity-、一致性-C-consistency-、隔离性-I-isolation-、持久性-D-durabulity-。"><span class="toc-number">1.0.0.1.</span> <span class="toc-text">事务具有ACID特性：原子性(A,atomicity)、一致性(C,consistency)、隔离性(I,isolation)、持久性(D,durabulity)。</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#原子性：事务内的所有操作要么都执行，要么都不执行。"><span class="toc-number">1.0.0.2.</span> <span class="toc-text">原子性：事务内的所有操作要么都执行，要么都不执行。</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#一致性：事务开始和结束前后，数据都满足数据一致性约束，而不是经过事务控制之后数据变得不满足条件或业务规则。"><span class="toc-number">1.0.0.3.</span> <span class="toc-text">一致性：事务开始和结束前后，数据都满足数据一致性约束，而不是经过事务控制之后数据变得不满足条件或业务规则。</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#隔离性：事务之间不能互影响，它们必须完全的各行其道，互不可见。"><span class="toc-number">1.0.0.4.</span> <span class="toc-text">隔离性：事务之间不能互影响，它们必须完全的各行其道，互不可见。</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#持久性：事务完成后，该事务内涉及的数据必须持久性的写入磁盘保证其持久性。当然，这是从事务的角度来考虑的的持久性，从操作系统故障或硬件故障来说，这是不一定的。"><span class="toc-number">1.0.0.5.</span> <span class="toc-text">持久性：事务完成后，该事务内涉及的数据必须持久性的写入磁盘保证其持久性。当然，这是从事务的角度来考虑的的持久性，从操作系统故障或硬件故障来说，这是不一定的。</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#事务分类"><span class="toc-number">2.</span> <span class="toc-text">事务分类</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#扁平事务"><span class="toc-number">2.0.1.</span> <span class="toc-text">扁平事务</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#带有保存点的扁平事务"><span class="toc-number">2.0.2.</span> <span class="toc-text">带有保存点的扁平事务</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#通过在事务内部的某个位置使用savepoint，将来可以在事务中回滚到此位置。"><span class="toc-number">2.0.2.1.</span> <span class="toc-text">通过在事务内部的某个位置使用savepoint，将来可以在事务中回滚到此位置。</span></a></li></ol></li><li class="toc-item toc-level-5"><a class="toc-link" href="#链式事务"><span class="toc-number">2.0.3.</span> <span class="toc-text">链式事务</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#嵌套事务"><span class="toc-number">2.0.4.</span> <span class="toc-text">嵌套事务</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#关于嵌套事务的机制，主要有以下3个结论："><span class="toc-number">2.0.4.1.</span> <span class="toc-text">关于嵌套事务的机制，主要有以下3个结论：</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#不管怎么样，最好少用嵌套事务。且MariaDB-MySQL不原生态支持嵌套事务-SQL-Server支持-。"><span class="toc-number">2.0.4.2.</span> <span class="toc-text">不管怎么样，最好少用嵌套事务。且MariaDB/MySQL不原生态支持嵌套事务(SQL Server支持)。</span></a></li></ol></li><li class="toc-item toc-level-5"><a class="toc-link" href="#分布式事务"><span class="toc-number">2.0.5.</span> <span class="toc-text">分布式事务</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#将多个服务器上的事务-节点-组合形成一个遵循事务特性-acid-的分布式事务。"><span class="toc-number">2.0.5.1.</span> <span class="toc-text">将多个服务器上的事务(节点)组合形成一个遵循事务特性(acid)的分布式事务。</span></a></li></ol></li><li class="toc-item toc-level-5"><a class="toc-link" href="#事务控制语句"><span class="toc-number">2.0.6.</span> <span class="toc-text">事务控制语句</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#将completion-type设置为2，进行测试。"><span class="toc-number">2.0.6.1.</span> <span class="toc-text">将completion_type设置为2，进行测试。</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#提交后，再查询或者进行其他操作，结果提示已经和MariaDB-MySQL服务器断开连接了。"><span class="toc-number">2.0.6.2.</span> <span class="toc-text">提交后，再查询或者进行其他操作，结果提示已经和MariaDB/MySQL服务器断开连接了。</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#显式事务的次数统计"><span class="toc-number">3.</span> <span class="toc-text">显式事务的次数统计</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#通过全局状态变量com-commit和com-rollback可以查看当前已经显式提交和显式回滚事务的次数。还可以看到回滚到保存点的次数。"><span class="toc-number">3.0.0.1.</span> <span class="toc-text">通过全局状态变量com_commit和com_rollback可以查看当前已经显式提交和显式回滚事务的次数。还可以看到回滚到保存点的次数。</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#一致性非锁定读-快照查询"><span class="toc-number">4.</span> <span class="toc-text">一致性非锁定读(快照查询)</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#当前示例表ttt的记录如下："><span class="toc-number">4.0.0.1.</span> <span class="toc-text">当前示例表ttt的记录如下：</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#在会话1执行："><span class="toc-number">4.0.0.2.</span> <span class="toc-text">在会话1执行：</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#在会话2中执行："><span class="toc-number">4.0.0.3.</span> <span class="toc-text">在会话2中执行：</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#查询的结果和预期的一样，来自开启事务前最新提交的行版本数据。"><span class="toc-number">4.0.0.4.</span> <span class="toc-text">查询的结果和预期的一样，来自开启事务前最新提交的行版本数据。</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#一致性锁定读"><span class="toc-number">5.</span> <span class="toc-text">一致性锁定读</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#事务隔离级别"><span class="toc-number">6.</span> <span class="toc-text">事务隔离级别</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#设置和查看事务隔离级别"><span class="toc-number">6.0.1.</span> <span class="toc-text">设置和查看事务隔离级别</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#read-uncommitted"><span class="toc-number">6.0.2.</span> <span class="toc-text">read uncommitted</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#read-committed"><span class="toc-number">6.0.3.</span> <span class="toc-text">read committed</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#当前示例表ttt的记录如下：-1"><span class="toc-number">6.0.3.1.</span> <span class="toc-text">当前示例表ttt的记录如下：</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#现在将会话1中的事务提交。"><span class="toc-number">6.0.3.2.</span> <span class="toc-text">现在将会话1中的事务提交。</span></a></li></ol></li><li class="toc-item toc-level-5"><a class="toc-link" href="#repeatable-read"><span class="toc-number">6.0.4.</span> <span class="toc-text">repeatable read</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#当前示例表ttt的记录如下：-2"><span class="toc-number">6.0.4.1.</span> <span class="toc-text">当前示例表ttt的记录如下：</span></a></li></ol></li><li class="toc-item toc-level-5"><a class="toc-link" href="#serializable"><span class="toc-number">6.0.5.</span> <span class="toc-text">serializable</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#这个隔离级别对并发性来说，显然是有点太严格了。"><span class="toc-number">6.0.5.1.</span> <span class="toc-text">这个隔离级别对并发性来说，显然是有点太严格了。</span></a></li></ol></li></ol></li></ol></li></ol>
+    </div>
+    
+    <div class="back-top iconfont-archer">&#xe639;</div>
+    <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+          <div class="sidebar-panel-archives">
+    <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 24
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+    
+    
+    
+    <div class="archive-year"> 2017 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/01</span><a class="archive-post-title" href= "/2017/06/01/介绍 MYSQL的事务日志/" >介绍 MYSQL的事务日志</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/22</span><a class="archive-post-title" href= "/2017/05/22/MYSQL 数据库的日志介绍/" >MYSQL 数据库的日志介绍</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/15</span><a class="archive-post-title" href= "/2017/05/15/MYSQL MariaDB 的事务和事务隔离级别/" >MYSQL MariaDB 的事务和事务隔离级别</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/08</span><a class="archive-post-title" href= "/2017/05/08/MASQL MariaDB 用户权限管理/" >MASQL MariaDB 用户权限管理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/20</span><a class="archive-post-title" href= "/2017/04/20/ext 文件系统机制原理/" >ext 文件系统机制原理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/15</span><a class="archive-post-title" href= "/2017/04/15/Linux分区信息与管理文件系统/" >Linux分区信息与管理文件系统</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/10</span><a class="archive-post-title" href= "/2017/04/10/DHCP 服务/" >DHCP服务</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/01</span><a class="archive-post-title" href= "/2017/04/01/Linux系统中su 和 sudo 的用法/" >Linux系统中su 和 sudo 的用法</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/22</span><a class="archive-post-title" href= "/2017/03/22/实现DNS服务主从复制/" >实现DNS服务主从复制</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/20</span><a class="archive-post-title" href= "/2017/03/20/搭建DNS互联网架构服务器(一）/" >搭建DNS互联网架构服务器</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/15</span><a class="archive-post-title" href= "/2017/03/15/搭建DNS 服务，实现主服务器，邮件服务器，泛域名解析，反向解析等/" >搭建DNS 服务，实现主服务器，邮件服务器，泛域名解析，反向解析等</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/12</span><a class="archive-post-title" href= "/2017/03/12/Linux 文件权限管理/" >Linux 文件权限管理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/08</span><a class="archive-post-title" href= "/2017/03/08/LINUX系统中用户、组管理/" >安装管理包：LINUX系统中用户、组管理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/28</span><a class="archive-post-title" href= "/2017/02/28/搭建DNS服务器，实现主DNS服务器，负责解析一个域/" >搭建DNS服务器，实现主DNS服务器，负责解析一个域</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/15</span><a class="archive-post-title" href= "/2017/02/15/DNS 服务从基础到深入/" >DNS 服务从基础到深入</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/10</span><a class="archive-post-title" href= "/2017/02/10/SSH端口转发实验/" >SSH端口转发实验</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/08</span><a class="archive-post-title" href= "/2017/02/08/实现PXE自动安装/" >实现PXE自动安装</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/01</span><a class="archive-post-title" href= "/2017/02/01/rpm管理包 和 yum管理包(1)/" >安装管理包：rpm包和yum包</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/20</span><a class="archive-post-title" href= "/2017/01/20/搭建CA/" >如何搭建CA（向CA申请证书）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/08</span><a class="archive-post-title" href= "/2017/01/08/自制一个mini 的Linux系统/" >自制一个mini 的Linux系统</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2016 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/20</span><a class="archive-post-title" href= "/2016/12/20/进程管理和计划任务的知识点()/" >进程管理与计划任务的知识点</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/08</span><a class="archive-post-title" href= "/2016/12/08/TCP、IP协议三次握手与四次握手流程解析（）/" >TCP、IP协议三次握手与四次握手流程解析</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/29</span><a class="archive-post-title" href= "/2016/11/29/Linux 的一些基础练习题/" >Linux 的一些基础练习题</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/23</span><a class="archive-post-title" href= "/2016/11/23/对正则表达式，VIM编辑器命令的基本操作（三）/" >对正则表达式，VIM编辑器命令的基本操作</a>
+        </li>
+    
+    </div>
+  </div>
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+    
+        <span class="sidebar-tag-name" data-tags="Linux"><span class="iconfont-archer">&#xe606;</span>Linux</span>
+    
+        <span class="sidebar-tag-name" data-tags="DNS"><span class="iconfont-archer">&#xe606;</span>DNS</span>
+    
+        <span class="sidebar-tag-name" data-tags="用户组"><span class="iconfont-archer">&#xe606;</span>用户组</span>
+    
+        <span class="sidebar-tag-name" data-tags="DHCP"><span class="iconfont-archer">&#xe606;</span>DHCP</span>
+    
+        <span class="sidebar-tag-name" data-tags="权限管理"><span class="iconfont-archer">&#xe606;</span>权限管理</span>
+    
+        <span class="sidebar-tag-name" data-tags="练习题"><span class="iconfont-archer">&#xe606;</span>练习题</span>
+    
+        <span class="sidebar-tag-name" data-tags="su和sudo"><span class="iconfont-archer">&#xe606;</span>su和sudo</span>
+    
+        <span class="sidebar-tag-name" data-tags="文件系统"><span class="iconfont-archer">&#xe606;</span>文件系统</span>
+    
+        <span class="sidebar-tag-name" data-tags="SSH"><span class="iconfont-archer">&#xe606;</span>SSH</span>
+    
+        <span class="sidebar-tag-name" data-tags="MYSQL"><span class="iconfont-archer">&#xe606;</span>MYSQL</span>
+    
+        <span class="sidebar-tag-name" data-tags="TCP/IP"><span class="iconfont-archer">&#xe606;</span>TCP/IP</span>
+    
+        <span class="sidebar-tag-name" data-tags="rpm"><span class="iconfont-archer">&#xe606;</span>rpm</span>
+    
+        <span class="sidebar-tag-name" data-tags="自动化安装"><span class="iconfont-archer">&#xe606;</span>自动化安装</span>
+    
+        <span class="sidebar-tag-name" data-tags="CA"><span class="iconfont-archer">&#xe606;</span>CA</span>
+    
+        <span class="sidebar-tag-name" data-tags="基本命令"><span class="iconfont-archer">&#xe606;</span>基本命令</span>
+    
+        <span class="sidebar-tag-name" data-tags="dns"><span class="iconfont-archer">&#xe606;</span>dns</span>
+    
+        <span class="sidebar-tag-name" data-tags="mini系统"><span class="iconfont-archer">&#xe606;</span>mini系统</span>
+    
+        <span class="sidebar-tag-name" data-tags="进程管理、计划任务"><span class="iconfont-archer">&#xe606;</span>进程管理、计划任务</span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+    缺失模块。<br/>
+    1、请确保node版本大于6.2<br/>
+    2、在博客根目录（注意不是archer根目录）执行以下命令：<br/>
+    <span style="color: #f75357; font-size: 1rem; line-height: 2rem;">npm i hexo-generator-json-content --save</span><br/>
+    3、在根目录_config.yml里添加配置：
+    <pre style="color: #787878; font-size: 0.6rem;">
+jsonContent:
+  meta: false
+  pages: false
+  posts:
+    title: true
+    date: true
+    path: true
+    text: false
+    raw: false
+    content: false
+    slug: false
+    updated: false
+    comments: false
+    link: false
+    permalink: false
+    excerpt: false
+    categories: true
+    tags: true</pre>
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+    </div>
+</div> 
+    <script>
+    var siteMeta = {
+        root: "/",
+        author: "John Doe"
+    }
+</script>
+    <!-- CDN failover -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ === 'undefined')
+        {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js">\x3C/script>')
+        }
+    </script>
+    <script src="/scripts/main.js"></script>
+    <!-- algolia -->
+    
+    <!-- busuanzi  -->
+    
+    <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+    <!-- CNZZ  -->
+    
+    </div>
+    <!-- async load share.js -->
+    
+        <script src="/scripts/share.js" async></script>    
+     
+    </body>
+</html>
+
+
