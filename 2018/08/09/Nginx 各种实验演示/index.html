@@ -1,0 +1,1541 @@
+<!DOCTYPE html>
+<html>
+    <!-- title -->
+
+
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" >
+    <meta name="author" content="John Doe">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="John Doe">
+    <meta name="keywords" content="Hexo | John Doe">
+    <meta name="description" content="">
+    <meta name="Cache-Control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <title>李登峰</title>
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s 1;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+
+</style>
+
+    <link rel="preload" href= /css/style.css?v=20180630 as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    <link rel="stylesheet" href= /css/mobile.css?v=20180630 media="(max-width: 980px)">
+    
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+(function( w ){
+	"use strict";
+	// rel=preload support test
+	if( !w.loadCSS ){
+		w.loadCSS = function(){};
+	}
+	// define on the loadCSS obj
+	var rp = loadCSS.relpreload = {};
+	// rel=preload feature support test
+	// runs once and returns a function for compat purposes
+	rp.support = (function(){
+		var ret;
+		try {
+			ret = w.document.createElement( "link" ).relList.supports( "preload" );
+		} catch (e) {
+			ret = false;
+		}
+		return function(){
+			return ret;
+		};
+	})();
+
+	// if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+	// then change that media back to its intended value on load
+	rp.bindMediaToggle = function( link ){
+		// remember existing media attr for ultimate state, or default to 'all'
+		var finalMedia = link.media || "all";
+
+		function enableStylesheet(){
+			link.media = finalMedia;
+		}
+
+		// bind load handlers to enable media
+		if( link.addEventListener ){
+			link.addEventListener( "load", enableStylesheet );
+		} else if( link.attachEvent ){
+			link.attachEvent( "onload", enableStylesheet );
+		}
+
+		// Set rel and non-applicable media type to start an async request
+		// note: timeout allows this to happen async to let rendering continue in IE
+		setTimeout(function(){
+			link.rel = "stylesheet";
+			link.media = "only x";
+		});
+		// also enable media after 3 seconds,
+		// which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+		setTimeout( enableStylesheet, 3000 );
+	};
+
+	// loop through link elements in DOM
+	rp.poly = function(){
+		// double check this to prevent external calls from running
+		if( rp.support() ){
+			return;
+		}
+		var links = w.document.getElementsByTagName( "link" );
+		for( var i = 0; i < links.length; i++ ){
+			var link = links[ i ];
+			// qualify links to those with rel=preload and as=style attrs
+			if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+				// prevent rerunning on link
+				link.setAttribute( "data-loadcss", true );
+				// bind listeners to toggle media back
+				rp.bindMediaToggle( link );
+			}
+		}
+	};
+
+	// if unsupported, run the polyfill
+	if( !rp.support() ){
+		// run once at least
+		rp.poly();
+
+		// rerun poly on an interval until onload
+		var run = w.setInterval( rp.poly, 500 );
+		if( w.addEventListener ){
+			w.addEventListener( "load", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		} else if( w.attachEvent ){
+			w.attachEvent( "onload", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		}
+	}
+
+
+	// commonjs
+	if( typeof exports !== "undefined" ){
+		exports.loadCSS = loadCSS;
+	}
+	else {
+		w.loadCSS = loadCSS;
+	}
+}( typeof global !== "undefined" ? global : this ) );
+</script>
+
+    <link rel="icon" href= "/assets/favicon.ico" />
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js" as="script" />
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" as="script" />
+    <link rel="preload" href="/scripts/main.js" as="script" />
+    <link rel="preload" as="font" href="/font/Oswald-Regular.ttf" crossorigin>
+    <link rel="preload" as="font" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" crossorigin>
+    
+    <!-- fancybox -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script>
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  -->
+    
+</head>
+
+    
+        <body class="post-body">
+    
+    
+<header class="header">
+
+    <div class="read-progress"></div>
+    <div class="header-sidebar-menu">&#xe775;</div>
+    <!-- post页的toggle banner  -->
+    
+    <div class="banner">
+            <div class="blog-title">
+                <a href="/" >博客</a>
+            </div>
+            <div class="post-title">
+                <a href="#" class="post-name"></a>
+            </div>
+    </div>
+    
+    <a class="home-link" href=/>博客</a>
+</header>
+    <div class="wrapper">
+        <div class="site-intro" style=
+
+
+
+
+
+
+
+
+height:50vh;
+
+>
+    
+    <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
+            
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+            [Untitled Post]
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+            
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                
+                    <div class="post-intro-read">
+                        <span>Word count: <span class="post-count">4,064</span> / Reading time: <span class="post-count">17 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                    <span class="post-intro-time">2018/08/09</span>
+                    
+                    <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                        <span class="iconfont-archer">&#xe602;</span>
+                        <span id="busuanzi_value_page_pv"></span>
+                    </span>
+                    
+                    <span class="shareWrapper">
+                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
+                        <span class="shareText">Share</span>
+                        <ul class="shareList">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        
+    </div>
+</div> 
+        <script>
+ 
+  // get user agent
+  var browser = {
+    versions: function () {
+      var u = window.navigator.userAgent;
+      return {
+        userAgent: u,
+        trident: u.indexOf('Trident') > -1, //IE内核
+        presto: u.indexOf('Presto') > -1, //opera内核
+        webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+        gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+        mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+        ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+        android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+        iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+        iPad: u.indexOf('iPad') > -1, //是否为iPad
+        webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+        weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+        uc: u.indexOf('UCBrowser') > -1 //是否为android下的UC浏览器
+      };
+    }()
+  }
+  console.log("userAgent:" + browser.versions.userAgent);
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded');
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document.getElementsByClassName('intro-title')[0].classList.add('intro-fade-in');
+      document.getElementsByClassName('intro-subtitle')[0].classList.add('intro-fade-in');
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in');
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb(){
+    if (browser.versions.uc) {
+      console.log("UCBrowser");
+      fontLoaded();
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular']
+        },
+        loading: function () {  //所有字体开始加载
+          // console.log('loading');
+        },
+        active: function () {  //所有字体已渲染
+          fontLoaded();
+        },
+        inactive: function () { //字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout');
+          fontLoaded();
+        },
+        timeout: 5000 // Set the timeout to two seconds
+      });
+    }
+  }
+
+  function asyncErr(){
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (cb) { o.addEventListener('load', function (e) { cb(null, e); }, false); }
+    if (err) { o.addEventListener('error', function (e) { err(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+
+  var asyncLoadWithFallBack = function(arr, success, reject) {
+      var currReject = function(){
+        reject()
+        arr.shift()
+        if(arr.length)
+          async(arr[0], success, currReject)
+        }
+
+      async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack([
+    "https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js", 
+    "https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js",
+    "/lib/webfontloader.min.js"
+  ], asyncCb, asyncErr)
+</script>        
+        <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+        <div class="container container-unloaded">
+            <main class="main post-page">
+    <article class="article-entry">
+        <hr>
+<p>layout: post<br>title: Nginx 各种实验演示<br>date: 2017-8-02<br>tags:</p>
+<ul>
+<li>Linux</li>
+<li>nginx</li>
+</ul>
+<hr>
+<h2 id="实验：Nginx-实现-SSL-加密"><a href="#实验：Nginx-实现-SSL-加密" class="headerlink" title="实验：Nginx 实现 SSL 加密"></a>实验：Nginx 实现 SSL 加密</h2><p>要实现 SSL 加密首先在服务器上生成证书，如：<br>创建 CA 第一种方法：<br>    cd /etc/pki/CA<br>(umask 077;openssl genrsa -out private/cakey.pem 2048)<br>openssl req -new -x509 -key private/cakey.pem -out cacert.pem -days 3650<br>            然后输入一些地区单位信息等，如：<br>                            CN<br>                             beijing<br>                             beijing<br>                             magedu<br>                             opt<br>                             <a href="http://www.a.com" target="_blank" rel="noopener">www.a.com</a><br> 这样 CA 的自签名证书就创建好了，还要创建两个文件  </p>
+<p> touch serial index.txt<br>echo 01 &gt; serial  </p>
+<p>接下来为 nginx 向 CA 申请证书<br> cd /etc/nginx/<br>mkdir ssl<br>cd ssl<br>(umask 077;openssl genrsa -out nginx.key 1024)<br>openssl req -new -key nginx.key -out nginx.csr<br>             然后输入一些地区单位信息等，如：<br>                            CN<br>                             beijing<br>                             beijing<br>                             magedu<br>                             opt<br>                             <a href="http://www.a.com" target="_blank" rel="noopener">www.a.com</a><br><a id="more"></a><br>接下来 ca 颁发证书<br>openssl ca -in nginx.csr -out nginx.crt -days 3655<br>这样就生成 nginx 证书  </p>
+<p>创建 CA 第二种方法：<br>cd /etc/pki/tls/certs<br>make a.crt<br>接下来会让输入口令，这个口令是给私钥加的口令，这个口令加上后， nginx 服务启动时自动起不来了，输完口令才能起来，为了方便操作，也可以在这先加上，到后面在取消。<br>然后输入一些地区单位信息等，如：<br> CN<br>beijing<br>beijing<br>magedu<br>opt<br><a href="http://www.a.com" target="_blank" rel="noopener">www.a.com</a><br>这时候就在当前目录下生成两个文件，一个私钥文件，一个自签名证书文件，如： a.key  ,  a.crt<br>如果在前面给私钥加了密，现在就可以给解下密，如：<br>openssl rsa -in a.key -out aa.key<br> 生成的这个 aa.key 跟原来一样就是不加密了<br>接下来就可以把 生成的文件复制到 nginx 的配置文件目录下<br>cp a.crt aa.key /etc/nginx/conf.d/<br>cd /etc/nginx/conf.d/<br>为了好看，可以把 aa.key 文件名在改过来。<br>mv aa.key a.key  </p>
+<p>然后在当前目录下创建配置文件，vim vhosts.conf  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line"> listen 443 ssl;</span><br><span class="line"> server_name www.a.com;</span><br><span class="line"> root /data/sitea/;               # 这个目录表示 url 的根目录</span><br><span class="line"> ssl on; </span><br><span class="line">ssl_certificate /etc/nginx/conf.d/a.crt;</span><br><span class="line"> ssl_certificate_key /etc/nginx/conf.d/a..key; </span><br><span class="line">ssl_session_cache shared:sslcache:20m; </span><br><span class="line">ssl_session_timeout 10m; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>接下来重启服务    nginx<br>就会发现端口 443 已经开启<br>然后就可以在远程服务器上进行测试连接了<br>在远程服务器上   curl -k https:// <a href="http://www.a.com" target="_blank" rel="noopener">www.a.com</a><br>也可以在浏览器上输入 IP   进行访问，如果要在浏览器上输入网址，就还得 DNS 解析才行。<br>在浏览器上输入      https:// <a href="http://www.a.com" target="_blank" rel="noopener">www.a.com</a><br>当然这个证书是没有可信度的，在具体生产中要想实现 https ，那就花钱买正规证书，然后把放在对应的目录下就可以了。<br>这就是 SSL 的实现  </p>
+<h2 id="实验：在一台-Nginx-服务器上实现搭建多个加密网站"><a href="#实验：在一台-Nginx-服务器上实现搭建多个加密网站" class="headerlink" title="实验：在一台 Nginx 服务器上实现搭建多个加密网站"></a>实验：在一台 Nginx 服务器上实现搭建多个加密网站</h2><p>在 apache 上要想在一台物理服务器上实现多个 https 的虚拟主机网站是不行的，但是在 nginx 上是可以实现的，因为 nginx 上支持     SNI 技术，所谓的 SNI 技术表示服务器的名称扩展，这个技术就可以让我们在一台物理服务器上实现多个 https 的网站。  </p>
+<p>  那么现在来实现以下在一台服务器上实现多个加密的网站。比如：   <a href="http://www.a.com" target="_blank" rel="noopener">www.a.com</a>     <a href="http://www.b.com" target="_blank" rel="noopener">www.b.com</a><br>首先准备两个证书，过程如上，在这就不细说。<br>两个证书准备好后，然后放到相应的目录下。然后写配置文件，如：<br>cd /etc/nginx/conf.d/<br>vim vhosts.conf  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line"> listen 443 ssl;</span><br><span class="line"> server_name www.a.com;</span><br><span class="line"> root /data/sitea/;               # 这个目录表示 url 的根目录</span><br><span class="line"> ssl on; </span><br><span class="line">ssl_certificate /etc/nginx/conf.d/a.crt;</span><br><span class="line"> ssl_certificate_key /etc/nginx/conf.d/a..key; </span><br><span class="line">ssl_session_cache shared:sslcache:20m; </span><br><span class="line">ssl_session_timeout 10m; </span><br><span class="line">&#125;</span><br><span class="line">server &#123;</span><br><span class="line"> listen 443 ssl;</span><br><span class="line"> server_name www.b.com;</span><br><span class="line"> root /data/siteb/;               # 这个目录表示 url 的根目录</span><br><span class="line"> ssl on; </span><br><span class="line">ssl_certificate /etc/nginx/conf.d/b.crt;</span><br><span class="line"> ssl_certificate_key /etc/nginx/conf.d/b.key; </span><br><span class="line">ssl_session_cache shared:sslcache:20m; </span><br><span class="line">ssl_session_timeout 10m; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>接下来重启服务    nginx<br>然后就可以测试了，当然要是直接在浏览器上输入 网址，还需要 DNS 解析。<br>当然即使解析了浏览器也会报网站不安全，因为证书是我们自签名的，浏览器比信任，要想浏览器信任，在具体生产中还得花钱购买公认的证书。<br>这就实现了 一个物理服务器上搭建多个 加密网站。  </p>
+<h2 id="实验：-实现-nginx-服务，fastcgi-模式之间的搭建连接。"><a href="#实验：-实现-nginx-服务，fastcgi-模式之间的搭建连接。" class="headerlink" title="实验： 实现 nginx 服务，fastcgi 模式之间的搭建连接。"></a>实验： 实现 nginx 服务，fastcgi 模式之间的搭建连接。</h2><p>准备四台服务器来模拟实验，分别用来当做 客户端、nginx 服务器、fastcgi 服务器、mysql 数据库服务器。<br>客户端服务器的地址为 192.168.30.6<br>fastcgi 服务器的地址为 192.168.30.17</p>
+<p>首先在192.168.30.7 主机上安装 nginx 服务并启动<br>yum install nginx<br>nginx<br>接下来添加配置文件让能够连接后端的 fastcgi 程序<br>vim /etc/nginx/conf.d/vhosts.conf<br>添加内容      </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">location ~ \.php$ &#123;</span><br><span class="line">fastcgi_pass 192.168.30.17:9000; </span><br><span class="line">                 fastcgi_index index.php;</span><br><span class="line">                 fastcgi_param SCRIPT_FILENAME</span><br><span class="line">                 /data/php$fastcgi_script_name; </span><br><span class="line">                 include fastcgi_params; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>添加完后重新加载配置文件<br>nginx -s reload  </p>
+<p>在192.168.30.17 服务器上安装 php-fpm 包<br>yum install php-fpm<br>修改配置文件      vim /etc/php-fpm.d/<a href="http://www.conf" target="_blank" rel="noopener">www.conf</a><br>修改   listen = 127.0.0.1:9000   改为   listen = 9000<br>          listen.allowed_clients = 127.0.0.1    改为<br>          listen.allowed_clients = 192.168.30.7<br>          这块的 IP 为前端 nginx 服务器的地址<br>修改完重启服务<br>systemctl start php-fpm<br>创建一个文件夹，将来存放 php 程序的文件<br>mkdir /data/php<br>cd /data/php/<br>添加一些测试文件  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">vim index.html</span><br><span class="line">&lt;?</span><br><span class="line">phpinfo();</span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">vim tset.php</span><br><span class="line">&lt;?php</span><br><span class="line">$dsn=&apos;mysql:host=192.168.30.27;dbname=mysql&apos;;</span><br><span class="line">$username=&apos;test&apos;;</span><br><span class="line">$passwd=&apos;centos&apos;;</span><br><span class="line">$dbh=new PDO($dsn,$username,$passwd);</span><br><span class="line">var_dump($dbh);</span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure>
+<p>接下来就可以拿浏览器访问 nginx 服务器了。<br>这就实现了 fastcgi 的php程序。不过一般在生产中为了节约物理服务器，这两个还是放在一起的，在这只是为了演示原理分开测试的。  </p>
+<p>如果 nginx 服务器作为中间的一个调度器，后端比如有两个提供外部服务的服务器，那如何调度，首先在后端的外部服务器上设置好各自的服务跟站点页面。然后在 nginx 服务器配置文件的 http 语句块中添加：  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">upstream www &#123;</span><br><span class="line">server 192.168.30.200:80;    #    表示后端的外部服务器地址</span><br><span class="line">server 192.168.30.17:80;        #    表示后端的外部服务器地址</span><br><span class="line">&#125;</span><br><span class="line">     location / &#123;</span><br><span class="line">proxy_pass http://www;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>然后在浏览器上进行访问就ok 了，注意访问的是 nginx 服务器的地址。<br>当然，如果后端的外部服务器有一个宕机，前面的 nginx 服务器会立即察觉，并且立即不往那台服务器上调度。不用手动配置什么，一切动作都是自动的。<br>说明 nginx 服务器还有自动健康检查功能。<br>还有如果后端的外部服务器端口发生变化，直接在 nginx 服务器配置文件中进行修改即可，并重启服务。  </p>
+<h2 id="实验：-实现-nginx-源码编译"><a href="#实验：-实现-nginx-源码编译" class="headerlink" title="实验： 实现 nginx 源码编译"></a>实验： 实现 nginx 源码编译</h2><p>先在官网上下载源码包到本机          官网： <a href="http://www.nginx.org" target="_blank" rel="noopener">www.nginx.org</a><br>下载包：   nginx-1.12.2.tar.gz<br>下载完解包<br>tar xvf nginx-1.12.2.tar.gz<br>解完包生成一个文件夹<br>nginx-1.12.2<br>解完包对源码进行修改，比如，对外 发布的版本号<br>cd nginx-1.12.2<br>vim src/http/ngx_http_header_filter_module.c<br>在里面进行修改    查找 48 行<br>修改  static u_char ngx_http_server_string[] = “Server: nginx” CRLF;   为：<br>          static u_char ngx_http_server_string[] = “Server: Linginx” CRLF;  （可以自己随意修改字段）  </p>
+<p>还有一个就是修改 nginx 版本号<br>vim src/core/nginx.h<br>在里面有版本号，然后进行修改。  </p>
+<p>安装包组<br>yum groupinstall “development tools”<br>接下来创建一个 nginx 账号，因为一会 work 进程要以 nginx 的身份运行<br>useradd -r nginx<br>然后 cd 到 nginx-1.12.2 目录下进行编译<br>./configure –prefix=/app/nginx \<br> –conf-path=/etc/nginx/nginx.conf \<br>– error-log-path=/var/log/nginx/error.log \<br>–http-logpath=/var/log/nginx/access.log \<br>–pid-path=/var/run/nginx.pid \<br>–lockpath=/var/run/nginx.lock \<br>–user=nginx \<br>–group=nginx \<br>–with-http_ssl_module \<br>–with-http_v2_module \<br>–with-http_dav_module \<br>–withhttp_stub_status_module \<br>–with-threads \<br>–with-file-aio  </p>
+<p>中间可能会提示缺包，提示缺什么包装上就可以了<br>如： yum install pcre-devel<br>        yum install openssl-devel  </p>
+<p>make -j 4 &amp;&amp; make install  </p>
+<p>编译完后在 /app/nginx/sbin/ 目录下有一个 nginx 程序<br>运行这个程序启动服务<br>./nginx<br>可以直接把这个工具加入 PASH 变量中<br>如果想干脆把让客户看到版本号，那就修改主配置文件<br>vim /etc/nginx/conf/nginx.conf<br>在 http 语句块中添加<br>server_tokens off;<br>修改完重新加载配置文件    ./nginx -s reload<br>这样客户端就看不见服务版本了  </p>
+<p>到此就编译成功了。  </p>
+<h2 id="实验：-实现-nginx-的反向代理功能"><a href="#实验：-实现-nginx-的反向代理功能" class="headerlink" title="实验：  实现 nginx 的反向代理功能"></a>实验：  实现 nginx 的反向代理功能</h2><p>现在准备三台主机来模拟实验环境，一个客户端，一个 nginx 服务器， 一个后端提供服务的 httpd 服务器。     实验模拟：   172 网段属于外网，  192 网段的属于内网<br>现在配置环境，客户机上的网卡网段是 172，IP 为 172.20.101.101<br> nginx 服务器上有两个网卡，一个是 172 网段的，IP 为  172.20.116.116   ， 一个是 192 网段的，IP 为 192.168.30.7 。<br>后端服务器上网卡的网段是 192 网段的，IP 为 192.168.30.17  </p>
+<p>先在后端提供外部服务的 httpd 服务器上安装 httpd 服务并启动<br>yum install httpd<br>systemctl start httpd  </p>
+<p>然后在 nginx 服务器上安装 nginx 服务，并配置反向代理功能<br>在配置文件中添加：  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">location / &#123;</span><br><span class="line">proxy_pass http://192.168.30.17/;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>然后用 客户机去访问 nginx 服务器的80 端口 ，curl 172.20.116.116<br>就会收到后端提供服务的外部服务器主页面的内容。<br>然后在后端的提供服务的外部服务器上的日志中收到发来的请求，就会发现日志显示的请求 ip 是 nginx 服务器的。<br>但在 nginx 服务器上的日志中会显示真正客户端发来的请求。<br>以上就实现了简单的 nginx 服务的反向代理  </p>
+<p>如果后端的外部服务器上端口进行修改，修改为 8080，那么就要在 nginx 服务器配置文件中进行修改，如：<br>       l<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ocation / &#123;</span><br><span class="line">proxy_pass http://192.168.30.17：8080/;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>如果只允许访问特定目录时才给转到后端外部服务器上去，怎么配置？   如：  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">location /bbs &#123;</span><br><span class="line">proxy_pass http://192.168.30.17/;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>注意：<br>        这里面 IP 后面加斜线，我们表示有 URL ，当访问 /bbs 目录时就会把这个目录置换为 IP 下的根，而不加斜线，就会把 /bbs 目录添加在地址后面充当我的 URL 。<br>        这里面 IP 后面加斜线，反向代理后访问到的是后端服务器默认的主站点页面文件，而不加斜线则访问到的是根下的 /bbs 目录下的文件</p>
+<h2 id="实验：-实现-nginx-服务反向代理，并要求客户端访问静态页面就调度到外部1服务器上，访问动态页面就调度到外部2-服务器上，并且动态服务器后还有对应的数据库服务器，-实现动静分离。"><a href="#实验：-实现-nginx-服务反向代理，并要求客户端访问静态页面就调度到外部1服务器上，访问动态页面就调度到外部2-服务器上，并且动态服务器后还有对应的数据库服务器，-实现动静分离。" class="headerlink" title="实验： 实现 nginx 服务反向代理，并要求客户端访问静态页面就调度到外部1服务器上，访问动态页面就调度到外部2 服务器上，并且动态服务器后还有对应的数据库服务器，  实现动静分离。"></a>实验： 实现 nginx 服务反向代理，并要求客户端访问静态页面就调度到外部1服务器上，访问动态页面就调度到外部2 服务器上，并且动态服务器后还有对应的数据库服务器，  实现动静分离。</h2><p>准备实验环境<br>准备 5 台服务器，分别为  192.168.30.6      192.168.30.7    192.168.30.200    192.168.30.17     192.168.30.27<br>用 192.168.30.6  主机当客户端服务器<br>用 192.168.30.7 主机当 nginx 服务器，还有一个地址   172.20.116.116<br>用 192.168.30.200 主机当外部1 服务器<br>用 192.168.30.17 主机当外部2 服务器<br>用 192.168.30.27 主机当外部2 服务器后的数据库服务器  </p>
+<p>先配置外部服务器<br>在外部1 服务器 192.168.30.200 上安装 httpd 服务并启动<br>yum install httpd<br>设置静态页面<br>cd /var/www/html<br>echo static page &gt; index.html<br>systemctl start httpd  </p>
+<p>在外部 2服务器 192.168.30.17 上安装 httpd php-fpm php-mysql<br>yum install httpd php-fpm php-mysql<br>systemctl start httpd php-fpm  </p>
+<p>在数据库服务器 192.168.30.27 安装 mysql 数据库<br>yum install mariadb-server<br>创建数据库账号<br>grant all on <em>.</em> to test@’192.168.30.%’ identfied by ‘centos’;<br>加载数据库<br>flush privileges;  </p>
+<p>然后回到外部2 服务器  192.168.30.17 上修改配置文件   vim /etc/httpd/conf.d/php.conf<br>在里面添加        </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">DirectoryIndex index.php </span><br><span class="line">ProxyRequests Off </span><br><span class="line">ProxyPassMatch ^/(.*\.php)$ fcgi://127.0.0.1:9000/var/www/html/$1</span><br></pre></td></tr></table></figure>
+<p>写连接数据库的php 程序配置文件<br>cd /var/www/html/<br>vim tset.php<br>在里面添加  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">$dsn=&apos;mysql:host=192.168.30.27;dbname=mysql&apos;;</span><br><span class="line">$username=&apos;test&apos;;</span><br><span class="line">$passwd=&apos;centos&apos;;</span><br><span class="line">$dbh=new PDO($dsn,$username,$passwd);</span><br><span class="line">var_dump($dbh);</span><br><span class="line">?&gt;</span><br><span class="line">然后再在这个目录下创建一个 php程序文件   </span><br><span class="line">vim php.html</span><br><span class="line">&lt;?php</span><br><span class="line">phpinfo();</span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure>
+<p>重启服务<br>systemctl restart httpd  </p>
+<p>然后回到 nginx 服务器 192.168.30.7 上配置反向代理<br>在配置文件中添加       vim /etc/nginx/conf.d/vhosts.conf  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">location ~ \.php$ &#123;</span><br><span class="line">proxy_pass http://192.168.30.17;</span><br><span class="line">&#125;</span><br><span class="line">location / &#123;</span><br><span class="line">proxy_pass http://192.168.30.200;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>最后拿客户端访问 nginx 服务器，在浏览器输入   172.20.116.116/test.php  ， 如果出现” object(PDO)#1 (0) { } “    这个字符串，就表示调度到 外部 2 服务器上，输入   172.20.116.116/index.html   ,如果出现  “static page”   这个字符串就表示调度到 外部 1服务器上。<br>这就实现了动静分离，访问静态页面调度到一台服务器，访问动态页面调度到另一台服务器。这样就有效的把服务器的负载分配到不同服务器上，提高了服务器性能。  </p>
+<p>   在上面唯一遗憾的就是在后端提供外部服务的服务器日志中显示访问的主机 IP 为 nginx 反向代理服务器的。这样对以后分析哪些地方 的客户访问了哪些页面就不太方便了，为了能够在后端服务器上显示原访问客户端的 IP 地址，就要在 nginx 服务器转发请求报文时在报文头部添加一些指令，把客户端的地址添加到报文头部中，这样在后端的服务器日志中就可以看到客户端的地址了。  </p>
+<p>   但是在后端服务器的日志中他只记录访问用户的地址，并不记录报文头部的地址，所以还要在后端的服务器上修改日志格式才行。<br>    在 nginx 服务器上添加报文头部信息<br>proxy_set_header remoteclientip $remote_addr;<br>   这个信息可以放在 location、server 、http 这三个语句块中都可以。<br>          还要在后端的外部服务器上修改日志格式  ，在服务的配置文件中进行修改。<br>            vim /etc/httpd/conf/httpd.conf<br>  修改下面这条指令：  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">LogFormat &quot;%&#123;remoteclientip&#125;i %l %u %&#123;%F %T&#125;t \&quot;%r\&quot; %&gt;s %b \&quot;%&#123;Referer&#125;i\&quot; \&quot;%&#123;User-Agent&#125;i\&quot;&quot; combined</span><br></pre></td></tr></table></figure>
+<p>   修改完重启服务<br>systemctl restart httpd  </p>
+<p>   如果在生产中，客户端访问后端服务器，中间要经过好几台 nginx 反向服务器，最后面才是 提供外部服 务的外部服务器，那么这样怎么在后端服务器上记录真实客户端的访问地址？<br>   一般只用在最前面的 nginx 服务器配置文件中添加以下两条 ：<br>proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;<br>        中间的 nginx 服务器配置文件中只用添加相应的反向代理地址即可。  </p>
+<p> 注意：如果外部服务器前面有好多反向代理服务器，前面的服务器配置文件中的转发 IP 一定是后面那个转发服务器的地址，不是后面外部服务器的地址，这样一次类推，直到外部服务器前的那一个转发服务器的配置文件中才是 后端外部服务器的地址。  </p>
+<p>这样只在后端的外部服务日志中记录真实客户端的地址，不记录中间经过的 nginx 服务器的地址。<br>如果在生产中有需求，需要经过的地址都记录，就在所有经过的 nginx 服务器配置文件中添加 proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;  这条就可以。  </p>
+
+    </article>
+    <!-- license  -->
+    
+        <div class="license-wrapper">
+            <p>原文作者: <a href="http://yoursite.com">John Doe</a>
+            <p>原文链接: <a href="http://yoursite.com/2018/08/09/Nginx 各种实验演示/">http://yoursite.com/2018/08/09/Nginx 各种实验演示/</a>
+            <p>发表日期: <a href="http://yoursite.com/2018/08/09/Nginx 各种实验演示/">August 9th 2018, 3:55:09 pm</a>
+            <p>版权声明: 本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+        </div>
+    
+    <!-- paginator  -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href= "/2018/08/09/Nginx 详细介绍/" title=  >
+                    <div class="prevTitle">[Untitled Post]</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+<!-- City版安装代码已完成 -->
+    
+    
+    <!--PC和WAP自适应版-->
+
+    <!--PC版-->
+
+
+    
+    
+
+    <!-- 评论 -->
+</main>
+            <!-- profile -->
+            
+        </div>
+        <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+    <div class="social">
+        
+    
+        
+            
+                <a href="mailto:1020846215@qq.com" class="iconfont-archer email" title=email ></a>
+            
+        
+    
+        
+            
+                <a href="//github.com/fi3ework" class="iconfont-archer github" target="_blank" title=github></a>
+            
+        
+    
+        
+            
+                <span class="iconfont-archer wechat" title=wechat>
+                  
+                  <img class="profile-qr" src="/assets/example_qr.png" />
+                </span>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+    </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- 不蒜子  -->
+    
+    <div class="busuanzi-container">
+    
+     
+    <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+    
+    </div>
+    
+</footer>
+    </div>
+    <!-- toc -->
+    
+    <div class="toc-wrapper" style=
+    
+
+
+
+
+
+
+
+top:50vh;
+
+    >
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#实验：Nginx-实现-SSL-加密"><span class="toc-number">1.</span> <span class="toc-text">实验：Nginx 实现 SSL 加密</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#实验：在一台-Nginx-服务器上实现搭建多个加密网站"><span class="toc-number">2.</span> <span class="toc-text">实验：在一台 Nginx 服务器上实现搭建多个加密网站</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#实验：-实现-nginx-服务，fastcgi-模式之间的搭建连接。"><span class="toc-number">3.</span> <span class="toc-text">实验： 实现 nginx 服务，fastcgi 模式之间的搭建连接。</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#实验：-实现-nginx-源码编译"><span class="toc-number">4.</span> <span class="toc-text">实验： 实现 nginx 源码编译</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#实验：-实现-nginx-的反向代理功能"><span class="toc-number">5.</span> <span class="toc-text">实验：  实现 nginx 的反向代理功能</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#实验：-实现-nginx-服务反向代理，并要求客户端访问静态页面就调度到外部1服务器上，访问动态页面就调度到外部2-服务器上，并且动态服务器后还有对应的数据库服务器，-实现动静分离。"><span class="toc-number">6.</span> <span class="toc-text">实验： 实现 nginx 服务反向代理，并要求客户端访问静态页面就调度到外部1服务器上，访问动态页面就调度到外部2 服务器上，并且动态服务器后还有对应的数据库服务器，  实现动静分离。</span></a></li></ol>
+    </div>
+    
+    <div class="back-top iconfont-archer">&#xe639;</div>
+    <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+          <div class="sidebar-panel-archives">
+    <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 39
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+    
+    
+    
+    <div class="archive-year"> 2018 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/09</span><a class="archive-post-title" href= "/2018/08/09/Linux 防火墙各种规则实战应用/" >[Untitled Post]</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/09</span><a class="archive-post-title" href= "/2018/08/09/Nginx 详细介绍/" >[Untitled Post]</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2017 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/15</span><a class="archive-post-title" href= "/2017/10/15/memcache  缓存原理介绍/" >memcache  缓存原理介绍</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/08</span><a class="archive-post-title" href= "/2017/10/08/tomcat 各种架构实验演示/" >tomcat 各种架构实验演示</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/05</span><a class="archive-post-title" href= "/2017/10/05/浅谈 tomcat 原理/" >浅谈 tomcat 原理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/25</span><a class="archive-post-title" href= "/2017/09/25/Varnish 缓存服务器介绍/" >Varnish 缓存服务器介绍</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/14</span><a class="archive-post-title" href= "/2017/09/14/keepalived 各种高可用实战演练/" >keepalived 各种高可用实战演练</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/28</span><a class="archive-post-title" href= "/2017/08/28/HAproxy 原理介绍/" >HAproxy 原理介绍</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/19</span><a class="archive-post-title" href= "/2017/08/19/lvs 详细介绍/" >lvs 详细介绍</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/24</span><a class="archive-post-title" href= "/2017/06/24/各种网络共享服务实验演示/" >各种网络共享服务实验演示</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/20</span><a class="archive-post-title" href= "/2017/06/20/网络文件共享服务：FTP    NFS   SAMBA/" >网络文件共享服务：FTP    NFS   SAMBA</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/11</span><a class="archive-post-title" href= "/2017/06/11/LAMP 架构的各种演示/" >LAMP 架构的各种演示</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/01</span><a class="archive-post-title" href= "/2017/06/01/介绍 MYSQL的事务日志/" >介绍 MYSQL的事务日志</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/22</span><a class="archive-post-title" href= "/2017/05/22/MYSQL 数据库的日志介绍/" >MYSQL 数据库的日志介绍</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/15</span><a class="archive-post-title" href= "/2017/05/15/MYSQL MariaDB 的事务和事务隔离级别/" >MYSQL MariaDB 的事务和事务隔离级别</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/08</span><a class="archive-post-title" href= "/2017/05/08/MASQL MariaDB 用户权限管理/" >MASQL MariaDB 用户权限管理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/20</span><a class="archive-post-title" href= "/2017/04/20/ext 文件系统机制原理/" >ext 文件系统机制原理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/15</span><a class="archive-post-title" href= "/2017/04/15/Linux分区信息与管理文件系统/" >Linux分区信息与管理文件系统</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/10</span><a class="archive-post-title" href= "/2017/04/10/DHCP 服务/" >DHCP服务</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/01</span><a class="archive-post-title" href= "/2017/04/01/Linux系统中su 和 sudo 的用法/" >Linux系统中su 和 sudo 的用法</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/22</span><a class="archive-post-title" href= "/2017/03/22/实现DNS服务主从复制/" >实现DNS服务主从复制</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/20</span><a class="archive-post-title" href= "/2017/03/20/搭建DNS互联网架构服务器(一）/" >搭建DNS互联网架构服务器</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/15</span><a class="archive-post-title" href= "/2017/03/15/搭建DNS 服务，实现主服务器，邮件服务器，泛域名解析，反向解析等/" >搭建DNS 服务，实现主服务器，邮件服务器，泛域名解析，反向解析等</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/12</span><a class="archive-post-title" href= "/2017/03/12/Linux 文件权限管理/" >Linux 文件权限管理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/08</span><a class="archive-post-title" href= "/2017/03/08/LINUX系统中用户、组管理/" >安装管理包：LINUX系统中用户、组管理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/28</span><a class="archive-post-title" href= "/2017/02/28/搭建DNS服务器，实现主DNS服务器，负责解析一个域/" >搭建DNS服务器，实现主DNS服务器，负责解析一个域</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/15</span><a class="archive-post-title" href= "/2017/02/15/DNS 服务从基础到深入/" >DNS 服务从基础到深入</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/10</span><a class="archive-post-title" href= "/2017/02/10/SSH端口转发实验/" >SSH端口转发实验</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/08</span><a class="archive-post-title" href= "/2017/02/08/实现PXE自动安装/" >实现PXE自动安装</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/01</span><a class="archive-post-title" href= "/2017/02/01/rpm管理包 和 yum管理包(1)/" >安装管理包：rpm包和yum包</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/20</span><a class="archive-post-title" href= "/2017/01/20/搭建CA/" >如何搭建CA（向CA申请证书）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/08</span><a class="archive-post-title" href= "/2017/01/08/自制一个mini 的Linux系统/" >自制一个mini 的Linux系统</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2016 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/20</span><a class="archive-post-title" href= "/2016/12/20/进程管理和计划任务的知识点()/" >进程管理与计划任务的知识点</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/15</span><a class="archive-post-title" href= "/2016/12/15/文本处理工具：sed/" >文本处理工具：sed</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/08</span><a class="archive-post-title" href= "/2016/12/08/TCP、IP协议三次握手与四次握手流程解析（）/" >TCP、IP协议三次握手与四次握手流程解析</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> Invalid date </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">Invalid date</span><a class="archive-post-title" href= "/2018/08/09/Nginx 各种实验演示/" >[Untitled Post]</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2016 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/29</span><a class="archive-post-title" href= "/2016/11/29/Linux 的一些基础练习题/" >Linux 的一些基础练习题</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/23</span><a class="archive-post-title" href= "/2016/11/23/对正则表达式，VIM编辑器命令的基本操作（三）/" >对正则表达式，VIM编辑器命令的基本操作</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> Invalid date </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">Invalid date</span><a class="archive-post-title" href= "/2018/08/09/日志管理介绍/" >[Untitled Post]</a>
+        </li>
+    
+    </div>
+  </div>
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+    
+        <span class="sidebar-tag-name" data-tags="Linux"><span class="iconfont-archer">&#xe606;</span>Linux</span>
+    
+        <span class="sidebar-tag-name" data-tags="DHCP"><span class="iconfont-archer">&#xe606;</span>DHCP</span>
+    
+        <span class="sidebar-tag-name" data-tags="haproxy"><span class="iconfont-archer">&#xe606;</span>haproxy</span>
+    
+        <span class="sidebar-tag-name" data-tags="LAMP"><span class="iconfont-archer">&#xe606;</span>LAMP</span>
+    
+        <span class="sidebar-tag-name" data-tags="DNS"><span class="iconfont-archer">&#xe606;</span>DNS</span>
+    
+        <span class="sidebar-tag-name" data-tags="权限管理"><span class="iconfont-archer">&#xe606;</span>权限管理</span>
+    
+        <span class="sidebar-tag-name" data-tags="用户组"><span class="iconfont-archer">&#xe606;</span>用户组</span>
+    
+        <span class="sidebar-tag-name" data-tags="练习题"><span class="iconfont-archer">&#xe606;</span>练习题</span>
+    
+        <span class="sidebar-tag-name" data-tags="文件系统"><span class="iconfont-archer">&#xe606;</span>文件系统</span>
+    
+        <span class="sidebar-tag-name" data-tags="MYSQL"><span class="iconfont-archer">&#xe606;</span>MYSQL</span>
+    
+        <span class="sidebar-tag-name" data-tags="su和sudo"><span class="iconfont-archer">&#xe606;</span>su和sudo</span>
+    
+        <span class="sidebar-tag-name" data-tags="SSH"><span class="iconfont-archer">&#xe606;</span>SSH</span>
+    
+        <span class="sidebar-tag-name" data-tags="varnish"><span class="iconfont-archer">&#xe606;</span>varnish</span>
+    
+        <span class="sidebar-tag-name" data-tags="TCP/IP"><span class="iconfont-archer">&#xe606;</span>TCP/IP</span>
+    
+        <span class="sidebar-tag-name" data-tags="keepalied"><span class="iconfont-archer">&#xe606;</span>keepalied</span>
+    
+        <span class="sidebar-tag-name" data-tags="lvs"><span class="iconfont-archer">&#xe606;</span>lvs</span>
+    
+        <span class="sidebar-tag-name" data-tags="memcache"><span class="iconfont-archer">&#xe606;</span>memcache</span>
+    
+        <span class="sidebar-tag-name" data-tags="tomcat"><span class="iconfont-archer">&#xe606;</span>tomcat</span>
+    
+        <span class="sidebar-tag-name" data-tags="rpm"><span class="iconfont-archer">&#xe606;</span>rpm</span>
+    
+        <span class="sidebar-tag-name" data-tags="共享服务"><span class="iconfont-archer">&#xe606;</span>共享服务</span>
+    
+        <span class="sidebar-tag-name" data-tags="自动化安装"><span class="iconfont-archer">&#xe606;</span>自动化安装</span>
+    
+        <span class="sidebar-tag-name" data-tags="基本命令"><span class="iconfont-archer">&#xe606;</span>基本命令</span>
+    
+        <span class="sidebar-tag-name" data-tags="CA"><span class="iconfont-archer">&#xe606;</span>CA</span>
+    
+        <span class="sidebar-tag-name" data-tags="sed"><span class="iconfont-archer">&#xe606;</span>sed</span>
+    
+        <span class="sidebar-tag-name" data-tags="dns"><span class="iconfont-archer">&#xe606;</span>dns</span>
+    
+        <span class="sidebar-tag-name" data-tags="mini系统"><span class="iconfont-archer">&#xe606;</span>mini系统</span>
+    
+        <span class="sidebar-tag-name" data-tags="进程管理、计划任务"><span class="iconfont-archer">&#xe606;</span>进程管理、计划任务</span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+    缺失模块。<br/>
+    1、请确保node版本大于6.2<br/>
+    2、在博客根目录（注意不是archer根目录）执行以下命令：<br/>
+    <span style="color: #f75357; font-size: 1rem; line-height: 2rem;">npm i hexo-generator-json-content --save</span><br/>
+    3、在根目录_config.yml里添加配置：
+    <pre style="color: #787878; font-size: 0.6rem;">
+jsonContent:
+  meta: false
+  pages: false
+  posts:
+    title: true
+    date: true
+    path: true
+    text: false
+    raw: false
+    content: false
+    slug: false
+    updated: false
+    comments: false
+    link: false
+    permalink: false
+    excerpt: false
+    categories: true
+    tags: true</pre>
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+    </div>
+</div> 
+    <script>
+    var siteMeta = {
+        root: "/",
+        author: "John Doe"
+    }
+</script>
+    <!-- CDN failover -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ === 'undefined')
+        {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js">\x3C/script>')
+        }
+    </script>
+    <script src="/scripts/main.js"></script>
+    <!-- algolia -->
+    
+    <!-- busuanzi  -->
+    
+    <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+    <!-- CNZZ  -->
+    
+    </div>
+    <!-- async load share.js -->
+    
+        <script src="/scripts/share.js" async></script>    
+     
+    </body>
+</html>
+
+

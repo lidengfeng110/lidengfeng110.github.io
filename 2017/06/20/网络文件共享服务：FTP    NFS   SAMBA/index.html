@@ -1,0 +1,1617 @@
+<!DOCTYPE html>
+<html>
+    <!-- title -->
+
+
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" >
+    <meta name="author" content="John Doe">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="John Doe">
+    <meta name="keywords" content="Hexo | John Doe">
+    <meta name="description" content="">
+    <meta name="Cache-Control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <title>网络文件共享服务：FTP    NFS   SAMBA · 李登峰</title>
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s 1;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+
+</style>
+
+    <link rel="preload" href= /css/style.css?v=20180630 as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    <link rel="stylesheet" href= /css/mobile.css?v=20180630 media="(max-width: 980px)">
+    
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+(function( w ){
+	"use strict";
+	// rel=preload support test
+	if( !w.loadCSS ){
+		w.loadCSS = function(){};
+	}
+	// define on the loadCSS obj
+	var rp = loadCSS.relpreload = {};
+	// rel=preload feature support test
+	// runs once and returns a function for compat purposes
+	rp.support = (function(){
+		var ret;
+		try {
+			ret = w.document.createElement( "link" ).relList.supports( "preload" );
+		} catch (e) {
+			ret = false;
+		}
+		return function(){
+			return ret;
+		};
+	})();
+
+	// if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+	// then change that media back to its intended value on load
+	rp.bindMediaToggle = function( link ){
+		// remember existing media attr for ultimate state, or default to 'all'
+		var finalMedia = link.media || "all";
+
+		function enableStylesheet(){
+			link.media = finalMedia;
+		}
+
+		// bind load handlers to enable media
+		if( link.addEventListener ){
+			link.addEventListener( "load", enableStylesheet );
+		} else if( link.attachEvent ){
+			link.attachEvent( "onload", enableStylesheet );
+		}
+
+		// Set rel and non-applicable media type to start an async request
+		// note: timeout allows this to happen async to let rendering continue in IE
+		setTimeout(function(){
+			link.rel = "stylesheet";
+			link.media = "only x";
+		});
+		// also enable media after 3 seconds,
+		// which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+		setTimeout( enableStylesheet, 3000 );
+	};
+
+	// loop through link elements in DOM
+	rp.poly = function(){
+		// double check this to prevent external calls from running
+		if( rp.support() ){
+			return;
+		}
+		var links = w.document.getElementsByTagName( "link" );
+		for( var i = 0; i < links.length; i++ ){
+			var link = links[ i ];
+			// qualify links to those with rel=preload and as=style attrs
+			if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+				// prevent rerunning on link
+				link.setAttribute( "data-loadcss", true );
+				// bind listeners to toggle media back
+				rp.bindMediaToggle( link );
+			}
+		}
+	};
+
+	// if unsupported, run the polyfill
+	if( !rp.support() ){
+		// run once at least
+		rp.poly();
+
+		// rerun poly on an interval until onload
+		var run = w.setInterval( rp.poly, 500 );
+		if( w.addEventListener ){
+			w.addEventListener( "load", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		} else if( w.attachEvent ){
+			w.attachEvent( "onload", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		}
+	}
+
+
+	// commonjs
+	if( typeof exports !== "undefined" ){
+		exports.loadCSS = loadCSS;
+	}
+	else {
+		w.loadCSS = loadCSS;
+	}
+}( typeof global !== "undefined" ? global : this ) );
+</script>
+
+    <link rel="icon" href= "/assets/favicon.ico" />
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js" as="script" />
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" as="script" />
+    <link rel="preload" href="/scripts/main.js" as="script" />
+    <link rel="preload" as="font" href="/font/Oswald-Regular.ttf" crossorigin>
+    <link rel="preload" as="font" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" crossorigin>
+    
+    <!-- fancybox -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script>
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  -->
+    
+</head>
+
+    
+        <body class="post-body">
+    
+    
+<header class="header">
+
+    <div class="read-progress"></div>
+    <div class="header-sidebar-menu">&#xe775;</div>
+    <!-- post页的toggle banner  -->
+    
+    <div class="banner">
+            <div class="blog-title">
+                <a href="/" >博客</a>
+            </div>
+            <div class="post-title">
+                <a href="#" class="post-name">网络文件共享服务：FTP    NFS   SAMBA</a>
+            </div>
+    </div>
+    
+    <a class="home-link" href=/>博客</a>
+</header>
+    <div class="wrapper">
+        <div class="site-intro" style=
+
+
+
+
+
+
+
+
+height:50vh;
+
+>
+    
+    <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
+            
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+            网络文件共享服务：FTP    NFS   SAMBA
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+            
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class= post-intro-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "Linux">Linux</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "共享服务">共享服务</a>
+    
+</div>
+                
+                
+                    <div class="post-intro-read">
+                        <span>Word count: <span class="post-count">8,526</span> / Reading time: <span class="post-count">35 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                    <span class="post-intro-time">2017/06/20</span>
+                    
+                    <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                        <span class="iconfont-archer">&#xe602;</span>
+                        <span id="busuanzi_value_page_pv"></span>
+                    </span>
+                    
+                    <span class="shareWrapper">
+                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
+                        <span class="shareText">Share</span>
+                        <ul class="shareList">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        
+    </div>
+</div> 
+        <script>
+ 
+  // get user agent
+  var browser = {
+    versions: function () {
+      var u = window.navigator.userAgent;
+      return {
+        userAgent: u,
+        trident: u.indexOf('Trident') > -1, //IE内核
+        presto: u.indexOf('Presto') > -1, //opera内核
+        webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+        gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+        mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+        ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+        android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+        iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+        iPad: u.indexOf('iPad') > -1, //是否为iPad
+        webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+        weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+        uc: u.indexOf('UCBrowser') > -1 //是否为android下的UC浏览器
+      };
+    }()
+  }
+  console.log("userAgent:" + browser.versions.userAgent);
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded');
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document.getElementsByClassName('intro-title')[0].classList.add('intro-fade-in');
+      document.getElementsByClassName('intro-subtitle')[0].classList.add('intro-fade-in');
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in');
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb(){
+    if (browser.versions.uc) {
+      console.log("UCBrowser");
+      fontLoaded();
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular']
+        },
+        loading: function () {  //所有字体开始加载
+          // console.log('loading');
+        },
+        active: function () {  //所有字体已渲染
+          fontLoaded();
+        },
+        inactive: function () { //字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout');
+          fontLoaded();
+        },
+        timeout: 5000 // Set the timeout to two seconds
+      });
+    }
+  }
+
+  function asyncErr(){
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (cb) { o.addEventListener('load', function (e) { cb(null, e); }, false); }
+    if (err) { o.addEventListener('error', function (e) { err(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+
+  var asyncLoadWithFallBack = function(arr, success, reject) {
+      var currReject = function(){
+        reject()
+        arr.shift()
+        if(arr.length)
+          async(arr[0], success, currReject)
+        }
+
+      async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack([
+    "https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js", 
+    "https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js",
+    "/lib/webfontloader.min.js"
+  ], asyncCb, asyncErr)
+</script>        
+        <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+        <div class="container container-unloaded">
+            <main class="main post-page">
+    <article class="article-entry">
+        <p>FTP服务   </p>
+<p>NFS服务   </p>
+<p>SAMBA服务<br><img src="http://i2.bvimg.com/657107/f69a81c483abce89.png" alt="Markdown"></p>
+<h4 id="文件传输协议（FTP）"><a href="#文件传输协议（FTP）" class="headerlink" title="文件传输协议（FTP）"></a>文件传输协议（FTP）</h4><p>File Transfer Protocol 早期的三个应用级协议之一<br>三个协议分别是： ftp    http      smtp<br>基于C/S结构<br>双通道协议：数据和命令连接<br>数据传输格式：二进制（默认）和文本<br>两种模式：服务器角度<br> 主动(PORT style)：服务器主动连接<br>       命令（控制）：客户端：随机port —&gt;服务器：tcp21<br>        数据：客户端：随机port &lt;—服务器 ：tcp20<br> 被动(PASV style)：客户端主动连接<br>        命令（控制）：客户端：随机port —&gt;服务器：tcp21<br>        数据：客户端：随机port —&gt;服务器：随机port<br> <a id="more"></a><br>主动模式跟被动模式的要点:<br>            主动模式就是服务器主动去连接客户端，被动模式就是客户端主动去连接服务器端，主动模式与被动模式都是从服务器的角度来决定。  </p>
+<pre><code>主动模式服务器端数据模式默认是 20端口，是固定的，被动模式服务器数据模式端口是随机的。但是无论主动还是被动服务器命令模式下用的端口默认都是21 端口。  
+</code></pre><p>服务器被动模式数据端口示例：<br>       227 Entering Passive Mode (192,168,175,138,224,59)<br>        服务器数据端口为：224*256+59</p>
+<h4 id="FTP软件介绍"><a href="#FTP软件介绍" class="headerlink" title="FTP软件介绍"></a>FTP软件介绍</h4><p> FTP服务器：<br>       Wu-ftpd，Proftpd，Pureftpd，ServU，IIS<br>       vsftpd:Very Secure FTP Daemon，CentOS默认FTP服务器<br>              高速，稳定，下载速度是WU-FTP的两倍<br>              ftp.redhat.com数据:单机最多可支持15000个并发<br> 客户端软件：<br>      ftp，lftp ： 这两个是交互式工具<br>     lftpget，wget，curl    ： 这些是非交互式工具，适合于脚本<br>      ftp -A ftpserver port -A主动模式 –p 被动模式<br>      lftp –u username ftpserver<br>      lftp username@ftpserver<br>      lftpget <a href="ftp://ftpserver/pub/file" target="_blank" rel="noopener">ftp://ftpserver/pub/file</a><br>gftp: GUI centos5 最新版2.0.19 (11/30/2008)<br> filezilla，CuteFtp，FlashFXP，LeapFtp<br> IE <a href="ftp://username:password@ftpserver" target="_blank" rel="noopener">ftp://username:password@ftpserver</a>  </p>
+<h4 id="FTP服务"><a href="#FTP服务" class="headerlink" title="FTP服务"></a>FTP服务</h4><p> 状态码： 1XX：信息                125：数据连接打开<br> 2XX：成功类状态                      200：命令OK 230：登录成功<br>3XX：补充类                             331：用户名OK<br> 4XX：客户端错误                       425：不能打开数据连接<br> 5XX：服务器错误                        530：不能登录     </p>
+<p> 用户认证：<br>     匿名用户：ftp,anonymous,对应Linux用户ftp<br>     系统用户：Linux用户,用户/etc/passwd,密码/etc/shadow<br>     虚拟用户：特定服务的专用用户，独立的用户/密码文件<br>           nsswitch:network service switch名称解析框架<br>           pam:pluggable authentication module 用户认证<br>           /lib64/security /etc/pam.d/ /etc/pam.conf  </p>
+<h4 id="vsftpd服务"><a href="#vsftpd服务" class="headerlink" title="vsftpd服务"></a>vsftpd服务</h4><p>由vsftpd包提供<br>不再由xinetd管理<br>用户认证配置文件:/etc/pam.d/vsftpd<br>服务脚本： /usr/lib/systemd/system/vsftpd.service<br>                   /etc/rc.d/init.d/vsftpd<br>配置文件:/etc/vsftpd/vsftpd.conf<br>              man 5 vsftpd.conf<br>              格式：option=value<br>               注意：= 前后不要有空格<br>匿名用户（映射为系统用户ftp ）共享文件位置：/var/ftp<br>系统用户共享文件位置：用户家目录<br>虚拟用户共享文件位置：为其映射的系统用户的家目录  </p>
+<h4 id="vsftpd服务配置"><a href="#vsftpd服务配置" class="headerlink" title="vsftpd服务配置"></a>vsftpd服务配置</h4><p>命令端口<br> listen_port=21<br> 主动模式端口<br>connect_from_port_20=YES    主动模式端口为20<br> ftp_data_port=20                     指定主动模式的端口<br>被动模式端口范围<br>           linux客户端默认使用被动模式<br>            windows 客户端默认使用主动模式<br>           pasv_min_port=6000 0为随机分配<br>            pasv_max_port=6010<br> 使用当地时间<br>        use_localtime=YES 使用当地时间（默认为NO，使用GMT）</p>
+<h4 id="vsftpd服务配置-1"><a href="#vsftpd服务配置-1" class="headerlink" title="vsftpd服务配置"></a>vsftpd服务配置</h4><p> 匿名用户<br>          anonymous_enable=YES 支持匿名用户 ，改为 NO ，匿名账号就不能登录，但是就算支持匿名，匿名也不允许上传。要想上传还需开启其他设置。  </p>
+<pre><code>no_anon_password=YES(默认 NO) 匿名用户略过口令检查       
+anon_world_readable_only (默认YES)只能下载全部读 的文件  
+anon_upload_enable=YES 匿名上传，注意:文件系统权限  
+anon_mkdir_write_enable=YES   
+</code></pre><p>  就是设置了匿名可以上传，可以创建文件的设置后，匿名也不一定就能上传，还要查看权限问题，看下 ftp 用户对 /var/ftp/pub/ 目录有权限没，如果没有加上匿名才能上传。   如： setfacl -m u:ftp:rwx /var/ftp/pub<br>      加上权限后虽然能传能建了但是还不能改不能删，要想实现还得加其他设置。  </p>
+<pre><code>anon_umask=077 指定匿名上传文件的umask  
+anon_other_write_enable=YES 可删除和修改上传的文件   
+指定上传文件的默认的所有者和权限  
+ chown_uploads=YES(默认NO)  
+  chown_username=wang  
+  chown_upload_mode=0644  
+</code></pre><p> ftp 登录以后 ，根目录是不允许有写权限的。  </p>
+<h4 id="vsftpd服务配置-2"><a href="#vsftpd服务配置-2" class="headerlink" title="vsftpd服务配置"></a>vsftpd服务配置</h4><p>Linux系统用户<br>        guest_enable=YES 所有系统用户都映射成guest用户<br>        guest_username=ftp 配合上面选项才生效，指定guest用户<br>        local_enable=YES 是否允许linux用户登录（默认是允许的）<br>        write_enable-YES 允许linux用户上传文件<br>        local_umask=022 指定系统用户上传文件的默认权限<br>        local_root=/ftproot 非匿名用户登录所在目录<br> 禁锢所有系统用户在家目录中<br>          chroot_local_user=YES（默认NO，不禁锢）禁锢系统用户<br> 禁锢或不禁锢特定的系统用户在家目录中，与上面设置功能相反<br>          chroot_list_enable=YES          chroot_list_file=/etc/vsftpd/chroot_list  </p>
+<pre><code>        # 这两项表示是否启用改禁锢文件  chroot_list   。  
+当chroot_local_user=YES时，则chroot_list中用户不禁锢  
+ 当chroot_local_user=NO时，则chroot_list中用户禁锢  
+</code></pre><h4 id="vsftpd服务配置-3"><a href="#vsftpd服务配置-3" class="headerlink" title="vsftpd服务配置"></a>vsftpd服务配置</h4><p> wu-ftp日志：默认启用<br>       xferlog_enable=YES （默认）启用记录上传下载日志<br>        xferlog_std_format=YES （默认）使用wu-ftp日志格式<br>        xferlog_file=/var/log/xferlog （默认）可自动生成<br> vsftpd日志：默认不启用<br>       dual_log_enable=YES 使用vsftpd日志格式，默认不启用<br>       vsftpd_log_file=/var/log/vsftpd.log（默认）可自动生成<br> 登录提示信息<br>       ftpd_banner=“welcome to mage ftp server”<br>        banner_file=/etc/vsftpd/ftpbanner.txt<br>      在文件中添加提示语并添加颜色        ^[[31mwelcome to ftp server^[[0m    </p>
+<pre><code>如果俩项都开启， 优先下面项生效 。  
+</code></pre><p> 目录访问提示信息<br>       dirmessage_enable=YES (默认)<br>        message_file=.message(默认)信息存放在指定目录下.message<br> 比如 /var/ftp/ 目录下有很多文件夹      upload/     tools/<br> 要想让用户访问这些文件夹时有提示语句，就要在各自目录下创建一个 .message  文件 ，然后在里面添加提示语句的内容即可，还可以给这些内容添加颜色等。</p>
+<h4 id="vsftpd服务配置-4"><a href="#vsftpd服务配置-4" class="headerlink" title="vsftpd服务配置"></a>vsftpd服务配置</h4><p> 使用pam(Pluggable Authentication Modules)完成用户认证<br>         pam_service_name=vsftpd<br>              pam配置文件:/etc/pam.d/vsftpd     这个文件中把 sense=allow ,下面这个文件中的用户才可以登录，默认是 sense = deny ，文件中的用户不能登录。  </p>
+<pre><code>/etc/vsftpd/ftpusers 默认文件中用户拒绝登录   
+</code></pre><p> 是否启用控制用户登录的列表文件<br>          userlist_enable=YES 默认有此设置<br>          userlist_deny=YES(默认值)黑名单,不提示口令，NO为白名单<br>           userlist_file=/etc/vsftpd/users_list    这个文件跟上面那个文件作用相同，只要在配置文件中添加 userlist_deny=YES  ，表示文件里的账号不允许登录，如果改为 NO ，则表示除了文件中的账户其他一律不让登录FTP。  </p>
+<p>连接限制<br>        max_clients=0 最大并发连接数<br>         max_per_ip=0 每个IP同时发起的最大连接数   </p>
+<pre><code>#  在生产中建议给这两项加以修改，定一个值。  
+</code></pre><p> vsftpd服务指定用户身份运行<br>         nopriv_user=nobody<br>默认还匿名账号登录显示进程用户是 nobody，也可以进行修改。  </p>
+<h4 id="vsftpd服务配置-5"><a href="#vsftpd服务配置-5" class="headerlink" title="vsftpd服务配置"></a>vsftpd服务配置</h4><p>传输速率：字节/秒<br>      anon_max_rate=0 匿名用户的最大传输速率          </p>
+<h1 id="生产中一定要限速不然容易吧服务器托死机。-在配置文件中添加-etv-vsftpd-vsftpd-conf"><a href="#生产中一定要限速不然容易吧服务器托死机。-在配置文件中添加-etv-vsftpd-vsftpd-conf" class="headerlink" title="生产中一定要限速不然容易吧服务器托死机。 在配置文件中添加    /etv/vsftpd/vsftpd.conf"></a>生产中一定要限速不然容易吧服务器托死机。 在配置文件中添加    /etv/vsftpd/vsftpd.conf</h1><p>local_max_rate=0 本地用户的最大传输速率<br> 连接时间：秒为单位<br>       connect_timeout=60 主动模式数据连接超时时长<br>        accept_timeout=60 被动模式数据连接超时时长<br>       data_connection_timeout=300 数据连接无数据输超时时长<br>        idle_session_timeout=60 无命令操作超时时长   </p>
+<p>优先以文本方式传输<br>        ascii_upload_enable=YES<br>        ascii_download_enable=YES<br> linux 系统默认 用的是二进制模式   ，建议没有特殊要求不要加这两项，容易破坏源数据。</p>
+<h4 id="vsftpd服务配置-6"><a href="#vsftpd服务配置-6" class="headerlink" title="vsftpd服务配置"></a>vsftpd服务配置</h4><p> 配置FTP服务以非独立服务方运行:listen=NO，默认为独立方式<br>cat /etc/xinetd.d/vsftpd  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">service ftp</span><br><span class="line"> &#123;</span><br><span class="line">        flags = REUSE </span><br><span class="line">        socket_type = stream</span><br><span class="line">         wait = no</span><br><span class="line">         user = root</span><br><span class="line">         server = /usr/sbin/vsftpd</span><br><span class="line">         log_on_failure += USERID</span><br><span class="line">          disable = no</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>可以在 centos 6 上进行修改，手动创建这个文件，7 上已经没有这个进程了。不过建议没有必要改，省不下多少资源。  </p>
+<h4 id="实现基于SSL的FTPS"><a href="#实现基于SSL的FTPS" class="headerlink" title="实现基于SSL的FTPS"></a>实现基于SSL的FTPS</h4><p> 查看是否支持SSL<br>       ldd <code>which vsftpd</code> 查看到libssl.so<br> 创建自签名证书<br>       cd /etc/pki/tls/certs/<br>        make vsftpd.pem<br>       openssl x509 -in vsftpd.pem -noout –text<br> 配置vsftpd服务支持SSL：/etc/vsftpd/vsftpd.conf<br>      ssl_enable=YES 启用SSL<br>       allow_anon_ssl=NO 匿名不支持SSL<br>        force_local_logins_ssl=YES 本地用户登录加密<br>       force_local_data_ssl=YES 本地用户数据传输加密<br>        rsa_cert_file=/etc/pki/tls/certs/vsftpd.pem<br> 用filezilla等工具测试<br>可以用命令抓口令 ：  如： tcpdump -nn -X port 21 -i eth0<br>还有一种更简单的申请证书方法：如：<br>         cd /etc/pki/tls/certs<br>       make ftp.pem<br>             CN<br>              beijing<br>             beijing<br>               magedu<br>                opt<br>                ftp.magedu.com  </p>
+<pre><code>这样就会在/etc/pki/tls/certs  目录下生成 ftp.pem 证书，这是一个自签名的证书，把私钥跟证书都放在这个文件中了。  
+
+ 用一个命令可以查看一个证书的内容。  
+</code></pre><p>  openssl  x509 -in ftp.pem -noout -test<br> 这样就可以查看 ftp.pem 这个证书的内容了  </p>
+<pre><code>证书申请以后还在 vsftpd 配置文件中添加内容才能使用，内容如上。  
+</code></pre><h4 id="vsftpd虚拟用户"><a href="#vsftpd虚拟用户" class="headerlink" title="vsftpd虚拟用户"></a>vsftpd虚拟用户</h4><p> 虚拟用户：<br>      所有虚拟用户会统一映射为一个指定的系统帐号：访问共享位置，即为此系统帐号 的家目录<br>       各虚拟用户可被赋予不同的访问权限，通过匿名用户的权限控制参数进行指定<br> 虚拟用户帐号的存储方式<br> 文件：编辑文本文件，此文件需要被编码为hash格式<br>          奇数行为用户名，偶数行为密码<br>           db_load -T -t hash -f vusers.txt vusers.db<br> 关系型数据库中的表中：<br>         实时查询数据库完成用户认证<br> mysql库：pam要依赖于pam-mysql<br>        /lib64/security/pam_mysql.so<br>       /usr/share/doc/pam_mysql-0.7/README  </p>
+<p>实现基于文件验证的vsftpd虚拟用户<br>一、创建用户数据库文件<br> • vim /etc/vsftpd/vusers.txt<br> wang<br> wangpass<br> mage<br>magepass<br> • cd /etc/vsftpd/<br> • db_load -T -t hash -f vusers.txt vusers.db<br> • chmod 600 vusers.db  </p>
+<p>二、创建用户和访问FTP目录<br> • useradd -d /var/ftproot -s /sbin/nologin vuser<br> • chmod +rx /var/ftproot/  </p>
+<p> • centos7 还需要执行以下操作：<br> • chmod -w /var/ftproot/<br>• mkdir /var/ftproot/upload<br> • setfacl -m u:vuser:rwx /var/ftproot/upload  </p>
+<p>三、创建pam配置文件<br> • vim /etc/pam.d/vsftpd.db<br> auth required pam_userdb.so db=/etc/vsftpd/vusers<br> account required pam_userdb.so db=/etc/vsftpd/vusers <br>四、指定pam配置文件<br> • vim /etc/vsftpd/vsftpd.conf<br>guest_enable=YES<br>guest_username=vuser<br> pam_service_name=vsftpd.db<br> • 五、SELinux设置：<br> 禁用SELinux 或者 setsebool -P ftpd_full_access 1  </p>
+<p>六、虚拟用户建立独立的配置文件<br>mdkir /etc/vsftpd/vusers.d/ 创建配置文件存放的路径<br>vim /etc/vsftpd/vsftpd.conf<br>user_config_dir=/etc/vsftpd/vusers.d/<br>cd /etc/vsftpd/vusers.d/ 进入此目录<br>允许wang用户可读写，其它用户只读<br>vim wang 创建各用户自已的配置文件<br> anon_upload_enable=YES<br>anon_mkdir_write_enable=YES<br> anon_other_write_enable=YES<br>vim mage 创建各用户自已的配置文件<br> local_root=/ftproot 登录目录改变至指定的目录  </p>
+<p>实现基于MYSQL验证的vsftpd虚拟用户<br>说明：本实验在两台CentOS主机上实现，一台做为FTP服务器，一台做数据库 服务器<br>一、安装所需要包和包组：<br> 在数据库服务器上安装包：<br> • Centos7：在数据库服务器上安装<br>yum –y install mariadb-server<br>systemctl start mariadb.service<br>systemctl enable mariadb<br> • Centos6：在数据库服务器上安装<br>yum –y install mysql-server<br>在FTP服务器上安装vsftpd和pam_mysql包<br> centos6：pam_mysql由epel6的源中提供<br>yum install vsftpd pam_mysql  </p>
+<p>centos7：无对应rpm包，需手动编译安装<br> yum -y groupinstall “Development Tools”<br> yum -y install mariadb-devel pam-devel vsftpd<br> 下载pam_mysql-0.7RC1.tar.gz<br>      <a href="ftp://172.16.0.1/pub/Sources/sources/pam/" target="_blank" rel="noopener">ftp://172.16.0.1/pub/Sources/sources/pam/</a><br>tar xvf pam_mysql-0.7RC1.tar.gz<br>cd pam_mysql-0.7RC1/<br> ./configure –with-mysql=/usr –with-pam=/usr<br>         –with-pam-mods-dir=/lib64/security<br>make<br> make install  </p>
+<p>二、在数据库服务器上创建虚拟用户账号<br> • 1.建立存储虚拟用户数据库和连接的数据库用户<br> mysql&gt; CREATE DATABASE vsftpd;<br>mysql&gt; SHOW DATABASES;<br>  ftp服务和mysql不在同一主机：<br> mysql&gt; GRANT SELECT ON vsftpd.<em> TO<br>vsftpd@’172.16.%.%’ IDENTIFIED BY ‘magedu’;<br> ftp服务和mysql在同一主机：<br> mysql&gt; GRANT SELECT ON vsftpd.</em> TO<br> vsftpd@localhost IDENTIFIED BY ‘magedu’;<br> mysql&gt; GRANT SELECT ON vsftpd.* TO<br>vsftpd@’127.0.0.1’ IDENTIFIED BY ‘magedu’;<br> mysql&gt; FLUSH PRIVILEGES;  </p>
+<p>2.准备相关表<br>mysql&gt; USE vsftpd;<br> Mysql&gt; SHOW TABLES;<br>mysql&gt; CREATE TABLE users (<br> id INT AUTO_INCREMENT NOT NULL PRIMARY KEY,<br>name CHAR(50) BINARY NOT NULL,<br> password CHAR(48) BINARY NOT NULL<br>);<br>mysql&gt;DESC users;<br> 测试连接<br> mysql -uvsftpd -h 172.16.200.200 -pmagedu<br> mysql&gt; SHOW DATABASES;  </p>
+<p>3.添加虚拟用户<br>根据需要添加所需要的用户，为了安全应该使用PASSWORD函数加密其密码后 存储<br>      mysql&gt;DESC users;<br>      mysql&gt; INSERT INTO users(name,password)<br>      values(‘wang’,password(‘magedu’));<br>      mysql&gt; INSERT INTO users(name,password)<br> values(‘mage’,password(‘magedu’));<br>       mysql&gt; SELECT * FROM users;  </p>
+<p>三、在FTP服务器上配置vsftpd服务<br>1.在FTP服务器上建立pam认证所需文件<br> vi /etc/pam.d/vsftpd.mysql 添加如下两行<br> auth required pam_mysql.so user=vsftpd passwd=magedu<br>host=mysqlserver db=vsftpd table=users usercolumn=name<br> passwdcolumn=password crypt=2<br> account required pam_mysql.so user=vsftpd passwd=magedu<br> host=mysqlserver db=vsftpd table=users usercolumn=name<br> passwdcolumn=password crypt=2<br>注意：参考README文档，选择正确的加密方式<br>crypt是加密方式，0表示不加密，1表示crypt(3)加密，2表示使用mysql<br> password()函数加密，3表示md5加密，4表示sha1加密  </p>
+<h4 id="配置字段说明"><a href="#配置字段说明" class="headerlink" title="配置字段说明"></a>配置字段说明</h4><p> • auth 表示认证<br> • account 验证账号密码正常使用<br> • required 表示认证要通过<br> • pam_mysql.so模块是默认的相对路径，是相对/lib64/security/路径而言，也可以写绝 对路径；后面为给此模块传递的参数<br> • user=vsftpd为登录mysql的用户<br> • passwd=magedu 登录mysql的的密码<br> • host=mysqlserver mysql服务器的主机名或ip地址<br> • db=vsftpd 指定连接msyql的数据库名称<br> • table=users 指定连接数据库中的表名<br> • usercolumn=name 当做用户名的字段<br> • passwdcolumn=password 当做用户名字段的密码<br> • crypt=2 密码的加密方式为mysql password()函数加密  </p>
+<p> 2.建立相应用户和修改vsftpd配置文件，使其适应mysql认证<br>建立虚拟用户映射的系统用户及对应的目录<br> useradd -s /sbin/nologin -d /var/ftproot vuser<br> chmod 555 /var/ftproot centos7 需除去ftp根目录的写权限<br>mkdir /var/ftproot/{upload,pub}<br>setfacl –m u:vuser:rwx /var/ftproot/upload<br>确保/etc/vsftpd.conf中已经启用了以下选项<br>anonymous_enable=YES<br> 添加下面两项<br>guest_enable=YES<br>guest_username=vuser<br>修改下面一项，原系统用户无法登录<br> pam_service_name=vsftpd.mysql  </p>
+<p>四、启动vsftpd服务<br> service vsftpd start;systemctl start vsftpd<br> chkconfig vsftpd on;systemctl enable vsftpd<br> 查看端口开启情况<br> netstat -tnlp |grep :21<br>五、Selinux相关设置：在FTP服务器上执行<br>    • restorecon -R /lib64/security<br>    • setsebool -P ftpd_connect_db 1<br>    • setsebool -P ftp_home_dir 1<br>    • chcon -R -t public_content_rw_t /var/ftproot/<br>六、测试：利用FTP客户端工具,以虚拟用户登录验证结果<br>     • tail /var/log/secure  </p>
+<p>七、在FTP服务器上配置虚拟用户具有不同的访问权限<br>vsftpd可以在配置文件目录中为每个用户提供单独的配置文件以定义其ftp服务访 问权限，每个虚拟用户的配置文件名同虚拟用户的用户名。配置文件目录可以是任 意未使用目录，只需要在vsftpd.conf指定其路径及名称即可<br> • 1、配置vsftpd为虚拟用户使用配置文件目录<br>       vim /etc/vsftpd/vsftpd.conf<br> 添加如下选项<br>      user_config_dir=/etc/vsftpd/vusers_config<br> • 2、创建所需要目录，并为虚拟用户提供配置文件<br>      mkdir /etc/vsftpd/vusers_config/<br>      cd /etc/vsftpd/vusers_config/<br>      touch wang mage  </p>
+<p>3、配置虚拟用户的访问权限<br>          虚拟用户对vsftpd服务的访问权限是通过匿名用户的相关指令进行的。如 果需要让用户wang具有上传文件的权限，可以修改 /etc/vsftpd/vusers_config/wang文件，在里面添加如下选项并设置为YES即可, 只读则设为NO  </p>
+<pre><code>注意：需确保对应的映射用户对于文件系统有写权限  
+anon_upload_enable={YES|NO}  
+anon_mkdir_write_enable={YES|NO}   
+anon_other_write_enable={YES|NO}   
+local_root=/ftproot 登录目录改变至指定的目录  
+</code></pre><h4 id="Ftp工具"><a href="#Ftp工具" class="headerlink" title="Ftp工具"></a>Ftp工具</h4><p>Axel:网络客户端工具<br>下载安装axel<br> <a href="ftp://172.16.0.1/pub/Sources/6.x86_64/axel/axel-2.4-1.el6.rf.x86_64.rpm" target="_blank" rel="noopener">ftp://172.16.0.1/pub/Sources/6.x86_64/axel/axel-2.4-1.el6.rf.x86_64.rpm</a><br>axel -n 3 -o /root <a href="ftp://172.16.0.1/pub/ISOs/CentOS-7-x86_64-" target="_blank" rel="noopener">ftp://172.16.0.1/pub/ISOs/CentOS-7-x86_64-</a> Everything-1511.iso<br> 也可以使用 wget 工具来下载</p>
+<h4 id="NFS服务"><a href="#NFS服务" class="headerlink" title="NFS服务"></a>NFS服务</h4><p>NFS：Network File System 网络文件系统，基于内核的文件系统。Sun公司 开发，通过使用NFS，用户和程序可以像访问本地文件一样访问远端系统上的 文件，基于RPC（Remote Procedure Call Protocol远程过程调用）实现<br>RPC采用C/S模式。客户机请求程序调用进程发送一个有进程参数的调用信息 到服务进程，然后等待应答信息。在服务器端，进程保持睡眠状态直到调用 信息到达为止。当一个调用信息到达，服务器获得进程参数，计算结果，发 送答复信息，然后等待下一个调用信息，最后，客户端调用进程接收答复信 息，获得进程结果，然后调用执行继续进行。<br>NFS优势：节省本地存储空间，将常用的数据如：home目录,存放在一台NFS 服务器上且可以通过网络访问，那么本地终端将可以减少自身存储空间的使 用</p>
+<p><img src="http://i1.bvimg.com/657107/24c85457a085f44b.png" alt="Markdown"></p>
+<p><img src="http://i1.bvimg.com/657107/472eedbf86bdcb45.png" alt="Markdown"></p>
+<pre><code>nfs 服务是依赖于 rpcbind 服务的，客户端访问 nfs 服务，是先访问 rpcbind 服务进而找到 nfs 服务的。  
+</code></pre><p>  nfs 服务的端口很多，而且不是固定的，可以用命令  rpcinfo -p 来查看 nfs 服务涉及到的端口号  </p>
+<p>  因为端口很多而且经常变所以不适合在公网使用，一般都是在局域网使用。  </p>
+<p>  在 centos 6 上 ，如果把 rpcbind 服务关掉 , nfs 服务重启后就会报错，而在 centos 7 上，一样的情况， nfs 重启后如果发现 rpcbid 服务关闭，重启后，它会自动把 rpcbind 服务开启。  </p>
+<p>所以 nfs 启动时一定要把 rpcbind 服务也一并开启，不然客户端不能访问。  </p>
+<p> nfs 服务启动时的命令     systemctl start nfs-server      ，   在 centos 6 上 启动命令为    systemctl start nfs<br>                                         systemctl start rpcbind<br>   还要把设为开机启动          systemctl   enable nfs-server<br>                                             systemctl enable rpcbind  </p>
+<p>nfs 的主配置文件是  /etc/exports  </p>
+<p>下面来实现 nfs 服务<br>现在 nfs 服务主机上创建几个文件夹，将来要把这几个文件夹共享出去。<br>mkdir /data/nfsdir1<br>mkdir /data/nfsdir2<br>然后修改配置文件        vim /etc/expotrs<br>在里面添加         /data/nfsdir1     *          #  表示把这个目录共享给所有人，默认是只读的<br>                           /data/nfsdir2（rw）      #   表示把这个目录共享给所有人，但是设定权限读写<br>修改完后按以往的方式修改完配置文件要想生效需要重启服务，在这不用，在这有专门的命令   expotrfs -r<br>这表示重新加载配置文件<br>也可以在服务端用命令查看哪些目录被共享出来      expotrfs -v  </p>
+<p>接下来拿客户端来连接下服务器，只用在客户端把服务器共享出来的目录挂载到自己的一个文件夹上就可以使用了。<br>如果客户端不知道服务端到底共享了哪些目录，可以用命令来查看<br>    showmount -e 192.168.30.7<br>这样就可以看见这个主机上共享的文件夹<br>创建两个文件夹<br>mkdir /mnt/nfs1<br>mkdir /mnt/nfs2<br>然后把共享目录挂载上去<br>mount 192.168.30.7:/data/nfsdir1  /mnt/nfs1           # 这样就挂载到自己本机上了<br>挂载是挂载上了，也能查看 /mnt/nfs1 下的数据文件，但是如果想修改这些文件却不允许，因为你在你本机用的是你本机的root 访问，而你访问的却是服务器上的文件，所以不允许，要想修改，必须在服务器上给共享的文件加上相应的权限，这样在客户端才能进行修改。  </p>
+<p>那么上面就说明：<br>NFS 服务器端和客户端这边，当客户端访问服务器端数据的时候，root 将映射为NFS  nfsnobody 用户，如果是普通用户，就映射成 NFS 服务器这边 ID 相同的用户，如果服务器端没有相同的用户，就显示 ID 号。 那么现在就知道如果远程的客户端root 想访问 NFS 服务器，向往里写东西，但是权限不够不能写，现在就要给服务器端的 nfsnobody 用户加上权限就可以了。  </p>
+<p>比如现在客户端要拿root 账户访问共享目录，在服务器端就要给 nfsnobody 用户添加这个目录的权限<br>    setfacl -m u:nfsnobody:rwx /data/nfsdir1<br>这样客户端的 root 用户就可以对这个共享目录进行修改了  </p>
+<p>也可以让客户端 root 用户不用添加特定权限就可以对服务器共享出来的目录进行修改，做法是 在配置文件中添加相关信息   ，   如  ： vim /etc/expotrs<br>                                        /data/nfsdir1     * (rw,no_root_squash)<br>                              这样客户端 root 用户就可以直接对共享目录进行修改了</p>
+<h4 id="NFS服务介绍"><a href="#NFS服务介绍" class="headerlink" title="NFS服务介绍"></a>NFS服务介绍</h4><p> 软件包：nfs-utils<br>Kernel支持:nfs.ko<br> 端口：2049(nfsd), 其它端口由portmap(111)分配<br> 配置文件：/etc/exports,/etc/exports.d/*.exports<br> CentOS7不支持同一目录同时用nfs和samba共享，因为使用锁机制不同<br> 相关软件包:rpcbind（必须），tcp_wrappers<br> CentOS6开始portmap进程由rpcbind代替<br> NFS服务主要进程：<br>      rpc.nfsd 最主要的NFS进程，管理客户端是否可登录<br>       rpc.mountd 挂载和卸载NFS文件系统，包括权限管理<br>       rpc.lockd 非必要，管理文件锁，避免同时写出错<br>        rpc.statd 非必要，检查文件一致性，可修复文件<br> 日志：/var/lib/nfs/  </p>
+<h4 id="配置防火墙"><a href="#配置防火墙" class="headerlink" title="配置防火墙"></a>配置防火墙</h4><p>配置防火墙，开放NFS服务<br> • 配置NFS使用固定端口<br>• vim /etc/sysconfig/nfs<br>    RQUOTAD_PORT=875<br>     LOCKD_TCPPORT=32803<br>     LOCKD_UDPPORT=32769<br>    MOUNTD_PORT=892<br>    STATD_PORT=662<br>    STATD_OUTGOING_PORT=2020<br>• 防火墙除开放上述端口，还需开放TCP和UDP的111和2049共4个端口  </p>
+<h4 id="NFS配置文件"><a href="#NFS配置文件" class="headerlink" title="NFS配置文件"></a>NFS配置文件</h4><p>导出的文件系统的格式：<br> /dir 主机1(opt1,opt2) 主机2(opt1,opt2)…   </p>
+<p>#开始为注释<br>主机格式：<br> • 单个主机：ipv4，ipv6，FQDN<br>• IP networks：两种掩码格式均支持<br>     172.18.0.0/255.255.0.0<br>      172.18.0.0/16<br>• wildcards：主机名通配，例如<em>.magedu.com，IP不可以<br> • netgroups：NIS域的主机组，@group_name<br> • anonymous：表示使用</em>通配所有客户端  </p>
+<p>每个条目指定目录导出到的哪些主机，及相关的权限和选项<br>• 默认选项：(ro,sync,root_squash,no_all_squash)<br> • ro,rw 只读和读写 • async 异步，数据变化后不立即写磁盘，性能高<br> • sync（1.0.0后为默认）同步，数据在请求时立即写入共享<br> • no_all_squash （默认）保留共享文件的UID和GID<br> • all_squash 所有远程用户(包括root)都变成nfsnobody<br> • root_squash （默认）远程root映射为nfsnobody,UID为65534，早期版本 是4294967294 (nfsnobody)<br> • no_root_squash 远程root映射成root用户<br> • anonuid和anongid 指明匿名用户映射为特定用户UID和组GID，而非   nfsnobody,可配合all_squash使用   </p>
+<h4 id="NFS配置示例"><a href="#NFS配置示例" class="headerlink" title="NFS配置示例"></a>NFS配置示例</h4><p>在/etc/exports文件中定义导出目录<br> • /myshare server.example.com<br> • /myshare <em>.example.com<br> • /myshare server?.example.com<br> • /myshare server[0-20].example.com<br> • /myshare 172.25.11.10<br>• /myshare 172.25.0.0/16<br> • /myshare 2000:472:18:b51:c32:a21<br> • /myshare 2000:472:18:b51::/64<br> • /myshare </em>.example.com 172.25.0.0/16<br> • /myshare desktop.example.com(ro)<br>• /myshare desktop.example.com(ro) server[0-20].example.com(rw)<br> • /myshare diskless.example.com(rw,no_root_squash)  </p>
+<h4 id="NFS工具"><a href="#NFS工具" class="headerlink" title="NFS工具"></a>NFS工具</h4><p>rpcinfo<br>     rpcinfo -p hostname<br>      rpcinfo –s hostname 查看RPC注册程序<br>exportfs<br>     –v 查看本机所有NFS共享<br>     –r 重读配置文件，并共享目录<br>    –a 输出本机所有共享<br>     –au 停止本机所有共享<br>showmount -e hostname<br>mount.nfs 挂载工具<br>NFSv4支持通过挂载NFS服务器的共享“根”，从而浏览NFS服务器上的共享 目录列表<br>       mount nfsserver:/ /mnt/nfs  </p>
+<h4 id="客户端NFS挂载"><a href="#客户端NFS挂载" class="headerlink" title="客户端NFS挂载"></a>客户端NFS挂载</h4><p>基于安全考虑，建议使用nosuid,nodev,noexec挂载选项<br>NFS相关的挂载选项：<br>      fg（默认）前台挂载，bg后台挂载<br>      hard（默认）持续请求，soft 非持续请求<br>      intr 和hard配合，请求可中断<br>      rsize和wsize 一次读和写数据最大字节数，rsize=32768<br>      _netdev 无网络不挂载 <br>示例：<br>     mount -o rw,nos    uid,fg,hard,intr 172.16.0.1:/testdir /mnt/nfs/ <br>开机挂载:/etc/fstab<br>     172.16.0.1:/public /mnt/nfs nfs defaults 0 0</p>
+<h4 id="自动挂载"><a href="#自动挂载" class="headerlink" title="自动挂载"></a>自动挂载</h4><p>可使用autofs按需要挂载NFS共享，在空闲时自动卸载<br>由autofs包提供<br>系统管理器指定由/etc/auto.master自动挂载器守护进程控制的挂载点<br>自动挂载监视器访问这些目录并按要求挂载文件系统<br>文件系统在失活的指定间隔5分钟后会自动卸载<br>为所有导出到网络中的NFS启用特殊匹配 -host 至“browse”<br>参看帮助：man 5 autofs<br>支持含通配符的目录名   </p>
+<pre><code>* server:/export/&amp;  
+</code></pre><p>挂载规则：  分为相对路径和绝对路径。<br>      相对路径<br>           挂载点：/data/nfsdir   。这是一个挂载点，/data 是父目录， /nfsdir 是子目录。<br>      而相对路径就是把挂载点一分为二，把父目录和子目录分开。相对路径在主配置文件 auto.master 中只定义了 哪个父目录能够挂载和父目录下的子目录挂载在哪个子配置文件中，它不关心父目录下的子目录挂载的情况，而是把父目录下的子目录挂载情况体现在一个子配置文件中 autofs 文件，这个子配置文件中记录了父目录下的子目录的挂载和子目录下挂载着什么设备。  </p>
+<pre><code>还有父目录和子目录的文件夹都不用手动创建，只用在配置文件中添加相应的内容，就会生成，父目录是配置文件写好，重启服务就生成，而子目录是访问一下挂载点，也就是说只要触发一下才会生成。  
+这就叫做相对路径的自动挂载方式。  
+</code></pre><p> 而绝对路径是主配置文件中不记录父目录跟子目录，只用 /-  来表示，然后后面跟上子配置文件夹，而子配置文件中详细记录了父目录跟子目录以及子目录下挂载的设备等详细信息。这样就精确的匹配了父目录下的某个子目录挂载情况，而不会影响父目录下的其他不挂载的子目录。这就是绝对路径。</p>
+<h4 id="直接匹配"><a href="#直接匹配" class="headerlink" title="直接匹配"></a>直接匹配</h4><p>直接匹配包括绝对路径名称<br>不会影响本地目录结构<br>示例：<br> /etc/auto.master:<br>/- /etc/auto.direct   </p>
+<p>/etc/auto.direct:<br> /foo                 server1:/export/foo<br> /user/local/        server1:/usr/local  </p>
+<p>实验：实现NFS服务<br>systemctl start nfs-server<br>systemctl enable nfs-server<br>mkdir /nfsshare<br>chown nfsnobody /nfsshare<br>vi /etc/exports<br> /nfsshare desktopX(rw)<br>exporfs –r<br>mkdir /mnt/nfsshare<br>mount serverX:/nfsshare /mnt/nfsshare<br>vim /etc/fstab<br> nfsserver:/nfsshare /mnt/nfsshare nfs defaults 0 0<br>mount -a  </p>
+<p>实验：实现NFS伪根<br>配置NFS服务器<br>     vi /etc/fstab<br>      /data/read /exports/read none bind 0 0<br>      /data2/write /exports/write none bind 0 0<br>     vi /etc/exports<br>     /exports *(fsid=0,rw,crossmnt)<br>     /exports/read 192.168.0.0/24(ro)<br>     /exports/write 192.168.0.0/24(rw)<br>配置NFS客户端<br>      mount nfsserver:/ /mnt/nfs<br>       vi /etc/fstab<br>      nfsserver:/ /mnt/ nfs4 ro 0 0  </p>
+<h2 id="SAMBA服务简介"><a href="#SAMBA服务简介" class="headerlink" title="SAMBA服务简介"></a>SAMBA服务简介</h2><p>SMB：Server Message Block服务器消息块，IBM发布，最早是DOS网络文 件共享协议<br>Cifs：common internet file system，微软基于SMB发布<br>SAMBA:1991年Andrew Tridgell,实现windows和UNIX相通<br>SAMBA的功能：<br>        • 共享文件和打印，实现在线编辑<br>        • 实现登录SAMBA用户的身份认证<br>        • 可以进行NetBIOS名称解析<br>        • 外围设备共享<br>计算机网络管理模式：<br>        • 工作组WORKGROUP：计算机对等关系，帐号信息各自管理<br>         • 域DOMAIN:C/S结构，帐号信息集中管理，DC,AD  </p>
+<h4 id="SAMBA介绍"><a href="#SAMBA介绍" class="headerlink" title="SAMBA介绍"></a>SAMBA介绍</h4><p>相关包：<br>     Samba 提供smb服务<br>     Samba-client 客户端软件<br>      samba-common 通用软件<br>      cifs-utils smb客户端工具<br>      samba-winbind 和AD相关<br>相关服务进程：<br>      smbd 提供smb（cifs）服务 TCP:139,445<br>      nmbd NetBIOS名称解析 UDP:137,138<br>主配置文件：/etc/samba/smb.conf<br>       帮助参看：man smb.conf<br>语法检查： testparm [-v] [/etc/samba/smb.conf]<br>客户端工具：smbclient,mount.cifs  </p>
+<h4 id="SAMBA服务器配置"><a href="#SAMBA服务器配置" class="headerlink" title="SAMBA服务器配置"></a>SAMBA服务器配置</h4><p> smb.conf继承了.ini文件的格式，用[ ] 分成不同的部分<br>全局设置：<br> [global] 服务器通用或全局设置的部分<br> 特定共享设置：<br> [homes] 用户的家目录共享<br> [printers] 定义打印机资源和服务<br>[sharename] 自定义的共享目录配置<br> 其中：#和;开头的语句为注释，大小写不敏感<br>宏定义：<br> %m 客户端主机的NetBIOS名          %M 客户端主机的FQDN<br> %H 当前用户家目录路径                  %U 当前用户用户名<br> %g 当前用户所属组                         %h samba服务器的主机名<br> %L samba服务器的NetBIOS名           %I 客户端主机的IP<br> %T 当前日期和时间                           %S 可登录的用户名  </p>
+<h4 id="SAMBA服务器全局配置"><a href="#SAMBA服务器全局配置" class="headerlink" title="SAMBA服务器全局配置"></a>SAMBA服务器全局配置</h4><p>workgroup 指定工作组名称<br>server string 主机注释信息<br>netbios name 指定NetBIOS名<br> interfaces 指定服务侦听接口和IP<br>hosts allow 可用“,”   ，空格，或tab分隔，默认允许所有主机访问，也可在每个共享独立配置，   如在[global]设置，将应用并覆盖所有共享设置<br> IPv4 network/prefix: 172.25.0.0/24 IPv4前缀: 172.25.0.<br> IPv4 network/netmask: 172.25.0.0/255.255.255.0<br> 主机名: desktop.example.com<br> 以example.com后缀的主机名: .example.com<br> 示例：<br>      hosts allow = 172.25.<br>      hosts allow = 172.25. .example.com<br>  hosts deny 拒绝指定主机访问  </p>
+<p>SAMBA服务器全局配置<br>config file=/etc/samba/conf.d/%U 用户独立的配置文件<br>Log file=/var/log/samba/log.%m 不同客户机采用不同日志<br>max log size=50 日志文件达到50K，将轮循rotate,单位KB<br>Security三种认证方式：<br>      share：匿名(CentOS7不再支持)<br>       user：samba用户（采有linux用户，samba的独立口令）<br>       domain:使用DC（DOMAIN CONTROLLER)认证<br>passdb backend = tdbsam 密码数据库格式<br>实现samba用户：<br>      包：samba-common-tools<br>      工具：smbpasswd pdbedit<br>      samba用户须是Linux用户，建议使用/sbin/nologin  </p>
+<p>管理SAMBA用户<br> 添加samba用户<br>      smbpasswd -a <user><br>       pdbedit -a -u  <user><br> 修改用户密码<br>smbpasswd  <user><br> 删除用户和密码：<br>      smbpasswd –x <user><br>       pdbedit –x –u  <user><br> 查看samba用户列表：<br>       /var/lib/samba/private/passdb.tdb<br>      pdbedit –L –v<br>查看samba服务器状态<br>      smbstatus  </user></user></user></user></user></p>
+<h4 id="配置目录共享"><a href="#配置目录共享" class="headerlink" title="配置目录共享"></a>配置目录共享</h4><p> 每个共享目录应该有独立的[ ]部分<br> [共享名称] 远程网络看到的共享名称<br> comment 注释信息<br> path 所共享的目录路径<br> public 能否被guest访问的共享，默认no，和guest ok 类似<br> browsable 是否允许所有用户浏览此共享,默认为yes,no为隐藏<br> writable=yes 可以被所有用户读写，默认为no<br> read only=no 和writable=yes等价，如与以上设置冲突，放在后面的设置生 效，默认只读<br> write list 三种形式：用户，@组名，+组名,用，分隔<br> 如writable=no，列表中用户或组可读写，不在列表中用户只读<br>valid users 特定用户才能访问该共享，如为空，将允许所有用户，用户名之间 用空格分隔  </p>
+<p>基于特定用户和组的共享<br>编辑/etc/samba/smb.conf<br> [share]<br>path = /app/dir<br> valid users=wang,@admins<br> writeable = no<br> browseable = no  </p>
+<p>SMB客户端访问<br>UNC路径: Universal Naming Convention,通用命名规范<br>      格式：\sambaserver\sharename<br>终端下使用smbclient登录服务器<br> smbclient -L instructor.example.com<br> smbclient -L instructor.example.com -U wang<br>     &gt; cd directory<br>      &gt; get file1<br>      &gt; put file2<br> smbclient //instructor.example.com/shared -U wang<br> 可以使用-U选项来指定用户%密码，或通过设置和导出USER和 PASSWD环境变量来指定</p>
+<p>挂载CIFS文件系统<br>手动挂载<br> mount -t cifs -o user=wang,password=magedu //server//shared /mnt/smb<br>开机自动挂<br>  • cat /etc/fstab 可以用文件代替用户名和密码的输入<br>//server/homes /mnt cifs credentials=/etc/smb.txt 0 0<br>    • cat /etc/smb.txt<br>     username=wang<br>    password=password<br>     • chmod 600 /etc/smb.txt  </p>
+<p>实验：实现SMB共享<br>一、在samba服务器上安装samba包<br> yum -y install samba<br>二、创建samba用户和组<br> groupadd -r admins<br> useradd -s /sbin/nologin -G admins wang<br>smbpasswd -a wang<br>useradd -s /sbin/nologin mage<br> smbpasswd -a mage  </p>
+<p>三、创建samba共享目录,并设置SElinux<br> mkdir /testdir/smbshare<br> chgrp admins /testdir/smbshare<br> chmod 2775 /testdir/smbshare   </p>
+<p>semanage fcontext -a -t samba_share_t ‘/testdir/smbshare(/.*)?’<br> restorecon -vvFR /testdir/smbshare  </p>
+<p>三、samba服务器配置<br>vim /etc/samba/smb.conf<br> security = user<br>passdb backend = tdbsam<br> [share]<br> path = /testdir/smbshare<br>write list = @admins<br>systemctl start smb nmb<br>systemctl enable smb nmb<br>firewall-cmd –permanent –add-service=samba<br>firewall-cmd –reload  </p>
+<p>四、samba客户端访问<br>安装包<br> yum -y install cifs-utils<br>用wang用户挂载smb共享并访问<br> mkdir /mnt/wang<br> mount -o username=wang //smbserver/share /mnt/wang<br> echo “Hello wang” &gt;/mnt/wang/wangfile.txt<br> 用mage用户挂载smb共享并访问<br>mkdir /mnt/mage<br>mount -o username=mage //smbserver/share /mnt/mage<br> touch /mnt/mage/magefile.txt  </p>
+<p>多用户SMB挂载<br>SAMBA共享默认只支持同时用一个用户挂载SMB共享<br>CentOS7中可启用多用户挂载功能<br>          客户端挂载samba共享目录后，在客户端登录的不同用户访问同一个 samba的挂载点，可获得不同权限  </p>
+<p>一、samba服务器配置<br> • yum install samba<br> • mkdir /multiuser<br> • vim /etc/samba/smb.conf<br> [smbshare]<br> path=/multiuser<br> writable=no<br> write list= @admins  </p>
+<p>二、samba服务器创建samba用户<br> useradd –s /sbin/nologin smbuser<br>smbpasswd –s smbuser<br> useradd –s /sbin/nologin –G admins wang<br>smbpasswd –a wang<br> useradd –s /sbin/nologin mage<br> smbpasswd –a mage  </p>
+<p>三、samba服务器设置目录权限和SELinux<br>对wang,admins组分配目录读写权限<br>chmod 777 /testdir/multiuser<br> 或者<br> setfacl –m u:wang:rwx /testdir/multius er<br> setfacl –m g:admins:rwx /testdir/multiuser  </p>
+<p> 设置SELinux标签：<br>semanage fcontext -a -t samba_share_t ‘/testdir/multiuser (/.*)?’<br>restorecon /testdir/multiuser  </p>
+<p>四、samba客户端启用多用户挂载<br> yum -y install cifs-utils<br>mkdir /mnt/smb<br>echo ‘username=smbuser’ &gt;/etc/multiuser<br> echo ‘password=centos’ &gt;&gt;/etc/multiuser<br> chmod 600 /etc/multiuser<br>以多用户方式挂载：<br>vim /etc/fstab<br>//smbserver/smbshare /mnt/smb cifs<br> credentials=/etc/multiuser,multiuser 0 0<br> mount -a  </p>
+<p>五、在samba客户端用实现多用户访问 <br> useradd wang;useradd mage <br> 用root访问<br> ls /mnt/smb;             touch /mnt  /smb/root.txt <br>用wang访问<br> ls /mnt/smb;              touch /mnt/smb/wang.txt<br> cifscreds add –u wang smbserver<br> touch /mnt/smb/wang.txt <br>用mage访问<br> cifscreds add –u mage smbserver<br> ls /mnt/smb<br>touch /mnt/smb/mage.txt  </p>
+
+    </article>
+    <!-- license  -->
+    
+        <div class="license-wrapper">
+            <p>原文作者: <a href="http://yoursite.com">John Doe</a>
+            <p>原文链接: <a href="http://yoursite.com/2017/06/20/网络文件共享服务：FTP    NFS   SAMBA/">http://yoursite.com/2017/06/20/网络文件共享服务：FTP    NFS   SAMBA/</a>
+            <p>发表日期: <a href="http://yoursite.com/2017/06/20/网络文件共享服务：FTP    NFS   SAMBA/">June 20th 2017, 12:00:00 am</a>
+            <p>版权声明: 本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+        </div>
+    
+    <!-- paginator  -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+                <div class="nextSlogan">Next Post</div>
+                <a href= "/2017/06/24/各种网络共享服务实验演示/" title= 各种网络共享服务实验演示 >
+                    <div class="nextTitle">各种网络共享服务实验演示</div>
+                </a>
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href= "/2017/06/11/LAMP 架构的各种演示/" title= LAMP 架构的各种演示 >
+                    <div class="prevTitle">LAMP 架构的各种演示</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+<!-- City版安装代码已完成 -->
+    
+    
+    <!--PC和WAP自适应版-->
+
+    <!--PC版-->
+
+
+    
+    
+
+    <!-- 评论 -->
+</main>
+            <!-- profile -->
+            
+        </div>
+        <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+    <div class="social">
+        
+    
+        
+            
+                <a href="mailto:1020846215@qq.com" class="iconfont-archer email" title=email ></a>
+            
+        
+    
+        
+            
+                <a href="//github.com/fi3ework" class="iconfont-archer github" target="_blank" title=github></a>
+            
+        
+    
+        
+            
+                <span class="iconfont-archer wechat" title=wechat>
+                  
+                  <img class="profile-qr" src="/assets/example_qr.png" />
+                </span>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+    </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- 不蒜子  -->
+    
+    <div class="busuanzi-container">
+    
+     
+    <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+    
+    </div>
+    
+</footer>
+    </div>
+    <!-- toc -->
+    
+    <div class="toc-wrapper" style=
+    
+
+
+
+
+
+
+
+top:50vh;
+
+    >
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#文件传输协议（FTP）"><span class="toc-number">1.</span> <span class="toc-text">文件传输协议（FTP）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#FTP软件介绍"><span class="toc-number">2.</span> <span class="toc-text">FTP软件介绍</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#FTP服务"><span class="toc-number">3.</span> <span class="toc-text">FTP服务</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#vsftpd服务"><span class="toc-number">4.</span> <span class="toc-text">vsftpd服务</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#vsftpd服务配置"><span class="toc-number">5.</span> <span class="toc-text">vsftpd服务配置</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#vsftpd服务配置-1"><span class="toc-number">6.</span> <span class="toc-text">vsftpd服务配置</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#vsftpd服务配置-2"><span class="toc-number">7.</span> <span class="toc-text">vsftpd服务配置</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#vsftpd服务配置-3"><span class="toc-number">8.</span> <span class="toc-text">vsftpd服务配置</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#vsftpd服务配置-4"><span class="toc-number">9.</span> <span class="toc-text">vsftpd服务配置</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#vsftpd服务配置-5"><span class="toc-number">10.</span> <span class="toc-text">vsftpd服务配置</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#生产中一定要限速不然容易吧服务器托死机。-在配置文件中添加-etv-vsftpd-vsftpd-conf"><span class="toc-number"></span> <span class="toc-text">生产中一定要限速不然容易吧服务器托死机。 在配置文件中添加    /etv/vsftpd/vsftpd.conf</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#vsftpd服务配置-6"><span class="toc-number">1.</span> <span class="toc-text">vsftpd服务配置</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#实现基于SSL的FTPS"><span class="toc-number">2.</span> <span class="toc-text">实现基于SSL的FTPS</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#vsftpd虚拟用户"><span class="toc-number">3.</span> <span class="toc-text">vsftpd虚拟用户</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#配置字段说明"><span class="toc-number">4.</span> <span class="toc-text">配置字段说明</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Ftp工具"><span class="toc-number">5.</span> <span class="toc-text">Ftp工具</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#NFS服务"><span class="toc-number">6.</span> <span class="toc-text">NFS服务</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#NFS服务介绍"><span class="toc-number">7.</span> <span class="toc-text">NFS服务介绍</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#配置防火墙"><span class="toc-number">8.</span> <span class="toc-text">配置防火墙</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#NFS配置文件"><span class="toc-number">9.</span> <span class="toc-text">NFS配置文件</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#NFS配置示例"><span class="toc-number">10.</span> <span class="toc-text">NFS配置示例</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#NFS工具"><span class="toc-number">11.</span> <span class="toc-text">NFS工具</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#客户端NFS挂载"><span class="toc-number">12.</span> <span class="toc-text">客户端NFS挂载</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#自动挂载"><span class="toc-number">13.</span> <span class="toc-text">自动挂载</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#直接匹配"><span class="toc-number">14.</span> <span class="toc-text">直接匹配</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SAMBA服务简介"><span class="toc-number"></span> <span class="toc-text">SAMBA服务简介</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#SAMBA介绍"><span class="toc-number">1.</span> <span class="toc-text">SAMBA介绍</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#SAMBA服务器配置"><span class="toc-number">2.</span> <span class="toc-text">SAMBA服务器配置</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#SAMBA服务器全局配置"><span class="toc-number">3.</span> <span class="toc-text">SAMBA服务器全局配置</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#配置目录共享"><span class="toc-number">4.</span> <span class="toc-text">配置目录共享</span></a></li></ol>
+    </div>
+    
+    <div class="back-top iconfont-archer">&#xe639;</div>
+    <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+          <div class="sidebar-panel-archives">
+    <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 39
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+    
+    
+    
+    <div class="archive-year"> 2018 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/09</span><a class="archive-post-title" href= "/2018/08/09/Linux 防火墙各种规则实战应用/" >[Untitled Post]</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/09</span><a class="archive-post-title" href= "/2018/08/09/Nginx 详细介绍/" >[Untitled Post]</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2017 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/15</span><a class="archive-post-title" href= "/2017/10/15/memcache  缓存原理介绍/" >memcache  缓存原理介绍</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/08</span><a class="archive-post-title" href= "/2017/10/08/tomcat 各种架构实验演示/" >tomcat 各种架构实验演示</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/05</span><a class="archive-post-title" href= "/2017/10/05/浅谈 tomcat 原理/" >浅谈 tomcat 原理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/25</span><a class="archive-post-title" href= "/2017/09/25/Varnish 缓存服务器介绍/" >Varnish 缓存服务器介绍</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/14</span><a class="archive-post-title" href= "/2017/09/14/keepalived 各种高可用实战演练/" >keepalived 各种高可用实战演练</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/28</span><a class="archive-post-title" href= "/2017/08/28/HAproxy 原理介绍/" >HAproxy 原理介绍</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/19</span><a class="archive-post-title" href= "/2017/08/19/lvs 详细介绍/" >lvs 详细介绍</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/24</span><a class="archive-post-title" href= "/2017/06/24/各种网络共享服务实验演示/" >各种网络共享服务实验演示</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/20</span><a class="archive-post-title" href= "/2017/06/20/网络文件共享服务：FTP    NFS   SAMBA/" >网络文件共享服务：FTP    NFS   SAMBA</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/11</span><a class="archive-post-title" href= "/2017/06/11/LAMP 架构的各种演示/" >LAMP 架构的各种演示</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/01</span><a class="archive-post-title" href= "/2017/06/01/介绍 MYSQL的事务日志/" >介绍 MYSQL的事务日志</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/22</span><a class="archive-post-title" href= "/2017/05/22/MYSQL 数据库的日志介绍/" >MYSQL 数据库的日志介绍</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/15</span><a class="archive-post-title" href= "/2017/05/15/MYSQL MariaDB 的事务和事务隔离级别/" >MYSQL MariaDB 的事务和事务隔离级别</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/08</span><a class="archive-post-title" href= "/2017/05/08/MASQL MariaDB 用户权限管理/" >MASQL MariaDB 用户权限管理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/20</span><a class="archive-post-title" href= "/2017/04/20/ext 文件系统机制原理/" >ext 文件系统机制原理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/15</span><a class="archive-post-title" href= "/2017/04/15/Linux分区信息与管理文件系统/" >Linux分区信息与管理文件系统</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/10</span><a class="archive-post-title" href= "/2017/04/10/DHCP 服务/" >DHCP服务</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/01</span><a class="archive-post-title" href= "/2017/04/01/Linux系统中su 和 sudo 的用法/" >Linux系统中su 和 sudo 的用法</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/22</span><a class="archive-post-title" href= "/2017/03/22/实现DNS服务主从复制/" >实现DNS服务主从复制</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/20</span><a class="archive-post-title" href= "/2017/03/20/搭建DNS互联网架构服务器(一）/" >搭建DNS互联网架构服务器</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/15</span><a class="archive-post-title" href= "/2017/03/15/搭建DNS 服务，实现主服务器，邮件服务器，泛域名解析，反向解析等/" >搭建DNS 服务，实现主服务器，邮件服务器，泛域名解析，反向解析等</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/12</span><a class="archive-post-title" href= "/2017/03/12/Linux 文件权限管理/" >Linux 文件权限管理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/08</span><a class="archive-post-title" href= "/2017/03/08/LINUX系统中用户、组管理/" >安装管理包：LINUX系统中用户、组管理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/28</span><a class="archive-post-title" href= "/2017/02/28/搭建DNS服务器，实现主DNS服务器，负责解析一个域/" >搭建DNS服务器，实现主DNS服务器，负责解析一个域</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/15</span><a class="archive-post-title" href= "/2017/02/15/DNS 服务从基础到深入/" >DNS 服务从基础到深入</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/10</span><a class="archive-post-title" href= "/2017/02/10/SSH端口转发实验/" >SSH端口转发实验</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/08</span><a class="archive-post-title" href= "/2017/02/08/实现PXE自动安装/" >实现PXE自动安装</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/01</span><a class="archive-post-title" href= "/2017/02/01/rpm管理包 和 yum管理包(1)/" >安装管理包：rpm包和yum包</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/20</span><a class="archive-post-title" href= "/2017/01/20/搭建CA/" >如何搭建CA（向CA申请证书）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/08</span><a class="archive-post-title" href= "/2017/01/08/自制一个mini 的Linux系统/" >自制一个mini 的Linux系统</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2016 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/20</span><a class="archive-post-title" href= "/2016/12/20/进程管理和计划任务的知识点()/" >进程管理与计划任务的知识点</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/15</span><a class="archive-post-title" href= "/2016/12/15/文本处理工具：sed/" >文本处理工具：sed</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/08</span><a class="archive-post-title" href= "/2016/12/08/TCP、IP协议三次握手与四次握手流程解析（）/" >TCP、IP协议三次握手与四次握手流程解析</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> Invalid date </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">Invalid date</span><a class="archive-post-title" href= "/2018/08/09/Nginx 各种实验演示/" >[Untitled Post]</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2016 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/29</span><a class="archive-post-title" href= "/2016/11/29/Linux 的一些基础练习题/" >Linux 的一些基础练习题</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/23</span><a class="archive-post-title" href= "/2016/11/23/对正则表达式，VIM编辑器命令的基本操作（三）/" >对正则表达式，VIM编辑器命令的基本操作</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> Invalid date </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">Invalid date</span><a class="archive-post-title" href= "/2018/08/09/日志管理介绍/" >[Untitled Post]</a>
+        </li>
+    
+    </div>
+  </div>
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+    
+        <span class="sidebar-tag-name" data-tags="Linux"><span class="iconfont-archer">&#xe606;</span>Linux</span>
+    
+        <span class="sidebar-tag-name" data-tags="DHCP"><span class="iconfont-archer">&#xe606;</span>DHCP</span>
+    
+        <span class="sidebar-tag-name" data-tags="haproxy"><span class="iconfont-archer">&#xe606;</span>haproxy</span>
+    
+        <span class="sidebar-tag-name" data-tags="LAMP"><span class="iconfont-archer">&#xe606;</span>LAMP</span>
+    
+        <span class="sidebar-tag-name" data-tags="DNS"><span class="iconfont-archer">&#xe606;</span>DNS</span>
+    
+        <span class="sidebar-tag-name" data-tags="权限管理"><span class="iconfont-archer">&#xe606;</span>权限管理</span>
+    
+        <span class="sidebar-tag-name" data-tags="用户组"><span class="iconfont-archer">&#xe606;</span>用户组</span>
+    
+        <span class="sidebar-tag-name" data-tags="练习题"><span class="iconfont-archer">&#xe606;</span>练习题</span>
+    
+        <span class="sidebar-tag-name" data-tags="文件系统"><span class="iconfont-archer">&#xe606;</span>文件系统</span>
+    
+        <span class="sidebar-tag-name" data-tags="MYSQL"><span class="iconfont-archer">&#xe606;</span>MYSQL</span>
+    
+        <span class="sidebar-tag-name" data-tags="su和sudo"><span class="iconfont-archer">&#xe606;</span>su和sudo</span>
+    
+        <span class="sidebar-tag-name" data-tags="SSH"><span class="iconfont-archer">&#xe606;</span>SSH</span>
+    
+        <span class="sidebar-tag-name" data-tags="varnish"><span class="iconfont-archer">&#xe606;</span>varnish</span>
+    
+        <span class="sidebar-tag-name" data-tags="TCP/IP"><span class="iconfont-archer">&#xe606;</span>TCP/IP</span>
+    
+        <span class="sidebar-tag-name" data-tags="keepalied"><span class="iconfont-archer">&#xe606;</span>keepalied</span>
+    
+        <span class="sidebar-tag-name" data-tags="lvs"><span class="iconfont-archer">&#xe606;</span>lvs</span>
+    
+        <span class="sidebar-tag-name" data-tags="memcache"><span class="iconfont-archer">&#xe606;</span>memcache</span>
+    
+        <span class="sidebar-tag-name" data-tags="tomcat"><span class="iconfont-archer">&#xe606;</span>tomcat</span>
+    
+        <span class="sidebar-tag-name" data-tags="rpm"><span class="iconfont-archer">&#xe606;</span>rpm</span>
+    
+        <span class="sidebar-tag-name" data-tags="共享服务"><span class="iconfont-archer">&#xe606;</span>共享服务</span>
+    
+        <span class="sidebar-tag-name" data-tags="自动化安装"><span class="iconfont-archer">&#xe606;</span>自动化安装</span>
+    
+        <span class="sidebar-tag-name" data-tags="基本命令"><span class="iconfont-archer">&#xe606;</span>基本命令</span>
+    
+        <span class="sidebar-tag-name" data-tags="CA"><span class="iconfont-archer">&#xe606;</span>CA</span>
+    
+        <span class="sidebar-tag-name" data-tags="sed"><span class="iconfont-archer">&#xe606;</span>sed</span>
+    
+        <span class="sidebar-tag-name" data-tags="dns"><span class="iconfont-archer">&#xe606;</span>dns</span>
+    
+        <span class="sidebar-tag-name" data-tags="mini系统"><span class="iconfont-archer">&#xe606;</span>mini系统</span>
+    
+        <span class="sidebar-tag-name" data-tags="进程管理、计划任务"><span class="iconfont-archer">&#xe606;</span>进程管理、计划任务</span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+    缺失模块。<br/>
+    1、请确保node版本大于6.2<br/>
+    2、在博客根目录（注意不是archer根目录）执行以下命令：<br/>
+    <span style="color: #f75357; font-size: 1rem; line-height: 2rem;">npm i hexo-generator-json-content --save</span><br/>
+    3、在根目录_config.yml里添加配置：
+    <pre style="color: #787878; font-size: 0.6rem;">
+jsonContent:
+  meta: false
+  pages: false
+  posts:
+    title: true
+    date: true
+    path: true
+    text: false
+    raw: false
+    content: false
+    slug: false
+    updated: false
+    comments: false
+    link: false
+    permalink: false
+    excerpt: false
+    categories: true
+    tags: true</pre>
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+    </div>
+</div> 
+    <script>
+    var siteMeta = {
+        root: "/",
+        author: "John Doe"
+    }
+</script>
+    <!-- CDN failover -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ === 'undefined')
+        {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js">\x3C/script>')
+        }
+    </script>
+    <script src="/scripts/main.js"></script>
+    <!-- algolia -->
+    
+    <!-- busuanzi  -->
+    
+    <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+    <!-- CNZZ  -->
+    
+    </div>
+    <!-- async load share.js -->
+    
+        <script src="/scripts/share.js" async></script>    
+     
+    </body>
+</html>
+
+

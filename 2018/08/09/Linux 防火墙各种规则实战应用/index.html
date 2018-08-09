@@ -1,0 +1,1611 @@
+<!DOCTYPE html>
+<html>
+    <!-- title -->
+
+
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" >
+    <meta name="author" content="John Doe">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="John Doe">
+    <meta name="keywords" content="Hexo | John Doe">
+    <meta name="description" content="">
+    <meta name="Cache-Control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <title>李登峰</title>
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s 1;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+
+</style>
+
+    <link rel="preload" href= /css/style.css?v=20180630 as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    <link rel="stylesheet" href= /css/mobile.css?v=20180630 media="(max-width: 980px)">
+    
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+(function( w ){
+	"use strict";
+	// rel=preload support test
+	if( !w.loadCSS ){
+		w.loadCSS = function(){};
+	}
+	// define on the loadCSS obj
+	var rp = loadCSS.relpreload = {};
+	// rel=preload feature support test
+	// runs once and returns a function for compat purposes
+	rp.support = (function(){
+		var ret;
+		try {
+			ret = w.document.createElement( "link" ).relList.supports( "preload" );
+		} catch (e) {
+			ret = false;
+		}
+		return function(){
+			return ret;
+		};
+	})();
+
+	// if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+	// then change that media back to its intended value on load
+	rp.bindMediaToggle = function( link ){
+		// remember existing media attr for ultimate state, or default to 'all'
+		var finalMedia = link.media || "all";
+
+		function enableStylesheet(){
+			link.media = finalMedia;
+		}
+
+		// bind load handlers to enable media
+		if( link.addEventListener ){
+			link.addEventListener( "load", enableStylesheet );
+		} else if( link.attachEvent ){
+			link.attachEvent( "onload", enableStylesheet );
+		}
+
+		// Set rel and non-applicable media type to start an async request
+		// note: timeout allows this to happen async to let rendering continue in IE
+		setTimeout(function(){
+			link.rel = "stylesheet";
+			link.media = "only x";
+		});
+		// also enable media after 3 seconds,
+		// which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+		setTimeout( enableStylesheet, 3000 );
+	};
+
+	// loop through link elements in DOM
+	rp.poly = function(){
+		// double check this to prevent external calls from running
+		if( rp.support() ){
+			return;
+		}
+		var links = w.document.getElementsByTagName( "link" );
+		for( var i = 0; i < links.length; i++ ){
+			var link = links[ i ];
+			// qualify links to those with rel=preload and as=style attrs
+			if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+				// prevent rerunning on link
+				link.setAttribute( "data-loadcss", true );
+				// bind listeners to toggle media back
+				rp.bindMediaToggle( link );
+			}
+		}
+	};
+
+	// if unsupported, run the polyfill
+	if( !rp.support() ){
+		// run once at least
+		rp.poly();
+
+		// rerun poly on an interval until onload
+		var run = w.setInterval( rp.poly, 500 );
+		if( w.addEventListener ){
+			w.addEventListener( "load", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		} else if( w.attachEvent ){
+			w.attachEvent( "onload", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		}
+	}
+
+
+	// commonjs
+	if( typeof exports !== "undefined" ){
+		exports.loadCSS = loadCSS;
+	}
+	else {
+		w.loadCSS = loadCSS;
+	}
+}( typeof global !== "undefined" ? global : this ) );
+</script>
+
+    <link rel="icon" href= "/assets/favicon.ico" />
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js" as="script" />
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" as="script" />
+    <link rel="preload" href="/scripts/main.js" as="script" />
+    <link rel="preload" as="font" href="/font/Oswald-Regular.ttf" crossorigin>
+    <link rel="preload" as="font" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" crossorigin>
+    
+    <!-- fancybox -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script>
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  -->
+    
+</head>
+
+    
+        <body class="post-body">
+    
+    
+<header class="header">
+
+    <div class="read-progress"></div>
+    <div class="header-sidebar-menu">&#xe775;</div>
+    <!-- post页的toggle banner  -->
+    
+    <div class="banner">
+            <div class="blog-title">
+                <a href="/" >博客</a>
+            </div>
+            <div class="post-title">
+                <a href="#" class="post-name"></a>
+            </div>
+    </div>
+    
+    <a class="home-link" href=/>博客</a>
+</header>
+    <div class="wrapper">
+        <div class="site-intro" style=
+
+
+
+
+
+
+
+
+height:50vh;
+
+>
+    
+    <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
+            
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+            [Untitled Post]
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+            
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                
+                    <div class="post-intro-read">
+                        <span>Word count: <span class="post-count">9,839</span> / Reading time: <span class="post-count">40 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                    <span class="post-intro-time">2018/08/09</span>
+                    
+                    <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                        <span class="iconfont-archer">&#xe602;</span>
+                        <span id="busuanzi_value_page_pv"></span>
+                    </span>
+                    
+                    <span class="shareWrapper">
+                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
+                        <span class="shareText">Share</span>
+                        <ul class="shareList">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        
+    </div>
+</div> 
+        <script>
+ 
+  // get user agent
+  var browser = {
+    versions: function () {
+      var u = window.navigator.userAgent;
+      return {
+        userAgent: u,
+        trident: u.indexOf('Trident') > -1, //IE内核
+        presto: u.indexOf('Presto') > -1, //opera内核
+        webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+        gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+        mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+        ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+        android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+        iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+        iPad: u.indexOf('iPad') > -1, //是否为iPad
+        webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+        weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+        uc: u.indexOf('UCBrowser') > -1 //是否为android下的UC浏览器
+      };
+    }()
+  }
+  console.log("userAgent:" + browser.versions.userAgent);
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded');
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document.getElementsByClassName('intro-title')[0].classList.add('intro-fade-in');
+      document.getElementsByClassName('intro-subtitle')[0].classList.add('intro-fade-in');
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in');
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb(){
+    if (browser.versions.uc) {
+      console.log("UCBrowser");
+      fontLoaded();
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular']
+        },
+        loading: function () {  //所有字体开始加载
+          // console.log('loading');
+        },
+        active: function () {  //所有字体已渲染
+          fontLoaded();
+        },
+        inactive: function () { //字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout');
+          fontLoaded();
+        },
+        timeout: 5000 // Set the timeout to two seconds
+      });
+    }
+  }
+
+  function asyncErr(){
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (cb) { o.addEventListener('load', function (e) { cb(null, e); }, false); }
+    if (err) { o.addEventListener('error', function (e) { err(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+
+  var asyncLoadWithFallBack = function(arr, success, reject) {
+      var currReject = function(){
+        reject()
+        arr.shift()
+        if(arr.length)
+          async(arr[0], success, currReject)
+        }
+
+      async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack([
+    "https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js", 
+    "https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js",
+    "/lib/webfontloader.min.js"
+  ], asyncCb, asyncErr)
+</script>        
+        <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+        <div class="container container-unloaded">
+            <main class="main post-page">
+    <article class="article-entry">
+        <hr>
+<p>layout: post<br>title: Linux 防火墙各种规则实战应用<br>date: 2017-7-03<br>tags:</p>
+<ul>
+<li>Linux</li>
+<li>防火墙</li>
+</ul>
+<hr>
+<h4 id="防火墙的概念"><a href="#防火墙的概念" class="headerlink" title="防火墙的概念"></a>防火墙的概念</h4><p>iptables的基本认识<br>iptables的组成<br>iptables的基本语法<br>iptables之forward的概念<br>iptables之地址转换法则<br>SNAT源地址转换的具体实现<br>DNAT目标地址转换的具体实现<br>firewalld介绍<br>firewalld配置命令<br>rich规则  </p>
+<p>安全技术<br>入侵检测与管理系统（Intrusion Detection Systems）：特点是不阻断任何网络 访问，量化、定位来自内外网络的威胁情况，主要以提供报告和事后监督为主， 提供有针对性的指导措施和安全决策依据。一般采用旁路部署方式<br>入侵防御系统（Intrusion Prevention System）：以透明模式工作，分析数据包 的内容如：溢出攻击、拒绝服务攻击、木马、蠕虫、系统漏洞等进行准确的分析 判断，在判定为攻击行为后立即予以阻断，主动而有效的保护网络的安全，一般 采用在线部署方式<br>防火墙（ FireWall ）：隔离功能，工作在网络或主机边缘，对进出网络或主机的 数据包基于一定的规则检查，并在匹配某规则时由规则定义的行为进行处理的一 组功能的组件，基本上的实现都是默认情况下关闭所有的通过型访问，只开放允 许访问的策略</p>
+<a id="more"></a>
+<h4 id="防火墙的分类"><a href="#防火墙的分类" class="headerlink" title="防火墙的分类"></a>防火墙的分类</h4><p>防火墙的分类<br>主机防火墙：服务范围为当前主机<br>网络防火墙：服务范围为防火墙一侧的局域网<br>硬件防火墙：在专用硬件级别实现部分功能的防火墙；另一个部分功能基于软件 实现，Checkpoint,NetScreen<br> 软件防火墙：运行于通用硬件平台之上的防火墙的应用软件<br>网络层防火墙：OSI下面第三层<br> 应用层防火墙/代理服务器：代理网关，OSI七层  </p>
+<h4 id="网络型防火墙"><a href="#网络型防火墙" class="headerlink" title="网络型防火墙"></a>网络型防火墙</h4><p>网络层防火墙<br>     包过滤防火墙<br>      网络层对数据包进行选择，选择的依据是系统内设置的过滤逻辑，被称为访问控制 列表（ACL），通过检查数据流中每个数据的源地址，目的地址，所用端口号和协议 状态等因素，或他们的组合来确定是否允许该数据包通过<br>      优点：对用户来说透明，处理速度快且易于维护<br>       缺点：无法检查应用层数据，如病毒等  </p>
+<p><img src="http://i1.bvimg.com/657107/ccbce40854561161.png" alt="Markdown"></p>
+<h4 id="应用层防火墙"><a href="#应用层防火墙" class="headerlink" title="应用层防火墙"></a>应用层防火墙</h4><p>应用层防火墙/代理服务型防火墙（Proxy Service）<br>     将所有跨越防火墙的网络通信链路分为两段<br>      内外网用户的访问都是通过代理服务器上的“链接”来实现<br>       优点：在应用层对数据进行检查，比较安全<br>      缺点：增加防火墙的负载  </p>
+<p><img src="http://i1.bvimg.com/657107/3d056f94e7d5e7dd.png" alt="Markdown"><br>现实生产环境中所使用的防火墙一般都是二者结合体<br> 即先检查网络数据，通过之后再送到应用层去检查  </p>
+<h4 id="iptables的基本认识"><a href="#iptables的基本认识" class="headerlink" title="iptables的基本认识"></a>iptables的基本认识</h4><p>Netfilter组件<br>    内核空间，集成在linux内核中<br>     扩展各种网络服务的结构化底层框架<br>     内核中选取五个位置放了五个hook(勾子) function(INPUT、OUTPUT、FORWARD、 PREROUTING、POSTROUTING)，而这五个hook function向用户开放，用户可以通过一 个命令工具（iptables）向其写入规则<br>       由信息过滤表（table）组成，包含控制IP包处理的规则集（rules），规则被分组放 在链（chain）上<br> 三种报文流向：<br>      流入本机：PREROUTING –&gt; INPUT–&gt;用户空间进程<br>      流出本机：用户空间进程 –&gt;OUTPUT–&gt; POSTROUTING<br>      转发：PREROUTING –&gt; FORWARD –&gt; POSTROUTING  </p>
+<p>iptables的基本认识<br>防火墙工具<br>iptables<br>    命令行工具，工作在用户空间<br>     用来编写规则，写好的规则被送往netfilter，告诉内核如何去处理信息包<br>firewalld<br>      CentOS 7引入了新的前端管理工具<br>管理工具：<br>      firewall-cmd 命令行<br>       firewall-config 图形  </p>
+<p>iptables的组成<br> iptables由四个表和五个链以及一些规则组成<br>    四个表table：filter、nat、mangle、raw<br>     filter表:过滤规则表，根据预定义的规则过滤符合条件的数据包<br>    nat表:network address translation 地址转换规则表<br>     mangle:修改数据标记位规则表<br>     Raw:关闭NAT表上启用的连接跟踪机制，加快封包穿越防火墙速度   </p>
+<p>优先级由高到低的顺序为:raw–&gt;mangle–&gt;nat–&gt;filter<br> 五个内置链chain<br>    INPUT<br>     OUTPUT<br>     FORWARD<br>     PREROUTING<br>     POSTROUTING  </p>
+<p><img src="http://i4.bvimg.com/657107/54be2ff4f1e3ba03.png" alt="Markdown"></p>
+<p><img src="http://i4.bvimg.com/657107/6a8dde83727fe504.png" alt="Markdown"></p>
+<h4 id="IPTABLES和路由"><a href="#IPTABLES和路由" class="headerlink" title="IPTABLES和路由"></a>IPTABLES和路由</h4><p>路由功能发生的时间点<br>   报文进入本机后<br>      • 判断目标主机是否为本机<br>      是：INPUT<br>      否：FORWARD<br>   报文离开本机之前<br>       • 判断由哪个接口送往下一跳<br><img src="http://i4.bvimg.com/657107/3d7261a9eec5e022.png" alt="Markdown"><br>内核中数据包的传输过程<br> 内核中数据包的传输过程<br> 当一个数据包进入网卡时，数据包首先进入PREROUTING链，内核根据数据包目的 IP判断是否需要转送出去<br> 如果数据包就是进入本机的，数据包就会沿着图向下移动，到达INPUT链。数据包 到达INPUT链后，任何进程都会收到它。本机上运行的程序可以发送数据包，这些 数据包经过OUTPUT链，然后到达POSTROUTING链输出<br> 如果数据包是要转发出去的，且内核允许转发，数据包就会向右移动，经过 FORWARD链，然后到达POSTROUTING链输出  </p>
+<h4 id="iptables规则"><a href="#iptables规则" class="headerlink" title="iptables规则"></a>iptables规则</h4><p>规则rule：根据规则的匹配条件尝试匹配报文，对匹配成功的报文根据规则定义的 处理动作作出处理<br>     匹配条件：默认为与条件，同时满足<br>        基本匹配：IP,端口,TCP的Flags（SYN,ACK等）<br>        扩展匹配：通过复杂高级功能匹配<br>     处理动作：称为target，跳转目标<br>       内建处理动作：ACCEPT(接受),DROP（抛弃）,REJECT（拒绝）,SNAT,DNATMASQUERADE,MARK,LOG…<br>       自定义处理动作：自定义chain，利用分类管理复杂情形<br>规则要添加在链上，才生效；添加在自定义上不会自动生效<br>链chain：<br>       内置链：每个内置链对应于一个钩子函数<br>       自定义链：用于对内置链进行扩展或补充，可实现更灵活的规则组织管理机制； 只有Hook钩子调用自定义链时，才生效  </p>
+<p>  定义防火墙规则应注意：<br>  条件越严的、越苛刻的、范围小的尽量放在前面，相对不太严格的、宽松的放在后面，这个宽松说得是指范围。</p>
+<p>在防火墙规则中，如果没有定义任何规则时，系统默认的规则是 ACCEPT 的。 </p>
+<p>也可以把默认的规则进行修改，如：  把默认规则改为 DROP （注意，改之前一定要把自己本机摘出来，不然自己也不能连接了）<br> iptables -A INPUT -s 192.168.30.1 -j ACCEPT       #   表示在规则中添加192.168.30.1 主机访问时允许连接。<br>iptables -P INPUT DROP          #    表示把默认规则改为 DROP  </p>
+<p>也可以把规则里面的任意一条进行修改 ，如：<br>原来在规则中 192.168.30.6 这个主机是拒绝的，编号没第二条，现在要把他改为接受 </p>
+<p>iptables -R INPUT 2 -s 192.168.30.6 -j ACCEPT  </p>
+<p>  这就表示把192.168.30.6 这台主机改为 接受，允许连接。 </p>
+<p>iptables -F   :   清空所有规则  </p>
+<p>iptables -vnL –line-numbers    :  表示查看规则中的信息，并且前面带有编号  </p>
+<h4 id="iptables添加要点"><a href="#iptables添加要点" class="headerlink" title="iptables添加要点"></a>iptables添加要点</h4><p> iptables规则添加时考量点<br>     要实现哪种功能：判断添加在哪张表上<br>     报文流经的路径：判断添加在哪个链上<br>      报文的流向：判断源和目的<br>     匹配规则：业务需要<br> 链上规则的次序，即为检查的次序，因此隐含一定的法则<br>    同类规则(访问同一应用)，匹配范围小的放上面<br>    不同类规则(访问不同应用)，匹配到报文频率较大的放上面<br>     将那些可由一条规则描述的多个规则合并为一个<br>     设置默认策略<br> 实验环境准备：<br>     Centos7: systemctl stop firewalld.service<br>                 systemctl disable firewalld. service<br>     Centos6:service iptables stop; chkconfig iptables off  </p>
+<h4 id="iptables命令"><a href="#iptables命令" class="headerlink" title="iptables命令"></a>iptables命令</h4><p>man 8 iptables   </p>
+<p> iptables [-t table] {-A|-C|-D} chain rule-specification  </p>
+<p> iptables [-t table] -I chain [rulenum] rule-specification  </p>
+<p> iptables [-t table] -R chain rulenum rule-specification  </p>
+<p> iptables [-t table] -D chain rulenum   </p>
+<p> iptables [-t table] -S [chain [rulenum]]   </p>
+<p> iptables [-t table] {-F|-L|-Z} [chain [rulenum]] [options…]   </p>
+<p> iptables [-t table] -N chain   </p>
+<p> iptables [-t table] -X [chain]   </p>
+<p> iptables [-t table] -P chain target   </p>
+<p> iptables [-t table] -E old-chain-name new-chain-name   </p>
+<p> rule-specification = [matches…] [target]   </p>
+<p> match = -m matchname [per-match-options]   </p>
+<p> target = -j targetname [per-target-options]  </p>
+<p><img src="http://i4.bvimg.com/657107/1492c3334b91026c.png" alt="Markdown"></p>
+<h4 id="iptables命令-1"><a href="#iptables命令-1" class="headerlink" title="iptables命令"></a>iptables命令</h4><p> 规则格式：iptables [-t table] SUBCOMMAND chain [-m matchname [per-matchoptions]] -j targetname [per-target-options]   </p>
+<p> -t table：<br>         raw, mangle, nat, [filter]默认<br> SUBCOMMAND：<br>    1、链管理：<br>        -N：new, 自定义一条新的规则链<br>        -X：delete，删除自定义的空的规则链<br>         -P：Policy，设置默认策略；对filter表中的链而言，其默认策略有：<br>              ACCEPT：接受<br>               DROP：丢弃<br>         -E：重命名自定义链；引用计数不为0的自定义链不能够被重命名，也不能被删除  </p>
+<p>现在有几个组，分别为 web    fileshare   mange ， 其中 web 组中定义了 http    httpd  两种协议  </p>
+<p>fileshare 组中定义了 samba   ftp   两种协议      ，  mange 组中定义了  ssh  telnet  两种协议  </p>
+<p>将来对组进行定义相应的规则、自定义的链，将来看到组名就代表着组中的成员，<br>自定义的链将来必须跟系统自带的链相关联才能起效果  </p>
+<p>创建一个自定义的链<br>iptables -N WEB<br>也可以把自定义的链给删除了<br>iptables -X WEB<br>接下来给这个自定义的链加规则，怎么加呢，我们希望 http   https  属于这个链，希望将来别的主机可以通过 这个种协议来访问本机。<br>iptables -A WEB -p tcp -m multiport –dports 80,443 -j ACCEPT<br>现在这个规则还不能使用，还需要把这个自定义链关联到 系统自带的链上去<br>iptables -A INPUT -j WEB<br> 表示客户端访问本机的 input时 ，会跳转到 web 链上去，如果 web 链上有符合条件的就直接回应，如果没有就继续回到 input 继续往下匹配  </p>
+<p>修改自定义链<br>这样就可以实现模块化，INPUT 链中只定各自 自定义的链，然后把规则定义在各自自定义链中，将来想修改 INPUT 链中的规则时 就不用直接修改 input 了，把对应的自定义链修改就可以了。<br>比如 ： 现在想增加一条规则，允许客户端访问本机的 8080 端口，就可以直接在 WEB 链中添加规则就可以。<br> iptables -A WEB -p tcp –dport 8080 -j ACCEPT<br>这样客户端就可以访问本机的8080端口了<br>也可以直接在原来的规则上进行修改<br>ipyables -R WEB 1 -p -m multiport –dports 80,445,8080 -j ACCEPT  </p>
+<p>删除一个自定义链<br>先把关联在系统自带链中的规则进行删除<br>iptables -D INPUT 1<br>再把自定义链中的规则清空<br>iptables -D WEB 1<br>最后删除自定义链<br>iptables -X WEB   </p>
+<p>注意： 创建一个成熟的自定义链，需要先创建一个自定义链，再给它定义规则，最后把关联到系统自带的链上。<br>       删除的时应先把系统自带链中的自定义链规则删除，再把自定义链中的规则删除，最后再删除自定义链。<br>    必须按照顺序来，不然会报错。<br>这就是自定义链的内容，一般在生产中，定义的规则比较复杂时，就可以采用这种自定义链来进行管理，就相当于把系统自带链模块化了。  </p>
+<h4 id="iptables命令-2"><a href="#iptables命令-2" class="headerlink" title="iptables命令"></a>iptables命令</h4><p>2、查看：<br> -L：list, 列出指定鏈上的所有规则，本选项须置后<br> -n：numberic，以数字格式显示地址和端口号<br> -v：verbose，详细信息<br>        -vv 更详细<br>-x：exactly，显示计数器结果的精确值,而非单位转换后的易读值<br> –line-numbers：显示规则的序号<br>常用组合：<br>       –vnL<br>      –vvnxL –line-numbers<br>       -S selected,以iptables-save 命令格式显示链上规则  </p>
+<h4 id="iptables命令-3"><a href="#iptables命令-3" class="headerlink" title="iptables命令"></a>iptables命令</h4><p> 3、规则管理：<br> -A：append，追加<br> -I：insert, 插入，要指明插入至的规则编号，默认为第一条<br> -D：delete，删除<br>     (1) 指明规则序号<br>      (2) 指明规则本身<br>-R：replace，替换指定链上的指定规则编号<br> -F：flush，清空指定的规则链<br>-Z：zero，置零<br>    iptables的每条规则都有两个计数器<br>        (1) 匹配到的报文的个数<br>        (2) 匹配到的所有报文的大小之和<br>chain：PREROUTING，INPUT，FORWARD，OUTPUT，POSTROUTING  </p>
+<h4 id="iptables命令-4"><a href="#iptables命令-4" class="headerlink" title="iptables命令"></a>iptables命令</h4><p> 匹配条件<br>      基本：通用的，PARAMETERS<br>      扩展：需加载模块，MATCH EXTENTIONS<br> 1、基本匹配条件：无需加载模块，由iptables/netfilter自行提供<br> [!]-s, –source address[/mask][,…]：源IP地址或范围<br> [!] -d, –destination address[/mask][,…]：目标IP地址或范围<br> [!] -p, –protocol protocol：指定协议，可使用数字如0（all）<br>           protocol: tcp, udp, icmp, icmpv6, udplite,esp, ah, sctp, mh or “all“ 参看：/etc/protocols<br> [!] -i, –in-interface   name：报文流入的接口；只能应用于数据报文流入环节，只应用于   INPUT、FORWARD、PREROUTING链<br> [!] -o, –out-interface   name：报文流出的接口；只能应用于数据报文流出的环节，只应用 于FORWARD、OUTPUT、POSTROUTING链  </p>
+<h4 id="iptables命令-5"><a href="#iptables命令-5" class="headerlink" title="iptables命令"></a>iptables命令</h4><p> 2 扩展匹配条件：需要加载扩展模块（/usr/lib64/xtables/*.so），方可生效<br> 查看帮助 man iptables-extensions<br> (1)隐式扩展：在使用-p选项指明了特定的协议时，无需再用-m选项指明扩展模块的扩展 机制，不需要手动加载扩展模块<br> tcp协议的扩展选项<br>        [!] –source-port, –sport   port[:port]：匹配报文源端口,可为端口范围<br>        [!] –destination-port,–dport   port[:port]：匹配报文目标端口,可为范围<br>         [!] –tcp-flags mask comp<br>       mask 需检查的标志位列表，用,分隔<br>               例如 SYN,ACK,FIN,RST<br>       comp 在mask列表中必须为1的标志位列表，无指定则必须为0，用,分隔  </p>
+<h4 id="tcp协议的扩展选项"><a href="#tcp协议的扩展选项" class="headerlink" title="tcp协议的扩展选项"></a>tcp协议的扩展选项</h4><p>示例：<br>       –tcp-flags SYN,ACK,FIN,RST SYN 表示要检查的标志位为 SYN,ACK,FIN,RST四个，其中SYN必须为1，余下的必须为0<br>        –tcp-flags SYN,ACK,FIN,RST SYN,ACK<br>         –tcp-flags ALL ALL<br>          –tcp_flags ALLNONE   </p>
+<p>[!] –syn：用于匹配第一次握手<br>         相当于：–tcp-flags SYN,ACK,FIN,RST SYN  </p>
+<h4 id="iptables命令-6"><a href="#iptables命令-6" class="headerlink" title="iptables命令"></a>iptables命令</h4><p>udp<br>   [!] –source-port, –sport port[:port]：匹配报文的源端口；可以是端口 范围<br>   [!] –destination-port,–dport port[:port]：匹配报文的目标端口；可以 是端口范围<br>icmp<br>    [!] –icmp-type {type[/code]|typename}<br>      type/code<br>          0/0 echo-reply icmp应答<br>          8/0 echo-request icmp请求   </p>
+<p>也可以指定协议制定端口来定义规则<br>如： 拒绝 192.168.30.6 这台主机访问本机的 tcp 445   139  这两个端口<br>iptables -A INPUT -s 192.168.30.6 -p tcp –dport 445 -j REJECT<br>iptables -A INPUT -s 192.168.30.6 -p tcp –dport 139 -j REJECT  </p>
+<p>设定规则拒绝 tcp 协议第一次握手<br>iptables -A INPUT -p tcp –syn -j REJECT<br> 这种设定表示任何主机都不能连接本机，但是已经连接上的用户继续维护，新建连接的主机被拒绝了。  </p>
+<p>现在有两台主机，192.168.30.7    192.168.30.6    ，现在要求 192.168.30.7 能 ping 通 192.168.30.6 ，但是 192.168.30.6  ping 不同 192.168.30.7  ，操作如下：<br>在 192.168.30.7 主机上输入 ：  iptables -A INPUT -p icmp –icmp-type 8 -j REJECT<br>  这样也就实现了上面的效果</p>
+<p>(2)显式扩展：必须使用-m选项指明要调用的扩展模块的扩展机制，要手动加载 扩展模块<br>          [-m matchname [per-match-options]]  </p>
+<p>现在要求其他主机不能访问本机的 80  21  445 这三个端口，操作如下：<br>iptables -A INPUT -p tcp -m multiport –dports  21,80,445 -j REJECT  </p>
+<p>在生产中，一般配置服务器，都只对外开放特定的端口  80  22 ，剩余其他的都不允许访问。<br>现在模拟一下，先拿一台主机禁止任何主机访问，然后在进行开启 80  22  两个端口<br>加策略时首先把本机先摘出来再进行加策略<br>先把全部禁止访问<br>iptables -A INPUT -s 192.168.30.1 -j REJECT<br>iptables -A OUTPUT -d 192.168.30.1 -j REJECT<br>iptables -A INPUT -j REJECT<br>iptables -A  OUTPUT -j REJECT<br>然后再把 80 22 两个端口开放出来<br>iptables -I INPUT -p tcp -m multiport -dports 22,80 -j ACCEPT<br>iptables -I OUTPUT -p tcp -m multiport -sports 22,80 -j ACCEPT<br>  这样就满足了以上要求  </p>
+<p>现在有要求，要求其他任意主机只允许访问本机的 samba  httpd  ssh 三种服务，剩余其他都不允许。<br>同样先把所有端口都禁止然后在进行开放特定端口<br>禁止之前先把本机摘出来<br>iptables -A INPUT -s 192.168.30.1 -j REJECT<br>iptables -A OUTPUT -d 192.168.30.1 -j REJECT<br>iptables -A INPUT -j REJECT<br>iptables -A  OUTPUT -j REJECT<br>然后在开放特定端口<br>iptables -I INPUT -p tcp -m multiport -dports 22,80,139,445 -j ACCEPT<br>iptables -I INPUT 2 -p udp -m multiport -dports 137,138 -j ACCEPT<br>因为 samba 服务有四个端口，tcp 139  445   udp  137  138<br> 这样就实现以上要求</p>
+<h4 id="iptables命令-7"><a href="#iptables命令-7" class="headerlink" title="iptables命令"></a>iptables命令</h4><p> 处理动作：<br>     -j targetname [per-target-options]<br> 简单： ACCEPT，DROP<br>扩展： REJECT：–reject-with:icmp-port-unreachable默认<br>             RETURN：返回调用链<br>             REDIRECT：端口重定向<br>             LOG：记录日志，dmesg<br>              MARK：做防火墙标记<br>             DNAT：目标地址转换<br>              SNAT：源地址转换<br>              MASQUERADE：地址伪装<br>               …<br>             自定义链：  </p>
+<h4 id="iptables命令-8"><a href="#iptables命令-8" class="headerlink" title="iptables命令"></a>iptables命令</h4><p>显式扩展：必须显式地指明使用的扩展模块进行的扩展<br>使用帮助：<br>        CentOS 6: man iptables<br>         CentOS 7: man iptables-extensions<br> 1、multiport扩展<br>      以离散方式定义多端口匹配,最多指定15个端口<br>       [!] –source-ports,–sports port[,port|,port:port]…<br>            指定多个源端口<br>        [!] –destination-ports,–dports port[,port|,port:port]…<br>             指定多个目标端口<br>         [!] –ports port[,port|,port:port]…多个源或目标端口<br> 示例：<br> iptables -A INPUT -s 172.16.0.0/16 -d 172.16.100.10 -p tcp -m multiport –dports 20:22,80 -j ACCEPT  </p>
+<h4 id="iptables命令-9"><a href="#iptables命令-9" class="headerlink" title="iptables命令"></a>iptables命令</h4><p>2、iprange扩展<br>指明连续的（但一般不是整个网络）ip地址范围<br> [!] –src-range from[-to] 源IP地址范围<br> [!] –dst-range from[-to] 目标IP地址范围  </p>
+<p> 示例：<br> iptables -A INPUT -d 172.16.1.100 -p tcp –dport 80 -m iprange –srcrange 172.16.1.5-172.16.1.10 -j DROP  </p>
+<h4 id="iptables命令-10"><a href="#iptables命令-10" class="headerlink" title="iptables命令"></a>iptables命令</h4><p>3、mac扩展<br> 指明源MAC地址<br>适用于：PREROUTING, FORWARD，INPUT chains<br> [!] –mac-source XX:XX:XX:XX:XX:XX  </p>
+<p> 示例：<br> iptables -A INPUT -s 172.16.0.100 -m mac –mac-source 00:50:56:12:34:56 -j ACCEPT<br> iptables -A INPUT -s 172.16.0.100 -j REJECT  </p>
+<h4 id="iptables命令-11"><a href="#iptables命令-11" class="headerlink" title="iptables命令"></a>iptables命令</h4><p>4、string扩展<br>对报文中的应用层数据做字符串模式匹配检测<br> –algo {bm|kmp}：字符串匹配检测算法<br>     bm：Boyer-Moore<br>      kmp：Knuth-Pratt-Morris<br> –from offset 开始偏移<br>–to offset 结束偏移<br> [!] –string pattern：要检测的字符串模式<br> [!] –hex-string pattern：要检测字符串模式，16进制格式<br> 示例：<br> iptables -A OUTPUT -s 172.16.100.10 -d 0/0 -p tcp –sport 80 -m string - -algo bm –string “google” -j REJECT  </p>
+<p>现在客户端可以访问主服务器的 80 端口，主服务器上有两个外部网页，一个是 mage 网页，一个是 google 网页，现在要求客户端访问本机的80 端口时，只能查看到 mage 页面，不能查看 googe 页面。怎么操作？  </p>
+<p>在服务器端<br>iptables -A INPUT -s 192.168.30.1 -j REJECT<br>iptables -A INPUT -j REJECT<br>iptables -A INPUT -p tcp –dport 80 -j ACCEPT<br>echo welcome to magedu  &gt; /var/www/html/index1.html<br>echo welcome to google  &gt; /var/www/html/index2.html<br>iptables -A OUTPUT -m string –algo bm –string “google” -j REJECT<br>这样客户端访问本机的 80 端口时就不能查看到 google 页面，而 magedu  页面还能访问。</p>
+<p> 5、time扩展<br>根据将报文到达的时间与指定的时间范围进行匹配<br>–datestart YYYY[-MM[-DD[Thh[:mm[:ss]]]]] 日期<br> –datestop YYYY[-MM[-DD[Thh[:mm[:ss]]]]]<br> –timestart hh:mm[:ss] 时间<br> –timestop hh:mm[:ss]<br> [!] –monthdays day[,day…] 每个月的几号<br> [!] –weekdays day[,day…] 星期几<br> –kerneltz：内核时区，不建议使用，CentOS7系统默认为UTC<br>注意： centos6 不支持kerneltz ，–localtz指定本地时区(默认)<br> 示例：<br> iptables -A INPUT -s 172.16.0.0/16 -d 172.16.100.10 -p tcp –dport 80 -m time –timestart 14:30 –timestop 18:30 –weekdays Sat,Sun –kerneltz -j DROP  </p>
+<h4 id="iptables命令-12"><a href="#iptables命令-12" class="headerlink" title="iptables命令"></a>iptables命令</h4><p>6、connlimit扩展 根据每客户端IP做并发连接数数量匹配<br>可防止CC(Challenge Collapsar挑战黑洞)攻击<br> –connlimit-upto n：连接的数量小于等于n时匹配<br>–connlimit-above n：连接的数量大于n时匹配<br> 通常分别与默认的拒绝或允许策略配合使用<br> 示例：<br> iptables -A INPUT -d 172.16.100.10 -p tcp –dport 22 -m connlimit –connlimit-above 2 -j REJECT  </p>
+<h4 id="iptables命令-13"><a href="#iptables命令-13" class="headerlink" title="iptables命令"></a>iptables命令</h4><p>7、limit扩展 基于收发报文的速率做匹配<br> 令牌桶过滤器   (限流，达到一定程度就要限流)<br> –limit rate[/second|/minute|/hour|/day]    （表示按时间限制）<br> –limit-burst number   （初始值，表示这设定的值之前不限，超过就开始限）<br>示例：<br> iptables -I INPUT -d 172.16.100.10 -p icmp –icmp-type 8 -m limit –limit 10/minute – limit-burst 5 -j ACCEPT<br> 表示前 五个 不限，超过五个每秒钟只限 十个<br> iptables -I INPUT 2 -p icmp -j REJECT  </p>
+<h4 id="iptables命令-14"><a href="#iptables命令-14" class="headerlink" title="iptables命令"></a>iptables命令</h4><p>8、state扩展<br>根据”连接追踪机制“去检查连接的状态，较耗资源<br>conntrack机制：追踪本机上的请求和响应之间的关系<br>状态有如下几种：<br>       NEW：新发出请求；连接追踪信息库中不存在此连接的相关信息条目，因 此，将其识别为第一次发出的请求<br>       ESTABLISHED：NEW状态之后，连接追踪信息库中为其建立的条目失效之 前期间内所进行的通信状态<br>      RELATED：新发起的但与已有连接相关联的连接，如：ftp协议中的数据连 接与命令连接之间的关系<br>      INVALID：无效的连接，如flag标记不正确<br>      UNTRACKED：未进行追踪的连接，如raw表中关闭追踪  </p>
+<h4 id="iptables命令-15"><a href="#iptables命令-15" class="headerlink" title="iptables命令"></a>iptables命令</h4><p> [!] –state state<br> 示例：<br> iptables -A INPUT -d 172.16.1.10 -p tcp -m multiport –dports 22,80 -m state – state NEW,ESTABLISHED -j ACCEPT<br> iptables -A OUTPUT -s 172.16.1.10 -p tcp -m multiport –sports 22,80 -m state – state ESTABLISHED -j ACCEPT<br> 已经追踪到的并记录下来的连接信息库<br>        /proc/net/nf_conntrack<br> 调整连接追踪功能所能够容纳的最大连接数量<br>       /proc/sys/net/nf_conntrack_max<br>   如果修改这个值，如：<br>  echo net.nf_conntrack_max=2000000 &gt;&gt; /etc/sysctl.conf<br>   生效一下 ：   sysctl -p<br>  这个值也不是越大越好，值越大性能消耗就越多<br> 不同的协议的连接追踪时长<br>      /proc/sys/net/netfilter/<br>注意：CentOS7 需要加载模块： modprobe nf_conntrack  </p>
+<h4 id="iptables命令-16"><a href="#iptables命令-16" class="headerlink" title="iptables命令"></a>iptables命令</h4><p> iptables的链接跟踪表最大容量为/proc/sys/net/nf_conntrack_max，各种状态的超 时链接会从表中删除；当模板满载时，后续连接可能会超时<br> 解决方法两个：<br> (1) 加大nf_conntrack_max 值<br> vi /etc/sysctl.conf<br> net.nf_conntrack_max = 393216<br> net.netfilter.nf_conntrack_max = 393216<br>(2) 降低 nf_conntrack timeout时间<br> vi /etc/sysctl.conf<br> net.netfilter.nf_conntrack_tcp_timeout_established = 300   net.netfilter.nf_conntrack_tcp_timeout_time_wait = 120<br>net.netfilter.nf_conntrack_tcp_timeout_close_wait = 60<br> net.netfilter.nf_conntrack_tcp_timeout_fin_wait = 120<br> iptables -t nat -L -n  </p>
+<h4 id="iptables命令-17"><a href="#iptables命令-17" class="headerlink" title="iptables命令"></a>iptables命令</h4><p> 开放被动模式的ftp服务<br> (1) 装载ftp连接追踪的专用模块： 跟踪模块路径：<br>         /lib/modules/kernelversion/kernel/net/netfilter<br>          vim /etc/sysconfig/iptables-config 配置文件<br>          IPTABLES_MODULES=“nf_conntrack_ftp”<br>           modproble nf_conntrack_ftp<br> (2) 放行请求报文：<br>        命令连接：NEW, ESTABLISHED<br>        数据连接：RELATED, ESTABLISHED<br>        iptables –I INPUT -d LocalIP -p tcp -m state –state   ESTABLISHED,RELATED -j ACCEPT<br>        iptables -A INPUT -d LocalIP -p tcp –dport 21 -m state –state NEW -j ACCEPT<br> (3) 放行响应报文：<br>      iptables -I OUTPUT -s LocalIP -p tcp -m state –state ESTABLISHED -j ACCEPT  </p>
+<p>开放被动模式的ftp服务示例<br>yum install vsftpd<br>systemctl start vsftpd<br>modprobe nf_conntrack_ftp<br>iptables -F<br>iptables -A INPUT -m state –state ESTABLISHED,RELATED -j ACCEPT<br>iptables -A INPUT -p tcp –dport 21 -m state –state NEW -j ACCEPT<br>iptables -A OUTPUT -m state –state ESTABLISHED -j ACCEPT<br>iptables -P INPUT DROP<br>iptables -P OUTPUT DROP<br>iptables -vnL  </p>
+<h4 id="iptables命令-18"><a href="#iptables命令-18" class="headerlink" title="iptables命令"></a>iptables命令</h4><p>Target：<br>  ACCEPT， DROP， REJECT， RETURN<br>  LOG， SNAT， DNAT， REDIRECT， MASQUERADE，..<br>   LOG: 非中断target,本身不拒绝和允许,放在拒绝和允许规则前<br>     并将日志记录在/var/log/messages系统日志中<br>     –log-level level 级别： emerg, alert, crit, error, warning, notice, info or debug<br>     –log-prefix prefix 日志前缀，用于区别不同的日志，最多29个字符<br>示例：<br>iptables -I INPUT -s 10.0.1.0/24 -p tcp -m multiport –dports 80,21,22,23 -m state –state NEW -j LOG –log-prefix “new connections: “<br>  一般在生产中一般不加，除非用于排错等可能添加  </p>
+<h4 id="iptables命令-19"><a href="#iptables命令-19" class="headerlink" title="iptables命令"></a>iptables命令</h4><p>任何不允许的访问，应该在请求到达时给予拒绝<br>规则在链接上的次序即为其检查时的生效次序<br>基于上述，规则优化<br>  1 安全放行所有入站和出站的状态为ESTABLISHED状态连接<br>  2 谨慎放行入站的新请求<br>  3 有特殊目的限制访问功能，要在放行规则之前加以拒绝<br>  4 同类规则（访问同一应用），匹配范围小的放在前面，用于特殊处理<br>  5 不同类的规则（访问不同应用），匹配范围大的放在前面<br>  6 应该将那些可由一条规则能够描述的多个规则合并为一条<br>  7 设置默认策略，建议白名单（只放行特定连接）<br>     1） iptables -P，不建议<br>      2） 建议在规则的最后定义规则做为默认策略  </p>
+<p>在生产中，搭建 LAMP 架构，该怎么来添加防火墙策略。<br>如： 有三台服务器，A  B  C ，A 用来做 apache + php-fpm     ， B  用来做 mysql 数据库， C 是管理服务器。<br>然后在不同服务器上添加策略<br>lamp<br>client —&gt; apache+php-fpm  A  –&gt; mysql    B  </p>
+<p>A ：<br>添加前把策略先清空一下<br>iptables -F<br>然后把本服务器回环地址摘出来，因为 apache 连接 php-fpm 程序时，要连接 php-fpm 的9000 端口，而这个连接是在本机连接的，所以如果不加这条规则，外部服务器将无法连接 php 程序。<br>iptables -A INPUT -i lo -j ACCEPT<br>接下来开启本服务器的 80 端口允许所有人能够访问<br>iptables -A INPUT -p tcp –dport 80 -j ACCEPT<br>接下来还要把管理服务器的 22 端口摘出来，保证能够远程连接进行管路<br>iptables -A INPUT -s CIP -p tcp –dport 22 -j ACCEPT<br>添加禁止所有连接本服务器的策略<br>iptables -A  INPUT -j REJECT  </p>
+<p>B:<br>先清空所有策略<br>iptables -F<br>允许外部服务器连接本服务器的 3306 端口<br>iptables -A INPUT -s AIP -p tcp –dport 3306 -j ACCEPT<br>开启本服务器的 22 端口，允许管理服务器能够远程管理<br>iptables -A INPUT -s CIP -p tcp –dport 22 -j ACCEPT<br>添加禁止所有连接本服务器的策略<br>iptables -A INPUT -j REJECT  </p>
+<h4 id="iptables命令-20"><a href="#iptables命令-20" class="headerlink" title="iptables命令"></a>iptables命令</h4><p>规则有效期限：<br> 使用iptables命令定义的规则，手动删除之前，其生效期限为kernel存活期限<br>保存规则：<br> 保存规则至指定的文件<br>CentOS 6<br> service iptables save<br> 将规则覆盖保存至/etc/sysconfig/iptables文件中  </p>
+<p> CentOS 7 可用下面方法保存规则<br> iptables-save &gt; /PATH/TO/SOME_RULES_FILE<br> 生产中添加完规则以后一定要保存在文件中，不然重启服务或机器规则会清空的。如：<br>    iptables-save &gt; “（这个文件由自己设定，如：/etc/iptables-20180701）”<br>如果把规则清空后还可以还原     如：<br>iptables-restore &lt; /etc/iptables-20180701<br>这样还是手动执行的，如果想机器重启后开机这些规则自动就启用，可以写到启动服务脚本中<br>chmod +x /etc/rc.d/rc.local<br>echo ‘iptables-restore &lt; /etc/iptables-20180701’   &gt;&gt; /etc/rc.d/rc.local<br>或者写进计划任务中<br>vim /etc/crontab<br>iptables-restore &lt; /etc/iptables-20180701<br>不过一般还是建议放在服务脚本中      </p>
+<p>而 centos 6 上不用这么做，因为 在 6 上就有 iptables   这个服务，我们只需用把规则写进文件中，然后这个服务设为开机启动就可以。  </p>
+<h4 id="iptables命令-21"><a href="#iptables命令-21" class="headerlink" title="iptables命令"></a>iptables命令</h4><p>CentOS 6：<br>     service iptables restart<br>     会自动从/etc/sysconfig/iptables 重新载入规则<br>CentOS 7 重新载入预存规则文件中规则：<br>     iptables-restore &lt; /PATH/FROM/SOME_RULES_FILE<br>     -n, –noflush：不清除原有规则<br>     -t, –test：仅分析生成规则集，但不提交  </p>
+<h4 id="开机自动重载规则"><a href="#开机自动重载规则" class="headerlink" title="开机自动重载规则"></a>开机自动重载规则</h4><p>开机自动重载规则文件中的规则：<br> (1) 用脚本保存各iptables命令；让此脚本开机后自动运行<br>/etc/rc.d/rc.local文件中添加脚本路径<br> /PATH/TO/SOME_SCRIPT_FILE<br>(2) 用规则文件保存各规则，开机时自动载入此规则文件中的规则<br> /etc/rc.d/rc.local文件添加<br> iptables-restore &lt; /PATH/FROM/IPTABLES_RULES_FILE<br>(3)自定义Unit File，进行iptables-restore  </p>
+<h4 id="网络防火墙"><a href="#网络防火墙" class="headerlink" title="网络防火墙"></a>网络防火墙</h4><p>iptables/netfilter网络防火墙：<br> (1) 充当网关<br>(2) 使用filter表的FORWARD链   </p>
+<p>注意的问题：<br>    (1) 请求-响应报文均会经由FORWARD链，要注意规则的方向性<br>    (2) 如果要启用conntrack机制，建议将双方向的状态为ESTABLISHED的报 文直接放行  </p>
+<p>公司中的网络是一台服务器跟外网连接的，然后公司中的其他主机连接外网都有这台主机进行转发，然后在这台主机的网络防火墙中设定公司里在每礼拜 1  3  5 的早上9点钟到下午的6点钟都能上网，并且什么时候都不能登录“youku”这样的网站。<br>先把”youku”的这种网络加进规则中<br>iptables -I FORWORD -m string –algo bm –sting “youku.com” -j REJECT<br>在设定规定时间内不能上网的规则<br>iptables -A FORWORD -m time –timestart 1:00 –timestop 10:00 –weekdays 1,3,5 -j REJECT<br>这样就可以实现以上要求  </p>
+<p>现在又有要求，要做到只允许公司内容可以连接互联网上的服务器，但是互联网上的服务器不能连接公司内部网络。<br>还是在公司内部往外转发的这台服务器上制定防火墙规则<br>先把所有连接都拒绝<br>iptables -A FORWORD -j REJECT<br>在设定外网连接公司内网时只有已经连接的状态或者是有关联连接的这种状态才允许连进公司内网中<br>iptables -I FORWORD -m state –state ESTABLISHED,RELATED -j ACCEPT<br>在设定新状态连接只能是公司内网连接外网，外网不能连接内网,如： 内网网段是 192.168.30.0/24<br>iptables -I FORWORD 2 -s 192.168.30.0/24 -m state –state NEW -j ACCEPT<br>这样就实现了外网不能访问内网，实现了公司安全。  </p>
+<p>现在又有新的要求了，公司内部搭建了一个外部服务器，允许外网的任意客户端只能对公司内部的这一台服务器进行访问，怎么添加规则？外部服务器的IP 为 192.168.30.7<br>还是在转发外网的服务器上添加规则，在上面的规则基础上进行添加<br>iptables -I FORWORD 2 -d 192.168.30.7 -p tcp –dport 80 -m state NEW -j ACCEPT<br>这样就实现了外网只能连接内网的   外部服务器，其他的服务器不能访问，但是内网可以随意访问外网。  </p>
+<p>私有地址端：分别为<br> A : 10.0.0.0/8<br> B ： 172.16.0.0/16  -  172.31.0.0/16     合成超网为  ： 172.16.0.0/12<br> C : 192.168.0.0/24  -  192.168.255.0/24     合成超网  ：  192.168.0.0/16  </p>
+<h4 id="NAT"><a href="#NAT" class="headerlink" title="NAT"></a>NAT</h4><p>NAT: network address translation<br> PREROUTING，INPUT，OUTPUT，POSTROUTING<br>       请求报文：修改源/目标IP，由定义如何修改<br>       响应报文：修改源/目标IP，根据跟踪机制自动实现<br>SNAT：source NAT POSTROUTING, INPUT<br>     让本地网络中的主机通过某一特定地址访问外部网络，实现地址伪装<br>     请求报文：修改源IP<br>DNAT：destination NAT PREROUTING , OUTPUT<br>      把本地网络中的主机上的某服务开放给外部网络访问(发布服务和端口映射)， 但隐藏真实IP<br>       请求报文：修改目标IP<br>PNAT: port nat，端口和IP都进行修改  </p>
+<h4 id="SNAT"><a href="#SNAT" class="headerlink" title="SNAT"></a>SNAT</h4><p>nat表的target：<br> SNAT：固定IP<br>      –to-source [ipaddr[-ipaddr]][:port[-port]]<br>      –random<br>iptables -t nat -A POSTROU TING -s LocalNET ! -d LocalNet -j SNAT –tosource ExtIP<br>示例：<br>      iptables -t nat -A POSTROUTING -s 10.0.1.0/24 ! –d 10.0.1.0/24 -j SNAT – to-source 172.18.1.6-172.18.1.9  </p>
+<h4 id="SNAT-1"><a href="#SNAT-1" class="headerlink" title="SNAT"></a>SNAT</h4><p>MASQUERADE：动态IP，如拨号网络<br>      –to-ports port[-port]<br>     –random<br>iptables -t nat -A POSTROUTING -s LocalNET ! -d LocalNet -j MASQUERADE<br>示例：<br> iptables -t nat -A POSTROUTING -s 10.0.1.0/24 ! –d 10.0.1.0/24 -j MASQUERADE  </p>
+<h4 id="实验：-实现-SNAT"><a href="#实验：-实现-SNAT" class="headerlink" title="实验： 实现 SNAT"></a>实验： 实现 SNAT</h4><p>那三台主机来模拟拓扑，一个为局域网地址： 192.168.30.0/24    ，  一个为外网地址 ： 10.0.0.0/8<br> 还有一个为 NAT 服务器，服务器上有两个网卡，一个内网网卡接口IP 为 192.168.30.17     另一个外网网卡接口IP 为 10.0.0.254<br>现在要求局域网里的主机通过 NAT 服务器能够访问外网中的服务器  </p>
+<p>接下来首先来配置 NAT 服务器<br>iptables -t nat -A POSTROUTING -s 192.168.30.0/24 -j SNAT –to-source 10.0.0.254<br>这个规则是 NAT 服务器连接外网的地址是固定的，是静态地址<br>或者 NAT 服务器是动态地址，连接外网的地址不是固定的，可以这样添加：<br>iptables -t nat -A POSTROUTING -s 192.168.30.0/24 -j MASQUERADE  </p>
+<h4 id="实验-：-实现-DNAT"><a href="#实验-：-实现-DNAT" class="headerlink" title="实验 ： 实现 DNAT"></a>实验 ： 实现 DNAT</h4><p>iptables -t nat -A PREROUTING -d 10.0.0.254 -p tcp –dport 80 -j DNAT –to-destination 192.168.30.7<br> 表示外网客户端访问 NAT 服务器的80 端口时，就自动转发到内网中端口为 80 的外部服务器192.168.30.7 这台主机，不过也有可能内部端口不是80 ，为8080 也能转发。  </p>
+<h4 id="DNAT"><a href="#DNAT" class="headerlink" title="DNAT"></a>DNAT</h4><h5 id="DNAT-1"><a href="#DNAT-1" class="headerlink" title="DNAT"></a>DNAT</h5><pre><code>--to-destination [ipaddr[-ipaddr]][:port[-port]]   
+</code></pre><p>iptables -t nat -A PREROUTING -d ExtIP -p tcp|udp –dport PORT -j DNAT –to-destination InterSeverIP[:PORT]<br>示例：<br> iptables -t nat -A PREROUTING -s 0/0 -d 172.18.100.6 -p tcp –dport 22 -j DNAT –to-destination 10.0.1.22  </p>
+<p> iptables -t nat -A PREROUTING -s 0/0 -d 172.18.100.6 -p tcp –dport 80 -j DNAT –to-destination 10.0.1.22:8080  </p>
+<h4 id="转发"><a href="#转发" class="headerlink" title="转发"></a>转发</h4><p>REDIRECT：<br>     NAT表<br>     可用于：PREROUTING OUTPUT 自定义链<br>      通过改变目标IP和端口，将接受的包转发至不同端口<br>      –to-ports port[-port]<br> 示例：<br> iptables -t nat -A PREROUTING -d 172.16.100.10 -p tcp –dport 80 -j REDIRECT –to-ports 8080  </p>
+<p>现在公司有一外部服务器，端口为80，但是为了防止黑客攻击，一般都把端口号进行修改，如： 修改为 8080，但是外界客户访问时访问的是 80 端口，所以就要在防火墙策略中实现端口转发，如下：<br>iptables -t nat -A PREROUTING -d 192.168.30.7 -p tcp –dport 80 -j REDIRECT –to-ports 8080<br>表示客户端访问公司里外部服务器 192.168.30.7 这台服务器的 80 端口时，就给转发到设定的8080端口，是把本机的80 转发为 8080<br>  注意： 这个规则是在外部服务器上添加，不在 NAT 服务器上<br>这就叫做端口转发  </p>
+<h4 id="firewalld服务"><a href="#firewalld服务" class="headerlink" title="firewalld服务"></a>firewalld服务</h4><p>firewalld是CentOS 7.0新推出的管理netfilter的工具<br>firewalld是配置和监控防火墙规则的系统守护进程。可以实现 iptables,ip6tables,ebtables的功能<br>firewalld服务由firewalld包提供<br>firewalld支持划分区域zone,每个zone可以设置独立的防火墙规则<br>归入zone顺序：<br>    先根据数据包中源地址，将其纳为某个zone<br>   纳为网络接口所属zone<br>   纳入默认zone，默认为public zone,管理员可以改为其它zone<br>网卡默认属于public zone,lo网络接口属于trusted zone  </p>
+<p><img src="http://i2.bvimg.com/657107/a90ab2cd94711618.png" alt="Markdown"><br><img src="http://i2.bvimg.com/657107/d541e4ae731f6a25.png" alt="Markdown"></p>
+<h4 id="firewalld配置"><a href="#firewalld配置" class="headerlink" title="firewalld配置"></a>firewalld配置</h4><p>firewall-cmd –get-services 查看预定义服务列表<br> /usr/lib/firewalld/services/*.xml预定义服务的配置<br>三种配置方法<br>    firewall-config （firewall-config包）图形工具<br>     firewall-cmd （firewalld包）命令行工具<br>    /etc/firewalld 配置文件，一般不建议  </p>
+<h4 id="firewall-cmd-命令选项"><a href="#firewall-cmd-命令选项" class="headerlink" title="firewall-cmd 命令选项"></a>firewall-cmd 命令选项</h4><p>–get-zones               列出所有可用区域<br>–get-default-zone     查询默认区域<br>–set-default-zone=设置默认区域<br>–get-active-zones      列出当前正使用的区域<br>–add-source=[–zone=]添加源地址的流量到指定区域，如 果无–zone= 选项，使用默认区域<br>–remove-source= [–zone=] 从指定区域中删除源地址的 流量，如无–zone= 选项，使用默认区域<br>–add-interface=[–zone=] 添加来自于指定接口   的流量到特定区域，如果无–zone= 选项，使用默认区域  </p>
+<h4 id="firewall-cmd-命令选项-1"><a href="#firewall-cmd-命令选项-1" class="headerlink" title="firewall-cmd 命令选项"></a>firewall-cmd 命令选项</h4><p>–change-interface=[–zone=] 改变指定接口至新的 区域，如果无–zone= 选项，使用默认区域<br>–add-service= [–zone=] 允许服务的流量通过，如果 无–zone= 选项，使用默认区域<br>–add-port=[–zone=] 允许指定端口和协议 的流量，如果无–zone= 选项，使用默认区域  </p>
+<h4 id="firewall-cmd-命令选项-2"><a href="#firewall-cmd-命令选项-2" class="headerlink" title="firewall-cmd 命令选项"></a>firewall-cmd 命令选项</h4><p>–remove-service= [–zone=] 从区域中删除指定服 务，禁止该服务流量，如果无–zone= 选项，使用默认区域<br>–remove-port=[–zone=] 从区域中删除 指定端口和协议，禁止该端口的流量，如果无–zone= 选项，使用默认区域<br>–reload 删除当前运行时配置，应用加载永久配置<br>–list-services 查看开放的服务<br> –list-ports 查看开放的端口<br>–list-all [–zone=] 列出指定区域的所有配置信息，包括接口，源 地址，端口，服务等，如果无–zone= 选项，使用默认区域  </p>
+<h4 id="firewall-cmd-命令示例"><a href="#firewall-cmd-命令示例" class="headerlink" title="firewall-cmd 命令示例"></a>firewall-cmd 命令示例</h4><p>查看默认zone<br>       firewall-cmd –get-default-zone<br>默认zone设为dmz<br>       firewall-cmd –set-default-zone=dmz<br>在internal zone中增加源地址192.168.0.0/24的永久规则<br>         firewall-cmd –permanent –zone=internal –addsource=192.168.0.0/24<br>在internal zone中增加协议mysql的永久规则<br>         firewall-cmd –permanent –zone=internal –add-service=mysql<br>加载新规则以生效<br>           firewall-cmd –reload  </p>
+<p>实验：配置firewalld<br>systemctl mask iptables<br>systemctl mask ip6tables<br>systemctl status firewalld<br>systemctl enable firewalld<br>systemctl start firewalld<br>firewall-cmd –get-default-zone<br>firewall-cmd –set-default-zone public<br>firewall-cmd –permanent –zone=public –list-all<br>firewall-cmd –permanent –zone=public –add-port 8080/tcp<br>firewall-cmd —reload  </p>
+<p>其它规则<br>当基本firewalld语法规则不能满足要求时，可以使用以下更复杂的规则<br>rich-rules 富规则，功能强,表达性语言<br>Direct configuration rules 直接规则，灵活性差<br>帮助：man 5 firewalld.direct  </p>
+<p>管理rich规则<br>rich规则比基本的firewalld语法实现更强的功能，不仅实现允许/拒绝，还可以 实现日志syslog和auditd，也可以实现端口转发，伪装和限制速率<br>rich语法：<br>    rule<br>    [source]<br>     [destination]<br>     service|port|protocol|icmp-block|masquerade|forward-port<br>     [log]<br>    [audit]<br>    [accept|reject|drop]<br>man 5 firewalld.richlanguage  </p>
+<h4 id="规则"><a href="#规则" class="headerlink" title="规则"></a>规则</h4><p>规则实施顺序：<br>    该区域的端口转发，伪装规则<br>    该区域的日志规则<br>    该区域的允许规则<br>    该区域的拒绝规则<br>每个匹配的规则生效，所有规则都不匹配，该区域默认规则生效  </p>
+<p><img src="http://i1.bvimg.com/657107/099e63a693926d44.png" alt="Markdown"></p>
+<h4 id="rich规则示例"><a href="#rich规则示例" class="headerlink" title="rich规则示例"></a>rich规则示例</h4><p>拒绝从192.168.0.11的所有流量，当address 选项使用source 或 destination 时，必须用family= ipv4 |ipv6.<br>firewall-cmd –permanent –zone=classroom –add-rich-rule=’rule<br> family=ipv4 source address=192.168.0.11/32 reject‘<br>限制每分钟只有两个连接到ftp服务<br> firewall-cmd –add-rich-rule=‘rule service name=ftp limit value=2/m accept’<br>抛弃esp（ IPsec 体系中的一种主要协议）协议的所有数据包<br> firewall-cmd –permanent –add-rich-rule=’rule protocol value=esp drop’<br>接受所有192.168.1.0/24子网端口5900-5905范围的TCP流量<br> firewall-cmd –permanent –zone=vnc –add-rich-rule=’rule family=ipv4 source address=192.168.1.0/24 port port=5900-5905 protocol=tcp accept’</p>
+<p><img src="http://i1.bvimg.com/657107/0c1d28fc4ed8af7f.png" alt="Markdown"></p>
+<h4 id="rich日志规则实例"><a href="#rich日志规则实例" class="headerlink" title="rich日志规则实例"></a>rich日志规则实例</h4><p>接受ssh新连接，记录日志到syslog的notice级别，每分钟最多三条信息<br> firewall-cmd –permanent –zone=work –add-rich-rule=’rule service name=”ssh” log prefix=”ssh “ level=”notice” limit value=”3/m” accept<br>从2001:db8::/64子网的DNS连接在5分钟内被拒绝，并记录到日志到audit,每 小时最大记录一条信息<br> firewall-cmd –add-rich-rule=’rule family=ipv6 source<br> address=”2001:db8::/64” service name=”dns” audit limit value=”1/h” reject’ –timeout=300</p>
+
+    </article>
+    <!-- license  -->
+    
+        <div class="license-wrapper">
+            <p>原文作者: <a href="http://yoursite.com">John Doe</a>
+            <p>原文链接: <a href="http://yoursite.com/2018/08/09/Linux 防火墙各种规则实战应用/">http://yoursite.com/2018/08/09/Linux 防火墙各种规则实战应用/</a>
+            <p>发表日期: <a href="http://yoursite.com/2018/08/09/Linux 防火墙各种规则实战应用/">August 9th 2018, 3:50:51 pm</a>
+            <p>版权声明: 本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+        </div>
+    
+    <!-- paginator  -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+                <div class="nextSlogan">Next Post</div>
+                <a href= "/2018/08/09/日志管理介绍/" title=  >
+                    <div class="nextTitle">[Untitled Post]</div>
+                </a>
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href= "/2017/10/15/memcache  缓存原理介绍/" title= memcache  缓存原理介绍 >
+                    <div class="prevTitle">memcache  缓存原理介绍</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+<!-- City版安装代码已完成 -->
+    
+    
+    <!--PC和WAP自适应版-->
+
+    <!--PC版-->
+
+
+    
+    
+
+    <!-- 评论 -->
+</main>
+            <!-- profile -->
+            
+        </div>
+        <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+    <div class="social">
+        
+    
+        
+            
+                <a href="mailto:1020846215@qq.com" class="iconfont-archer email" title=email ></a>
+            
+        
+    
+        
+            
+                <a href="//github.com/fi3ework" class="iconfont-archer github" target="_blank" title=github></a>
+            
+        
+    
+        
+            
+                <span class="iconfont-archer wechat" title=wechat>
+                  
+                  <img class="profile-qr" src="/assets/example_qr.png" />
+                </span>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+    </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- 不蒜子  -->
+    
+    <div class="busuanzi-container">
+    
+     
+    <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+    
+    </div>
+    
+</footer>
+    </div>
+    <!-- toc -->
+    
+    <div class="toc-wrapper" style=
+    
+
+
+
+
+
+
+
+top:50vh;
+
+    >
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#防火墙的概念"><span class="toc-number">1.</span> <span class="toc-text">防火墙的概念</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#防火墙的分类"><span class="toc-number">2.</span> <span class="toc-text">防火墙的分类</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#网络型防火墙"><span class="toc-number">3.</span> <span class="toc-text">网络型防火墙</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#应用层防火墙"><span class="toc-number">4.</span> <span class="toc-text">应用层防火墙</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#iptables的基本认识"><span class="toc-number">5.</span> <span class="toc-text">iptables的基本认识</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#IPTABLES和路由"><span class="toc-number">6.</span> <span class="toc-text">IPTABLES和路由</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#iptables规则"><span class="toc-number">7.</span> <span class="toc-text">iptables规则</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#iptables添加要点"><span class="toc-number">8.</span> <span class="toc-text">iptables添加要点</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#iptables命令"><span class="toc-number">9.</span> <span class="toc-text">iptables命令</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#iptables命令-1"><span class="toc-number">10.</span> <span class="toc-text">iptables命令</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#iptables命令-2"><span class="toc-number">11.</span> <span class="toc-text">iptables命令</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#iptables命令-3"><span class="toc-number">12.</span> <span class="toc-text">iptables命令</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#iptables命令-4"><span class="toc-number">13.</span> <span class="toc-text">iptables命令</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#iptables命令-5"><span class="toc-number">14.</span> <span class="toc-text">iptables命令</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#tcp协议的扩展选项"><span class="toc-number">15.</span> <span class="toc-text">tcp协议的扩展选项</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#iptables命令-6"><span class="toc-number">16.</span> <span class="toc-text">iptables命令</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#iptables命令-7"><span class="toc-number">17.</span> <span class="toc-text">iptables命令</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#iptables命令-8"><span class="toc-number">18.</span> <span class="toc-text">iptables命令</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#iptables命令-9"><span class="toc-number">19.</span> <span class="toc-text">iptables命令</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#iptables命令-10"><span class="toc-number">20.</span> <span class="toc-text">iptables命令</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#iptables命令-11"><span class="toc-number">21.</span> <span class="toc-text">iptables命令</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#iptables命令-12"><span class="toc-number">22.</span> <span class="toc-text">iptables命令</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#iptables命令-13"><span class="toc-number">23.</span> <span class="toc-text">iptables命令</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#iptables命令-14"><span class="toc-number">24.</span> <span class="toc-text">iptables命令</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#iptables命令-15"><span class="toc-number">25.</span> <span class="toc-text">iptables命令</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#iptables命令-16"><span class="toc-number">26.</span> <span class="toc-text">iptables命令</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#iptables命令-17"><span class="toc-number">27.</span> <span class="toc-text">iptables命令</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#iptables命令-18"><span class="toc-number">28.</span> <span class="toc-text">iptables命令</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#iptables命令-19"><span class="toc-number">29.</span> <span class="toc-text">iptables命令</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#iptables命令-20"><span class="toc-number">30.</span> <span class="toc-text">iptables命令</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#iptables命令-21"><span class="toc-number">31.</span> <span class="toc-text">iptables命令</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#开机自动重载规则"><span class="toc-number">32.</span> <span class="toc-text">开机自动重载规则</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#网络防火墙"><span class="toc-number">33.</span> <span class="toc-text">网络防火墙</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#NAT"><span class="toc-number">34.</span> <span class="toc-text">NAT</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#SNAT"><span class="toc-number">35.</span> <span class="toc-text">SNAT</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#SNAT-1"><span class="toc-number">36.</span> <span class="toc-text">SNAT</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#实验：-实现-SNAT"><span class="toc-number">37.</span> <span class="toc-text">实验： 实现 SNAT</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#实验-：-实现-DNAT"><span class="toc-number">38.</span> <span class="toc-text">实验 ： 实现 DNAT</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#DNAT"><span class="toc-number">39.</span> <span class="toc-text">DNAT</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#DNAT-1"><span class="toc-number">39.1.</span> <span class="toc-text">DNAT</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#转发"><span class="toc-number">40.</span> <span class="toc-text">转发</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#firewalld服务"><span class="toc-number">41.</span> <span class="toc-text">firewalld服务</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#firewalld配置"><span class="toc-number">42.</span> <span class="toc-text">firewalld配置</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#firewall-cmd-命令选项"><span class="toc-number">43.</span> <span class="toc-text">firewall-cmd 命令选项</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#firewall-cmd-命令选项-1"><span class="toc-number">44.</span> <span class="toc-text">firewall-cmd 命令选项</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#firewall-cmd-命令选项-2"><span class="toc-number">45.</span> <span class="toc-text">firewall-cmd 命令选项</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#firewall-cmd-命令示例"><span class="toc-number">46.</span> <span class="toc-text">firewall-cmd 命令示例</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#规则"><span class="toc-number">47.</span> <span class="toc-text">规则</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#rich规则示例"><span class="toc-number">48.</span> <span class="toc-text">rich规则示例</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#rich日志规则实例"><span class="toc-number">49.</span> <span class="toc-text">rich日志规则实例</span></a></li></ol>
+    </div>
+    
+    <div class="back-top iconfont-archer">&#xe639;</div>
+    <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+          <div class="sidebar-panel-archives">
+    <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 39
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+    
+    
+    
+    <div class="archive-year"> 2018 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/09</span><a class="archive-post-title" href= "/2018/08/09/Linux 防火墙各种规则实战应用/" >[Untitled Post]</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/09</span><a class="archive-post-title" href= "/2018/08/09/Nginx 详细介绍/" >[Untitled Post]</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2017 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/15</span><a class="archive-post-title" href= "/2017/10/15/memcache  缓存原理介绍/" >memcache  缓存原理介绍</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/08</span><a class="archive-post-title" href= "/2017/10/08/tomcat 各种架构实验演示/" >tomcat 各种架构实验演示</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/05</span><a class="archive-post-title" href= "/2017/10/05/浅谈 tomcat 原理/" >浅谈 tomcat 原理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/25</span><a class="archive-post-title" href= "/2017/09/25/Varnish 缓存服务器介绍/" >Varnish 缓存服务器介绍</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/14</span><a class="archive-post-title" href= "/2017/09/14/keepalived 各种高可用实战演练/" >keepalived 各种高可用实战演练</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/28</span><a class="archive-post-title" href= "/2017/08/28/HAproxy 原理介绍/" >HAproxy 原理介绍</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/19</span><a class="archive-post-title" href= "/2017/08/19/lvs 详细介绍/" >lvs 详细介绍</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/24</span><a class="archive-post-title" href= "/2017/06/24/各种网络共享服务实验演示/" >各种网络共享服务实验演示</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/20</span><a class="archive-post-title" href= "/2017/06/20/网络文件共享服务：FTP    NFS   SAMBA/" >网络文件共享服务：FTP    NFS   SAMBA</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/11</span><a class="archive-post-title" href= "/2017/06/11/LAMP 架构的各种演示/" >LAMP 架构的各种演示</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/01</span><a class="archive-post-title" href= "/2017/06/01/介绍 MYSQL的事务日志/" >介绍 MYSQL的事务日志</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/22</span><a class="archive-post-title" href= "/2017/05/22/MYSQL 数据库的日志介绍/" >MYSQL 数据库的日志介绍</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/15</span><a class="archive-post-title" href= "/2017/05/15/MYSQL MariaDB 的事务和事务隔离级别/" >MYSQL MariaDB 的事务和事务隔离级别</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/08</span><a class="archive-post-title" href= "/2017/05/08/MASQL MariaDB 用户权限管理/" >MASQL MariaDB 用户权限管理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/20</span><a class="archive-post-title" href= "/2017/04/20/ext 文件系统机制原理/" >ext 文件系统机制原理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/15</span><a class="archive-post-title" href= "/2017/04/15/Linux分区信息与管理文件系统/" >Linux分区信息与管理文件系统</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/10</span><a class="archive-post-title" href= "/2017/04/10/DHCP 服务/" >DHCP服务</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/01</span><a class="archive-post-title" href= "/2017/04/01/Linux系统中su 和 sudo 的用法/" >Linux系统中su 和 sudo 的用法</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/22</span><a class="archive-post-title" href= "/2017/03/22/实现DNS服务主从复制/" >实现DNS服务主从复制</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/20</span><a class="archive-post-title" href= "/2017/03/20/搭建DNS互联网架构服务器(一）/" >搭建DNS互联网架构服务器</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/15</span><a class="archive-post-title" href= "/2017/03/15/搭建DNS 服务，实现主服务器，邮件服务器，泛域名解析，反向解析等/" >搭建DNS 服务，实现主服务器，邮件服务器，泛域名解析，反向解析等</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/12</span><a class="archive-post-title" href= "/2017/03/12/Linux 文件权限管理/" >Linux 文件权限管理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/08</span><a class="archive-post-title" href= "/2017/03/08/LINUX系统中用户、组管理/" >安装管理包：LINUX系统中用户、组管理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/28</span><a class="archive-post-title" href= "/2017/02/28/搭建DNS服务器，实现主DNS服务器，负责解析一个域/" >搭建DNS服务器，实现主DNS服务器，负责解析一个域</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/15</span><a class="archive-post-title" href= "/2017/02/15/DNS 服务从基础到深入/" >DNS 服务从基础到深入</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/10</span><a class="archive-post-title" href= "/2017/02/10/SSH端口转发实验/" >SSH端口转发实验</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/08</span><a class="archive-post-title" href= "/2017/02/08/实现PXE自动安装/" >实现PXE自动安装</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/01</span><a class="archive-post-title" href= "/2017/02/01/rpm管理包 和 yum管理包(1)/" >安装管理包：rpm包和yum包</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/20</span><a class="archive-post-title" href= "/2017/01/20/搭建CA/" >如何搭建CA（向CA申请证书）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/08</span><a class="archive-post-title" href= "/2017/01/08/自制一个mini 的Linux系统/" >自制一个mini 的Linux系统</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2016 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/20</span><a class="archive-post-title" href= "/2016/12/20/进程管理和计划任务的知识点()/" >进程管理与计划任务的知识点</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/15</span><a class="archive-post-title" href= "/2016/12/15/文本处理工具：sed/" >文本处理工具：sed</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/08</span><a class="archive-post-title" href= "/2016/12/08/TCP、IP协议三次握手与四次握手流程解析（）/" >TCP、IP协议三次握手与四次握手流程解析</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> Invalid date </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">Invalid date</span><a class="archive-post-title" href= "/2018/08/09/Nginx 各种实验演示/" >[Untitled Post]</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2016 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/29</span><a class="archive-post-title" href= "/2016/11/29/Linux 的一些基础练习题/" >Linux 的一些基础练习题</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/23</span><a class="archive-post-title" href= "/2016/11/23/对正则表达式，VIM编辑器命令的基本操作（三）/" >对正则表达式，VIM编辑器命令的基本操作</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> Invalid date </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">Invalid date</span><a class="archive-post-title" href= "/2018/08/09/日志管理介绍/" >[Untitled Post]</a>
+        </li>
+    
+    </div>
+  </div>
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+    
+        <span class="sidebar-tag-name" data-tags="Linux"><span class="iconfont-archer">&#xe606;</span>Linux</span>
+    
+        <span class="sidebar-tag-name" data-tags="DHCP"><span class="iconfont-archer">&#xe606;</span>DHCP</span>
+    
+        <span class="sidebar-tag-name" data-tags="haproxy"><span class="iconfont-archer">&#xe606;</span>haproxy</span>
+    
+        <span class="sidebar-tag-name" data-tags="LAMP"><span class="iconfont-archer">&#xe606;</span>LAMP</span>
+    
+        <span class="sidebar-tag-name" data-tags="DNS"><span class="iconfont-archer">&#xe606;</span>DNS</span>
+    
+        <span class="sidebar-tag-name" data-tags="权限管理"><span class="iconfont-archer">&#xe606;</span>权限管理</span>
+    
+        <span class="sidebar-tag-name" data-tags="用户组"><span class="iconfont-archer">&#xe606;</span>用户组</span>
+    
+        <span class="sidebar-tag-name" data-tags="练习题"><span class="iconfont-archer">&#xe606;</span>练习题</span>
+    
+        <span class="sidebar-tag-name" data-tags="文件系统"><span class="iconfont-archer">&#xe606;</span>文件系统</span>
+    
+        <span class="sidebar-tag-name" data-tags="MYSQL"><span class="iconfont-archer">&#xe606;</span>MYSQL</span>
+    
+        <span class="sidebar-tag-name" data-tags="su和sudo"><span class="iconfont-archer">&#xe606;</span>su和sudo</span>
+    
+        <span class="sidebar-tag-name" data-tags="SSH"><span class="iconfont-archer">&#xe606;</span>SSH</span>
+    
+        <span class="sidebar-tag-name" data-tags="varnish"><span class="iconfont-archer">&#xe606;</span>varnish</span>
+    
+        <span class="sidebar-tag-name" data-tags="TCP/IP"><span class="iconfont-archer">&#xe606;</span>TCP/IP</span>
+    
+        <span class="sidebar-tag-name" data-tags="keepalied"><span class="iconfont-archer">&#xe606;</span>keepalied</span>
+    
+        <span class="sidebar-tag-name" data-tags="lvs"><span class="iconfont-archer">&#xe606;</span>lvs</span>
+    
+        <span class="sidebar-tag-name" data-tags="memcache"><span class="iconfont-archer">&#xe606;</span>memcache</span>
+    
+        <span class="sidebar-tag-name" data-tags="tomcat"><span class="iconfont-archer">&#xe606;</span>tomcat</span>
+    
+        <span class="sidebar-tag-name" data-tags="rpm"><span class="iconfont-archer">&#xe606;</span>rpm</span>
+    
+        <span class="sidebar-tag-name" data-tags="共享服务"><span class="iconfont-archer">&#xe606;</span>共享服务</span>
+    
+        <span class="sidebar-tag-name" data-tags="自动化安装"><span class="iconfont-archer">&#xe606;</span>自动化安装</span>
+    
+        <span class="sidebar-tag-name" data-tags="基本命令"><span class="iconfont-archer">&#xe606;</span>基本命令</span>
+    
+        <span class="sidebar-tag-name" data-tags="CA"><span class="iconfont-archer">&#xe606;</span>CA</span>
+    
+        <span class="sidebar-tag-name" data-tags="sed"><span class="iconfont-archer">&#xe606;</span>sed</span>
+    
+        <span class="sidebar-tag-name" data-tags="dns"><span class="iconfont-archer">&#xe606;</span>dns</span>
+    
+        <span class="sidebar-tag-name" data-tags="mini系统"><span class="iconfont-archer">&#xe606;</span>mini系统</span>
+    
+        <span class="sidebar-tag-name" data-tags="进程管理、计划任务"><span class="iconfont-archer">&#xe606;</span>进程管理、计划任务</span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+    缺失模块。<br/>
+    1、请确保node版本大于6.2<br/>
+    2、在博客根目录（注意不是archer根目录）执行以下命令：<br/>
+    <span style="color: #f75357; font-size: 1rem; line-height: 2rem;">npm i hexo-generator-json-content --save</span><br/>
+    3、在根目录_config.yml里添加配置：
+    <pre style="color: #787878; font-size: 0.6rem;">
+jsonContent:
+  meta: false
+  pages: false
+  posts:
+    title: true
+    date: true
+    path: true
+    text: false
+    raw: false
+    content: false
+    slug: false
+    updated: false
+    comments: false
+    link: false
+    permalink: false
+    excerpt: false
+    categories: true
+    tags: true</pre>
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+    </div>
+</div> 
+    <script>
+    var siteMeta = {
+        root: "/",
+        author: "John Doe"
+    }
+</script>
+    <!-- CDN failover -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ === 'undefined')
+        {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js">\x3C/script>')
+        }
+    </script>
+    <script src="/scripts/main.js"></script>
+    <!-- algolia -->
+    
+    <!-- busuanzi  -->
+    
+    <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+    <!-- CNZZ  -->
+    
+    </div>
+    <!-- async load share.js -->
+    
+        <script src="/scripts/share.js" async></script>    
+     
+    </body>
+</html>
+
+

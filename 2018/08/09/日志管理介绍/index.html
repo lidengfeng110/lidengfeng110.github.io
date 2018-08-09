@@ -1,0 +1,1594 @@
+<!DOCTYPE html>
+<html>
+    <!-- title -->
+
+
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" >
+    <meta name="author" content="John Doe">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="John Doe">
+    <meta name="keywords" content="Hexo | John Doe">
+    <meta name="description" content="">
+    <meta name="Cache-Control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <title>李登峰</title>
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s 1;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+
+</style>
+
+    <link rel="preload" href= /css/style.css?v=20180630 as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    <link rel="stylesheet" href= /css/mobile.css?v=20180630 media="(max-width: 980px)">
+    
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+(function( w ){
+	"use strict";
+	// rel=preload support test
+	if( !w.loadCSS ){
+		w.loadCSS = function(){};
+	}
+	// define on the loadCSS obj
+	var rp = loadCSS.relpreload = {};
+	// rel=preload feature support test
+	// runs once and returns a function for compat purposes
+	rp.support = (function(){
+		var ret;
+		try {
+			ret = w.document.createElement( "link" ).relList.supports( "preload" );
+		} catch (e) {
+			ret = false;
+		}
+		return function(){
+			return ret;
+		};
+	})();
+
+	// if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+	// then change that media back to its intended value on load
+	rp.bindMediaToggle = function( link ){
+		// remember existing media attr for ultimate state, or default to 'all'
+		var finalMedia = link.media || "all";
+
+		function enableStylesheet(){
+			link.media = finalMedia;
+		}
+
+		// bind load handlers to enable media
+		if( link.addEventListener ){
+			link.addEventListener( "load", enableStylesheet );
+		} else if( link.attachEvent ){
+			link.attachEvent( "onload", enableStylesheet );
+		}
+
+		// Set rel and non-applicable media type to start an async request
+		// note: timeout allows this to happen async to let rendering continue in IE
+		setTimeout(function(){
+			link.rel = "stylesheet";
+			link.media = "only x";
+		});
+		// also enable media after 3 seconds,
+		// which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+		setTimeout( enableStylesheet, 3000 );
+	};
+
+	// loop through link elements in DOM
+	rp.poly = function(){
+		// double check this to prevent external calls from running
+		if( rp.support() ){
+			return;
+		}
+		var links = w.document.getElementsByTagName( "link" );
+		for( var i = 0; i < links.length; i++ ){
+			var link = links[ i ];
+			// qualify links to those with rel=preload and as=style attrs
+			if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+				// prevent rerunning on link
+				link.setAttribute( "data-loadcss", true );
+				// bind listeners to toggle media back
+				rp.bindMediaToggle( link );
+			}
+		}
+	};
+
+	// if unsupported, run the polyfill
+	if( !rp.support() ){
+		// run once at least
+		rp.poly();
+
+		// rerun poly on an interval until onload
+		var run = w.setInterval( rp.poly, 500 );
+		if( w.addEventListener ){
+			w.addEventListener( "load", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		} else if( w.attachEvent ){
+			w.attachEvent( "onload", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		}
+	}
+
+
+	// commonjs
+	if( typeof exports !== "undefined" ){
+		exports.loadCSS = loadCSS;
+	}
+	else {
+		w.loadCSS = loadCSS;
+	}
+}( typeof global !== "undefined" ? global : this ) );
+</script>
+
+    <link rel="icon" href= "/assets/favicon.ico" />
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js" as="script" />
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" as="script" />
+    <link rel="preload" href="/scripts/main.js" as="script" />
+    <link rel="preload" as="font" href="/font/Oswald-Regular.ttf" crossorigin>
+    <link rel="preload" as="font" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" crossorigin>
+    
+    <!-- fancybox -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script>
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  -->
+    
+</head>
+
+    
+        <body class="post-body">
+    
+    
+<header class="header">
+
+    <div class="read-progress"></div>
+    <div class="header-sidebar-menu">&#xe775;</div>
+    <!-- post页的toggle banner  -->
+    
+    <div class="banner">
+            <div class="blog-title">
+                <a href="/" >博客</a>
+            </div>
+            <div class="post-title">
+                <a href="#" class="post-name"></a>
+            </div>
+    </div>
+    
+    <a class="home-link" href=/>博客</a>
+</header>
+    <div class="wrapper">
+        <div class="site-intro" style=
+
+
+
+
+
+
+
+
+height:50vh;
+
+>
+    
+    <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
+            
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+            [Untitled Post]
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+            
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                
+                    <div class="post-intro-read">
+                        <span>Word count: <span class="post-count">3,358</span> / Reading time: <span class="post-count">13 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                    <span class="post-intro-time">2018/08/09</span>
+                    
+                    <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                        <span class="iconfont-archer">&#xe602;</span>
+                        <span id="busuanzi_value_page_pv"></span>
+                    </span>
+                    
+                    <span class="shareWrapper">
+                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
+                        <span class="shareText">Share</span>
+                        <ul class="shareList">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        
+    </div>
+</div> 
+        <script>
+ 
+  // get user agent
+  var browser = {
+    versions: function () {
+      var u = window.navigator.userAgent;
+      return {
+        userAgent: u,
+        trident: u.indexOf('Trident') > -1, //IE内核
+        presto: u.indexOf('Presto') > -1, //opera内核
+        webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+        gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+        mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+        ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+        android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+        iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+        iPad: u.indexOf('iPad') > -1, //是否为iPad
+        webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+        weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+        uc: u.indexOf('UCBrowser') > -1 //是否为android下的UC浏览器
+      };
+    }()
+  }
+  console.log("userAgent:" + browser.versions.userAgent);
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded');
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document.getElementsByClassName('intro-title')[0].classList.add('intro-fade-in');
+      document.getElementsByClassName('intro-subtitle')[0].classList.add('intro-fade-in');
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in');
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb(){
+    if (browser.versions.uc) {
+      console.log("UCBrowser");
+      fontLoaded();
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular']
+        },
+        loading: function () {  //所有字体开始加载
+          // console.log('loading');
+        },
+        active: function () {  //所有字体已渲染
+          fontLoaded();
+        },
+        inactive: function () { //字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout');
+          fontLoaded();
+        },
+        timeout: 5000 // Set the timeout to two seconds
+      });
+    }
+  }
+
+  function asyncErr(){
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (cb) { o.addEventListener('load', function (e) { cb(null, e); }, false); }
+    if (err) { o.addEventListener('error', function (e) { err(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+
+  var asyncLoadWithFallBack = function(arr, success, reject) {
+      var currReject = function(){
+        reject()
+        arr.shift()
+        if(arr.length)
+          async(arr[0], success, currReject)
+        }
+
+      async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack([
+    "https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js", 
+    "https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js",
+    "/lib/webfontloader.min.js"
+  ], asyncCb, asyncErr)
+</script>        
+        <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+        <div class="container container-unloaded">
+            <main class="main post-page">
+    <article class="article-entry">
+        <hr>
+<p>layout: post<br>title: 日志管理介绍<br>date: 2017-7-15<br>tags:</p>
+<ul>
+<li>Linux</li>
+<li>日志</li>
+</ul>
+<hr>
+<h2 id="日志介绍"><a href="#日志介绍" class="headerlink" title="日志介绍"></a>日志介绍</h2><h4 id="日志："><a href="#日志：" class="headerlink" title="日志："></a>日志：</h4><pre><code>历史事件:时间，地点，人物，事件  
+ 日志级别：事件的关键性程度，Loglevel   
+</code></pre><h4 id="系统日志服务："><a href="#系统日志服务：" class="headerlink" title="系统日志服务："></a>系统日志服务：</h4><p>sysklogd :CentOS 5之前版本<br>     syslogd: system application 记录应用日志<br>      klogd: linux kernel 记录内核日志<br>     事件记录格式：<br>       日期时间 主机 进程[pid]: 事件内容<br>    C/S架构：通过TCP或UDP协议的服务完成日志记录传送，将分布在不同主 机的日志实现集中管理  </p>
+<h4 id="rsyslog"><a href="#rsyslog" class="headerlink" title="rsyslog"></a>rsyslog</h4><p>rsyslog特性：CentOS6和7<br>     多线程<br>     UDP, TCP, SSL, TLS, RELP<br>     MySQL, PGSQL, Oracle实现日志存储<br>     强大的过滤器，可实现过滤记录日志信息中任意部分<br>     自定义输出格式<br>ELK：elasticsearch, logstash, kibana<br>     非关系型分布式数据库<br>     基于apache软件基金会jakarta项目组的项目lucene<br>     Elasticsearch是个开源分布式搜索引擎<br>     Logstash对日志进行收集、分析，并将其存储供以后使用<br>     kibana 可以提供的日志分析友好的 Web 界面</p>
+<a id="more"></a>
+<h4 id="rsyslog介绍"><a href="#rsyslog介绍" class="headerlink" title="rsyslog介绍"></a>rsyslog介绍</h4><p>术语，参见man logger<br>     facility：设施，从功能或程序上对日志进行归类<br>     auth, authpriv, cron, daemon,ftp,kern, lpr, mail, news, security(auth), user, uucp, local0-local7, syslog </p>
+<p>   Priority 优先级别，从低到高排序<br>       debug, info, notice, warn(warning), err(error), crit(critical), alert, emerg(panic)   </p>
+<p>  参看帮助： man 3 syslog</p>
+<h4 id="rsyslog-1"><a href="#rsyslog-1" class="headerlink" title="rsyslog"></a>rsyslog</h4><p>程序包：rsyslog<br>主程序：/usr/sbin/rsyslogd<br>CentOS 6：service rsyslog {start|stop|restart|status}<br>CentOS 7：/usr/lib/systemd/system/rsyslog.service<br>配置文件：/etc/rsyslog.conf，/etc/rsyslog.d/<em>.conf<br>库文件： /lib64/rsyslog/</em>.so<br>配置文件格式：由三部分组成<br>       MODULES：相关模块配置<br>       GLOBAL DIRECTIVES：全局配置<br>       RULES：日志记录相关的规则配置</p>
+<h4 id="rsyslog-2"><a href="#rsyslog-2" class="headerlink" title="rsyslog"></a>rsyslog</h4><p> RULES配置格式： facility.priority; facility.priority… target<br>facility：<br>      <em>: 所有的facility<br>       facility1,facility2,facility3,…：指定的facility列表<br> priority：  
+     </em>: 所有级别<br>      none：没有级别，即不记录<br>      PRIORITY：指定级别（含）以上的所有级别<br>      =PRIORITY：仅记录指定级别的日志信息<br> target：<br>     文件路径：通常在/var/log/，文件路径前的-表示异步写入<br>      用户：将日志事件通知给指定的用户，* 表示登录的所有用户<br>     日志服务器：@host，把日志送往至指定的远程服务器记录  </p>
+<p>如果要把日志记录在别的主机上，首先要在要被记录日志的主机上设定配置文件，可以设定在主配置文件中 /etc/rsyslog.conf/ ,也可以设定在子配置文件中 /etc/rsyslog.d/*.conf .</p>
+<p>比如要在远程主机上记录本机的 SSH 服务的日记记录，首先要在本机的SSH 服务的配置文件 /etc/ssh/sshd_config中添加 ： 如  syslogFacility  local2  </p>
+<pre><code>LogLevel     INFO  
+</code></pre><p>还要在本机的日志配置文件中添加内容，如： vim /etc/rsyslog.d/ssh.conf  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">在里面添加        local2                @192.168.30.7</span><br></pre></td></tr></table></figure>
+<p>这就表示把本机上的 local2 模式的日志发送到远程主机192.168.30.7 主机上去，但是这样只是指定了远程主机，远程主机还要开启相应的协议，记录上哪个主句上，就要把哪个远程主机上日志配置文件中 TCP，UDP 协议和端口开启，并且还要在配置文件中明确指定local2 模式的日志存放在哪个文件下。这样访问本机的SSH 服务是才会在 远程主机 192.168.30.7 指定的那个文件中产生日志。  </p>
+<p>  管道： | COMMAND，转发给其它命令处理</p>
+<h4 id="启用网络日志服务"><a href="#启用网络日志服务" class="headerlink" title="启用网络日志服务"></a>启用网络日志服务</h4><p>通常的日志格式：  </p>
+<p> 事件产生的日期时间 主机 进程(pid)：事件内容<br> 如： /var/log/messages,cron,secure等<br>配置rsyslog成为日志服务器  </p>
+<pre><code>#### MODULES ####   
+# Provides UDP syslog reception  
+$ModLoad imudp  
+$UDPServerRun 514   
+</code></pre><p> Provides TCP syslog reception<br>      $ModLoad imtcp<br>     $InputTCPServerRun 514</p>
+<h4 id="其它日志"><a href="#其它日志" class="headerlink" title="其它日志"></a>其它日志</h4><p>其它的日志文件   </p>
+<p>/var/log/secure：系统安装日志，文本格式，应周期性分析   </p>
+<p>/var/log/btmp：当前系统上，用户的失败尝试登录相关的日志信息，二进制格 式，lastb命令进行查看  </p>
+<p>/var/log/wtmp：当前系统上，用户正常登录系统的相关日志信息，二进制格 式，last命令可以查看   </p>
+<p>/var/log/lastlog:每一个用户最近一次的登录信息，二进制格式，lastlog命令 可以查看   </p>
+<p>/var/log/dmesg：系统引导过程中的日志信息，文本格式   </p>
+<p> 文本查看工具查看<br>     专用命令dmesg查看<br>/var/log/messages ：系统中大部分的信息   </p>
+<p>/var/log/anaconda : anaconda的日志  </p>
+<h4 id="日志管理journalctl"><a href="#日志管理journalctl" class="headerlink" title="日志管理journalctl"></a>日志管理journalctl</h4><p>Systemd 统一管理所有 Unit 的启动日志。带来的好处就是，可以只用 journalctl一个命令，查看所有日志（内核日志和应用日志）。日志的配置文件 /etc/systemd/journald.conf   </p>
+<p> journalctl用法<br>查看所有日志（默认情况下 ，只保存本次启动的日志）  </p>
+<p> journalctl<br>查看内核日志（不显示应用日志）  </p>
+<p> journalctl -k<br>查看系统本次启动的日志  </p>
+<p>journalctl -b<br>     journalctl -b -0  </p>
+<p>查看上一次启动的日志（需更改设置）<br> journalctl -b -1</p>
+<p>查看指定时间的日志  </p>
+<p>  journalctl –since=”2017-10-30 18:10:30”<br>      journalctl –since “20 min ago”<br>       journalctl –since yesterday<br>      journalctl –since “2017-01-10” –until “2017-01-11 03:00”<br>      journalctl –since 09:00 –until “1 hour ago”  </p>
+<p>显示尾部的最新10行日志<br>      journalctl -n   </p>
+<p> 显示尾部指定行数的日志<br>      journalctl -n 20   </p>
+<p>实时滚动显示最新日志<br>      journalctl -f  </p>
+<p> 查看指定服务的日志<br>     journalctl /usr/lib/systemd/systemd   </p>
+<p> 查看指定进程的日志<br>     journalctl _PID=1   </p>
+<p>查看某个路径的脚本的日志<br>     journalctl /usr/bin/bash   </p>
+<p> 查看指定用户的日志<br>      journalctl _UID=33 –since today   </p>
+<p>查看某个 Unit 的日志<br>     journalctl -u nginx.service journalctl -u nginx.service –since today   </p>
+<p>实时滚动显示某个 Unit 的最新日志<br>     journalctl -u nginx.service -f   </p>
+<p> 合并显示多个 Unit 的日志<br>     journalctl -u nginx.service -u php-fpm.service –since today  </p>
+<p>查看指定优先级（及其以上级别）的日志，共有8级<br>   0: emerg<br>    1: alert<br>    2: crit<br>   3: err<br>   4: warning<br>    5: notice<br>    6: info<br>    7: debug<br>       journalctl -p err -b </p>
+<p>  日志默认分页输出，–no-pager 改为正常的标准输出<br>       journalctl –no-pager</p>
+<p>以 JSON 格式（单行）输出<br>     journalctl -b -u nginx.service -o json   </p>
+<p>以 JSON 格式（多行）输出，可读性更好<br>     journalctl -b -u nginx.serviceqq -o json-pretty   </p>
+<p>显示日志占据的硬盘空间<br>     journalctl –disk-usage  </p>
+<p> 指定日志文件占据的最大空间<br>     journalctl –vacuum-size=1G   </p>
+<p>指定日志文件保存多久<br>     journalctl –vacuum-time=1years</p>
+<p>###################################################################################</p>
+<h2 id="实验：-把本机的日志记录到远程服务器的数据库中，并以图形方式展示日志。"><a href="#实验：-把本机的日志记录到远程服务器的数据库中，并以图形方式展示日志。" class="headerlink" title="实验： 把本机的日志记录到远程服务器的数据库中，并以图形方式展示日志。"></a>实验： 把本机的日志记录到远程服务器的数据库中，并以图形方式展示日志。</h2><p>现在准备两台主机 192.168.30.7    192.168.30.17  ，一个是日志服务器，一个是数据库服务器。  </p>
+<p>把192.168.30.7 主机上的日志记录到远程主机192.168.30.17 的数据库中。  </p>
+<p>首先在192.168.30.17 主机上把数据库准备好<br>yum install mariadb-server<br>启动服务<br>systemctl start mariadb</p>
+<p>还有要把 192.168.30.7 主机上的日志记录到远程主机的数据库中，还要安装一个模块包，必须先把这个包装上。  </p>
+<p>  yum install rsyslog-mysql.x86_64  </p>
+<p>装完后查看下包的结构，里面有一个脚本和一个模块，将来要在存放日志的数据库主机上跑一下这个脚本。  </p>
+<p>然后把这个脚本拷贝到远程主机上<br>scp /usr/share/doc/rsyslog-8.24.0/mysql-createDB.sql 192.168.30.17:  </p>
+<p>然后回到192.168.30.17 主机上把传过来的脚本跑一下  </p>
+<p>mysql &lt; mysql-createDB.sql<br>跑完后连接数据库可以看到生成新的数据库跟相应的表<br>接下来在创建一个用户<br>grant all on Syslog.* to syslog@’192.168.30.%’ identified by ‘centos’;<br>重新加载数据库<br>flush privileges;  </p>
+<p>然后回到日志服务器上，还要把刚才装那个包中的模块加载到日志配置文件中。<br>vim /etc/rsyslog.conf<br>在里面的 MODULES 语句块下添加这个模块<br>$ModLoad ommysql.so<br>还要修改一个地方<br>*.info;mail.none;authpriv.none;cron.none             :ommysql:192.168.30.17,Syslog,syslog,centos  </p>
+<p>修改完重启服务<br>systemctl restart rsyslog</p>
+<p>这样就配置完成了，就可以在日志服务器上生成日志，到数据库服务器中进行查询了。  </p>
+<p>查询命令： select * from SystemEvents \G<br>在日志服务器上可以用命令生成测试日志<br>logger<br>现在能看是能看了，但是查看的格式不太明显。  </p>
+<p>现在我们要求把这种显示的结果以容易观看的格式显示出来。要显示必须安装一个软件 loganalyzer     ,这样我们在添加一台主机 192.168.30.27 ，在这台主机上搭建 LAMP  。  </p>
+<p>这次我们用 yum 安装的方式搭建<br>先装包<br>yum install httpd php php-mysql php-gd<br>启动服务<br>systemctl start httpd   </p>
+<p>接下来准备测试代码      vim /var/www/html/a.php<br>&lt;?php<br>$dsn=’mysql:host=192.168.30.17;dbname=Syslog’;<br>$username=’syslog’;<br>$passwd=’centos’;<br>$dbh=new   PDO($dsn,$username,$passwd);<br>var_dump($dbh);<br>?&gt;  </p>
+<p>这样LAMP就搭好了，可以拿浏览器测试访问下看连接数据库连接成功没<br>在浏览器输入     192.168.30.27<br>如果现实出 OK 表示连接成功。  </p>
+<p>那么接下来就下载前面说的那个软件（就是能把数据库显示的结果以容易看得方式显示）<br>现在官网上把相应的包下载到 192.168.30.27 这台主机上<br>      官网：<a href="http://www.loganalyzer.com" target="_blank" rel="noopener">www.loganalyzer.com</a>  </p>
+<p>下载的包     loganalyzer-4.1.6.tar.gz<br>下载完进行解包<br>tar xvf loganalyzer-4.1.5.tar.gz<br>解完包生成一个文件夹<br>loganalyzer-4.1.5<br>然后把  loganalyzer-4.1.5/ 这个目录下 src/  目录复制到站点默认目录下<br>cp /loganalyzer-4.1.5/src/* /var/www/html/log  </p>
+<p>先 cd 到 /var/www/html/log 目录下 ，因为 apache 账号对这个目录没有写权限，所以一会 loganalyzer 要对这个目录下的文件进行修改，所以接下来还得准备一个配置文件，让他对目录下的文件具有写权限。      </p>
+<p>首先创建一个配置文件      touch /var/www/html/log/config.php  </p>
+<p>然后加上权限        chmod 666 /var/www/html/log/config.php</p>
+<p>接下来就拿浏览器进行访问了      192.168.39.27/log<br>连接上出现一个模块点击上面的 Here （安装），接下来就可以填写一些数据库的登录信息了。<br>登录上就可以查看图形化的日志信息了。<br>整个过程做完还要回收一下权限<br>在192.168.30.27 主机上执行    chmod 644 config.php  </p>
+<h5 id="到此就用-loganalyzer-实现图形日志了。"><a href="#到此就用-loganalyzer-实现图形日志了。" class="headerlink" title="到此就用 loganalyzer 实现图形日志了。"></a>到此就用 loganalyzer 实现图形日志了。</h5><p>#################################################################################</p>
+<p>示例：rsyslog将日志记录于MySQL中   </p>
+<p>(1) 准备MySQL Server<br>(2) 在mysql server上授权rsyslog能连接至当前服务器<br>      GRANT ALL ON Syslog.* TO ‘USER‘@’HOST’ IDENTIFIED BY ‘PASSWORD’;<br>(3) 在rsyslog服务器上安装mysql模块相关的程序包<br>     yum install rsyslog-mysql<br>(4) 为rsyslog创建数据库及表；<br>      mysql -uUSERNAME -hHOST -pPASSWORD &lt; /usr/share/doc/rsyslog- 7.4.7/mysql-createDB.sql<br>(5) 配置rsyslog将日志保存到mysql中  </p>
+<pre><code>#### MODULES ####  
+$ModLoad ommysql  
+#### RULES ####  
+ facility.priority :ommysql:DBHOST,DBNAME,DBUSER, PASSWORD  
+</code></pre><p>示例：通过loganalyzer展示数据库中的日志   </p>
+<h6 id="1-在rsyslog服务器上准备amp或nmp组合"><a href="#1-在rsyslog服务器上准备amp或nmp组合" class="headerlink" title="(1) 在rsyslog服务器上准备amp或nmp组合"></a>(1) 在rsyslog服务器上准备amp或nmp组合</h6><pre><code>yum install httpd php php-mysql php-gd   
+</code></pre><h6 id="2-安装LogAnalyzer"><a href="#2-安装LogAnalyzer" class="headerlink" title="(2) 安装LogAnalyzer"></a>(2) 安装LogAnalyzer</h6><pre><code>tar xf loganalyzer-4.1.5.tar.gz  
+cp -a loganalyzer-4.1.5/src /var/www/html/loganalyzer  
+cd /var/www/html/loganalyzer  
+touch config.php  
+chmod 666 config.php  
+</code></pre><h6 id="3-配置loganalyzer"><a href="#3-配置loganalyzer" class="headerlink" title="(3) 配置loganalyzer"></a>(3) 配置loganalyzer</h6><pre><code>systemctl start httpd.service  
+http://HOST/loganalyzer  
+MySQL Native, Syslog Fields, Monitorware   
+</code></pre><h6 id="4-安全加强"><a href="#4-安全加强" class="headerlink" title="(4) 安全加强"></a>(4) 安全加强</h6><pre><code>cd /var/www/html/loganalyzer  
+ chmod 644 config.php  
+</code></pre><h4 id="Logrotate日志存储"><a href="#Logrotate日志存储" class="headerlink" title="Logrotate日志存储"></a>Logrotate日志存储</h4><p>logrotate 程序是一个日志文件管理工具。用来把旧的日志文件删除，并创建新 的日志文件，称为日志转储或滚动。可以根据日志文件的大小，也可以根据其 天数来转储，这个过程一般通过 cron 程序来执行   </p>
+<p>配置文件是 /etc/logrotate.conf<br>主要参数如下<br>compress 通过gzip 压缩转储以后的日志<br>nocompress 不需要压缩时，用这个参数<br>copytruncate 用于还在打开中的日志文件，把当前日志备份并截断<br>nocopytruncate 备份日志文件但是不截断<br>create mode owner group 转储文件，使用指定的文件模式创建新的日志文件  </p>
+<p>nocreate 不建立新的日志文件<br>delaycompress 和 compress 一起使用时，转储的日志文件到下一次转储时 才压缩<br>nodelaycompress 覆盖 delaycompress 选项，转储并压缩<br>errors address 专储时的错误信息发送到指定的Email 地址<br>ifempty 即使是空文件也转储，是缺省选项。<br>notifempty 如果是空文件的话，不转储<br>mail address 把转储的日志文件发送到指定的E-mail 地址<br>nomail 转储时不发送日志文件<br>olddir directory 转储后的日志文件放入指定的目录，必须和当前日志文件在 同一个文件系统<br>noolddir 转储后的日志文件和当前日志文件放在同一个目录下  </p>
+<p>prerotate/endscript 在转储以前需要执行的命令可以放入这个对，这两个关键 字必须单独成行<br>postrotate/endscript 在转储以后需要执行的命令可以放入这个对，这两个关 键字必须单独成行<br>daily 指定转储周期为每天   weekly 指定转储周期为每周<br>monthly 指定转储周期为每月<br>size 大小 指定日志超过多大时，就执行日志转储<br>rotate count 指定日志文件删除之前转储的次数，0 指没有备份，5 指保留5 个 备份<br>Missingok 如果日志不存在，提示错误<br>Nomissingok如果日志不存在，继续下一次日志，不提示错误</p>
+
+    </article>
+    <!-- license  -->
+    
+        <div class="license-wrapper">
+            <p>原文作者: <a href="http://yoursite.com">John Doe</a>
+            <p>原文链接: <a href="http://yoursite.com/2018/08/09/日志管理介绍/">http://yoursite.com/2018/08/09/日志管理介绍/</a>
+            <p>发表日期: <a href="http://yoursite.com/2018/08/09/日志管理介绍/">August 9th 2018, 3:52:21 pm</a>
+            <p>版权声明: 本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+        </div>
+    
+    <!-- paginator  -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+                <div class="nextSlogan">Next Post</div>
+                <a href= "/2018/08/09/Nginx 详细介绍/" title=  >
+                    <div class="nextTitle">[Untitled Post]</div>
+                </a>
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href= "/2018/08/09/Linux 防火墙各种规则实战应用/" title=  >
+                    <div class="prevTitle">[Untitled Post]</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+<!-- City版安装代码已完成 -->
+    
+    
+    <!--PC和WAP自适应版-->
+
+    <!--PC版-->
+
+
+    
+    
+
+    <!-- 评论 -->
+</main>
+            <!-- profile -->
+            
+        </div>
+        <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+    <div class="social">
+        
+    
+        
+            
+                <a href="mailto:1020846215@qq.com" class="iconfont-archer email" title=email ></a>
+            
+        
+    
+        
+            
+                <a href="//github.com/fi3ework" class="iconfont-archer github" target="_blank" title=github></a>
+            
+        
+    
+        
+            
+                <span class="iconfont-archer wechat" title=wechat>
+                  
+                  <img class="profile-qr" src="/assets/example_qr.png" />
+                </span>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+    </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- 不蒜子  -->
+    
+    <div class="busuanzi-container">
+    
+     
+    <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+    
+    </div>
+    
+</footer>
+    </div>
+    <!-- toc -->
+    
+    <div class="toc-wrapper" style=
+    
+
+
+
+
+
+
+
+top:50vh;
+
+    >
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#日志介绍"><span class="toc-number">1.</span> <span class="toc-text">日志介绍</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#日志："><span class="toc-number">1.0.1.</span> <span class="toc-text">日志：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#系统日志服务："><span class="toc-number">1.0.2.</span> <span class="toc-text">系统日志服务：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#rsyslog"><span class="toc-number">1.0.3.</span> <span class="toc-text">rsyslog</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#rsyslog介绍"><span class="toc-number">1.0.4.</span> <span class="toc-text">rsyslog介绍</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#rsyslog-1"><span class="toc-number">1.0.5.</span> <span class="toc-text">rsyslog</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#rsyslog-2"><span class="toc-number">1.0.6.</span> <span class="toc-text">rsyslog</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#启用网络日志服务"><span class="toc-number">1.0.7.</span> <span class="toc-text">启用网络日志服务</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#其它日志"><span class="toc-number">1.0.8.</span> <span class="toc-text">其它日志</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#日志管理journalctl"><span class="toc-number">1.0.9.</span> <span class="toc-text">日志管理journalctl</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#实验：-把本机的日志记录到远程服务器的数据库中，并以图形方式展示日志。"><span class="toc-number">2.</span> <span class="toc-text">实验： 把本机的日志记录到远程服务器的数据库中，并以图形方式展示日志。</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#到此就用-loganalyzer-实现图形日志了。"><span class="toc-number">2.0.0.1.</span> <span class="toc-text">到此就用 loganalyzer 实现图形日志了。</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#1-在rsyslog服务器上准备amp或nmp组合"><span class="toc-number">2.0.0.1.1.</span> <span class="toc-text">(1) 在rsyslog服务器上准备amp或nmp组合</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#2-安装LogAnalyzer"><span class="toc-number">2.0.0.1.2.</span> <span class="toc-text">(2) 安装LogAnalyzer</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#3-配置loganalyzer"><span class="toc-number">2.0.0.1.3.</span> <span class="toc-text">(3) 配置loganalyzer</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#4-安全加强"><span class="toc-number">2.0.0.1.4.</span> <span class="toc-text">(4) 安全加强</span></a></li></ol></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Logrotate日志存储"><span class="toc-number">2.0.1.</span> <span class="toc-text">Logrotate日志存储</span></a></li></ol></li></ol></li></ol>
+    </div>
+    
+    <div class="back-top iconfont-archer">&#xe639;</div>
+    <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+          <div class="sidebar-panel-archives">
+    <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 39
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+    
+    
+    
+    <div class="archive-year"> 2018 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/09</span><a class="archive-post-title" href= "/2018/08/09/Linux 防火墙各种规则实战应用/" >[Untitled Post]</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/09</span><a class="archive-post-title" href= "/2018/08/09/Nginx 详细介绍/" >[Untitled Post]</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2017 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/15</span><a class="archive-post-title" href= "/2017/10/15/memcache  缓存原理介绍/" >memcache  缓存原理介绍</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/08</span><a class="archive-post-title" href= "/2017/10/08/tomcat 各种架构实验演示/" >tomcat 各种架构实验演示</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/05</span><a class="archive-post-title" href= "/2017/10/05/浅谈 tomcat 原理/" >浅谈 tomcat 原理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/25</span><a class="archive-post-title" href= "/2017/09/25/Varnish 缓存服务器介绍/" >Varnish 缓存服务器介绍</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/14</span><a class="archive-post-title" href= "/2017/09/14/keepalived 各种高可用实战演练/" >keepalived 各种高可用实战演练</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/28</span><a class="archive-post-title" href= "/2017/08/28/HAproxy 原理介绍/" >HAproxy 原理介绍</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/19</span><a class="archive-post-title" href= "/2017/08/19/lvs 详细介绍/" >lvs 详细介绍</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/24</span><a class="archive-post-title" href= "/2017/06/24/各种网络共享服务实验演示/" >各种网络共享服务实验演示</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/20</span><a class="archive-post-title" href= "/2017/06/20/网络文件共享服务：FTP    NFS   SAMBA/" >网络文件共享服务：FTP    NFS   SAMBA</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/11</span><a class="archive-post-title" href= "/2017/06/11/LAMP 架构的各种演示/" >LAMP 架构的各种演示</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/01</span><a class="archive-post-title" href= "/2017/06/01/介绍 MYSQL的事务日志/" >介绍 MYSQL的事务日志</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/22</span><a class="archive-post-title" href= "/2017/05/22/MYSQL 数据库的日志介绍/" >MYSQL 数据库的日志介绍</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/15</span><a class="archive-post-title" href= "/2017/05/15/MYSQL MariaDB 的事务和事务隔离级别/" >MYSQL MariaDB 的事务和事务隔离级别</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/08</span><a class="archive-post-title" href= "/2017/05/08/MASQL MariaDB 用户权限管理/" >MASQL MariaDB 用户权限管理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/20</span><a class="archive-post-title" href= "/2017/04/20/ext 文件系统机制原理/" >ext 文件系统机制原理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/15</span><a class="archive-post-title" href= "/2017/04/15/Linux分区信息与管理文件系统/" >Linux分区信息与管理文件系统</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/10</span><a class="archive-post-title" href= "/2017/04/10/DHCP 服务/" >DHCP服务</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/01</span><a class="archive-post-title" href= "/2017/04/01/Linux系统中su 和 sudo 的用法/" >Linux系统中su 和 sudo 的用法</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/22</span><a class="archive-post-title" href= "/2017/03/22/实现DNS服务主从复制/" >实现DNS服务主从复制</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/20</span><a class="archive-post-title" href= "/2017/03/20/搭建DNS互联网架构服务器(一）/" >搭建DNS互联网架构服务器</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/15</span><a class="archive-post-title" href= "/2017/03/15/搭建DNS 服务，实现主服务器，邮件服务器，泛域名解析，反向解析等/" >搭建DNS 服务，实现主服务器，邮件服务器，泛域名解析，反向解析等</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/12</span><a class="archive-post-title" href= "/2017/03/12/Linux 文件权限管理/" >Linux 文件权限管理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/08</span><a class="archive-post-title" href= "/2017/03/08/LINUX系统中用户、组管理/" >安装管理包：LINUX系统中用户、组管理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/28</span><a class="archive-post-title" href= "/2017/02/28/搭建DNS服务器，实现主DNS服务器，负责解析一个域/" >搭建DNS服务器，实现主DNS服务器，负责解析一个域</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/15</span><a class="archive-post-title" href= "/2017/02/15/DNS 服务从基础到深入/" >DNS 服务从基础到深入</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/10</span><a class="archive-post-title" href= "/2017/02/10/SSH端口转发实验/" >SSH端口转发实验</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/08</span><a class="archive-post-title" href= "/2017/02/08/实现PXE自动安装/" >实现PXE自动安装</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/01</span><a class="archive-post-title" href= "/2017/02/01/rpm管理包 和 yum管理包(1)/" >安装管理包：rpm包和yum包</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/20</span><a class="archive-post-title" href= "/2017/01/20/搭建CA/" >如何搭建CA（向CA申请证书）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/08</span><a class="archive-post-title" href= "/2017/01/08/自制一个mini 的Linux系统/" >自制一个mini 的Linux系统</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2016 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/20</span><a class="archive-post-title" href= "/2016/12/20/进程管理和计划任务的知识点()/" >进程管理与计划任务的知识点</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/15</span><a class="archive-post-title" href= "/2016/12/15/文本处理工具：sed/" >文本处理工具：sed</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/08</span><a class="archive-post-title" href= "/2016/12/08/TCP、IP协议三次握手与四次握手流程解析（）/" >TCP、IP协议三次握手与四次握手流程解析</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> Invalid date </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">Invalid date</span><a class="archive-post-title" href= "/2018/08/09/Nginx 各种实验演示/" >[Untitled Post]</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2016 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/29</span><a class="archive-post-title" href= "/2016/11/29/Linux 的一些基础练习题/" >Linux 的一些基础练习题</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/23</span><a class="archive-post-title" href= "/2016/11/23/对正则表达式，VIM编辑器命令的基本操作（三）/" >对正则表达式，VIM编辑器命令的基本操作</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> Invalid date </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">Invalid date</span><a class="archive-post-title" href= "/2018/08/09/日志管理介绍/" >[Untitled Post]</a>
+        </li>
+    
+    </div>
+  </div>
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+    
+        <span class="sidebar-tag-name" data-tags="Linux"><span class="iconfont-archer">&#xe606;</span>Linux</span>
+    
+        <span class="sidebar-tag-name" data-tags="DHCP"><span class="iconfont-archer">&#xe606;</span>DHCP</span>
+    
+        <span class="sidebar-tag-name" data-tags="haproxy"><span class="iconfont-archer">&#xe606;</span>haproxy</span>
+    
+        <span class="sidebar-tag-name" data-tags="LAMP"><span class="iconfont-archer">&#xe606;</span>LAMP</span>
+    
+        <span class="sidebar-tag-name" data-tags="DNS"><span class="iconfont-archer">&#xe606;</span>DNS</span>
+    
+        <span class="sidebar-tag-name" data-tags="权限管理"><span class="iconfont-archer">&#xe606;</span>权限管理</span>
+    
+        <span class="sidebar-tag-name" data-tags="用户组"><span class="iconfont-archer">&#xe606;</span>用户组</span>
+    
+        <span class="sidebar-tag-name" data-tags="练习题"><span class="iconfont-archer">&#xe606;</span>练习题</span>
+    
+        <span class="sidebar-tag-name" data-tags="文件系统"><span class="iconfont-archer">&#xe606;</span>文件系统</span>
+    
+        <span class="sidebar-tag-name" data-tags="MYSQL"><span class="iconfont-archer">&#xe606;</span>MYSQL</span>
+    
+        <span class="sidebar-tag-name" data-tags="su和sudo"><span class="iconfont-archer">&#xe606;</span>su和sudo</span>
+    
+        <span class="sidebar-tag-name" data-tags="SSH"><span class="iconfont-archer">&#xe606;</span>SSH</span>
+    
+        <span class="sidebar-tag-name" data-tags="varnish"><span class="iconfont-archer">&#xe606;</span>varnish</span>
+    
+        <span class="sidebar-tag-name" data-tags="TCP/IP"><span class="iconfont-archer">&#xe606;</span>TCP/IP</span>
+    
+        <span class="sidebar-tag-name" data-tags="keepalied"><span class="iconfont-archer">&#xe606;</span>keepalied</span>
+    
+        <span class="sidebar-tag-name" data-tags="lvs"><span class="iconfont-archer">&#xe606;</span>lvs</span>
+    
+        <span class="sidebar-tag-name" data-tags="memcache"><span class="iconfont-archer">&#xe606;</span>memcache</span>
+    
+        <span class="sidebar-tag-name" data-tags="tomcat"><span class="iconfont-archer">&#xe606;</span>tomcat</span>
+    
+        <span class="sidebar-tag-name" data-tags="rpm"><span class="iconfont-archer">&#xe606;</span>rpm</span>
+    
+        <span class="sidebar-tag-name" data-tags="共享服务"><span class="iconfont-archer">&#xe606;</span>共享服务</span>
+    
+        <span class="sidebar-tag-name" data-tags="自动化安装"><span class="iconfont-archer">&#xe606;</span>自动化安装</span>
+    
+        <span class="sidebar-tag-name" data-tags="基本命令"><span class="iconfont-archer">&#xe606;</span>基本命令</span>
+    
+        <span class="sidebar-tag-name" data-tags="CA"><span class="iconfont-archer">&#xe606;</span>CA</span>
+    
+        <span class="sidebar-tag-name" data-tags="sed"><span class="iconfont-archer">&#xe606;</span>sed</span>
+    
+        <span class="sidebar-tag-name" data-tags="dns"><span class="iconfont-archer">&#xe606;</span>dns</span>
+    
+        <span class="sidebar-tag-name" data-tags="mini系统"><span class="iconfont-archer">&#xe606;</span>mini系统</span>
+    
+        <span class="sidebar-tag-name" data-tags="进程管理、计划任务"><span class="iconfont-archer">&#xe606;</span>进程管理、计划任务</span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+    缺失模块。<br/>
+    1、请确保node版本大于6.2<br/>
+    2、在博客根目录（注意不是archer根目录）执行以下命令：<br/>
+    <span style="color: #f75357; font-size: 1rem; line-height: 2rem;">npm i hexo-generator-json-content --save</span><br/>
+    3、在根目录_config.yml里添加配置：
+    <pre style="color: #787878; font-size: 0.6rem;">
+jsonContent:
+  meta: false
+  pages: false
+  posts:
+    title: true
+    date: true
+    path: true
+    text: false
+    raw: false
+    content: false
+    slug: false
+    updated: false
+    comments: false
+    link: false
+    permalink: false
+    excerpt: false
+    categories: true
+    tags: true</pre>
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+    </div>
+</div> 
+    <script>
+    var siteMeta = {
+        root: "/",
+        author: "John Doe"
+    }
+</script>
+    <!-- CDN failover -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ === 'undefined')
+        {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js">\x3C/script>')
+        }
+    </script>
+    <script src="/scripts/main.js"></script>
+    <!-- algolia -->
+    
+    <!-- busuanzi  -->
+    
+    <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+    <!-- CNZZ  -->
+    
+    </div>
+    <!-- async load share.js -->
+    
+        <script src="/scripts/share.js" async></script>    
+     
+    </body>
+</html>
+
+

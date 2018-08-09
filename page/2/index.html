@@ -354,20 +354,17 @@ height:50vh;
     
     
     <article class="index-post">
-        <a class="abstract-title" href = "/2017/03/15/搭建DNS 服务，实现主服务器，邮件服务器，泛域名解析，反向解析等/" >
+        <a class="abstract-title" href = "/2017/08/19/lvs 详细介绍/" >
             
-                <span>搭建DNS 服务，实现主服务器，邮件服务器，泛域名解析，反向解析等</span>
+                <span>lvs 详细介绍</span>
         </a>
         <div class="abstract-content">
-            <h4 id="实验-：-搭建DNS-主服务器，现在拿-192-168-30-7-这台主机做主服务器"><a href="#实验-：-搭建DNS-主服务器，现在拿-192-168-30-7-这台主机做主服务器" class="headerlink" title="实验   ：   搭建DNS 主服务器，现在拿 192.168.30.7 这台主机做主服务器"></a>实验   ：   搭建DNS 主服务器，现在拿 192.168.30.7 这台主机做主服务器</h4><h6 id="先装包-yum-install-bind"><a href="#先装包-yum-install-bind" class="headerlink" title="先装包     yum install bind"></a>先装包     yum install bind</h6><h6 id="启动服务-systemctl-start-named"><a href="#启动服务-systemctl-start-named" class="headerlink" title="启动服务    systemctl start named"></a>启动服务    systemctl start named</h6><h6 id="然后修改主配置文件中的内容-vim-etc-named-conf"><a href="#然后修改主配置文件中的内容-vim-etc-named-conf" class="headerlink" title="然后修改主配置文件中的内容    vim /etc/named.conf"></a>然后修改主配置文件中的内容    vim /etc/named.conf</h6><blockquote>
-<p> 创建以 magedu.com 的区域数据，一般建议区域数据都存放在  /etc/named.rfc1912.zones 文件中  ，添加内容如下：</p>
-</blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">zone &quot;magedu.com&quot; IN &#123;  </span><br><span class="line">                    type master;  </span><br><span class="line">                    file &quot;magedu.com.zone&quot;;</span><br><span class="line">&#125;;  </span><br><span class="line">  ##这是主从类型中的主类型，存放名字和IP 的数据库文件</span><br></pre></td></tr></table></figure>
+            <h4 id="Cluster概念"><a href="#Cluster概念" class="headerlink" title="Cluster概念"></a>Cluster概念</h4><p> 系统扩展方式：<br>      Scale UP：向上扩展,增强<br>       Scale Out：向外扩展,增加设备，调度分配问题，Cluster<br> Cluster：集群,为解决某个特定问题将多台计算机组合起来形成的单个系统<br> Linux Cluster类型：<br>    LB：Load Balancing，负载均衡<br>    HA：High Availiablity，高可用，SPOF（single Point Of failure）<br>       MTBF:Mean Time Between Failure 平均无故障时间<br>       MTTR:Mean Time To Restoration（ repair）平均恢复前时间<br>        A=MTBF/（MTBF+MTTR） (0,1)：99%, 99.5%, 99.9%, 99.99%, 99.999%<br>     HPC：High-performance computing，高性能 <a href="http://www.top500.org" target="_blank" rel="noopener">www.top500.org</a><br> 分布式系统：<br>       分布式存储：云盘<br>       分布式计算：hadoop， park<br>
         </div>
         <div class="abstract-post-meta">
             <!-- date  -->
             <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/03/15</span>
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/08/19</span>
             </div>
             <!-- tags  -->
             
@@ -375,7 +372,7 @@ height:50vh;
     
         <a class="post-tag" href="javascript:void(0);" data-tags = "Linux">Linux</a>
     
-        <a class="post-tag" href="javascript:void(0);" data-tags = "DNS">DNS</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags = "lvs">lvs</a>
     
 </div>
             
@@ -388,18 +385,18 @@ height:50vh;
     
     
     <article class="index-post">
-        <a class="abstract-title" href = "/2017/03/12/Linux 文件权限管理/" >
+        <a class="abstract-title" href = "/2017/06/24/各种网络共享服务实验演示/" >
             
-                <span>Linux 文件权限管理</span>
+                <span>各种网络共享服务实验演示</span>
         </a>
         <div class="abstract-content">
-            <h4 id="文件-目录的权限"><a href="#文件-目录的权限" class="headerlink" title="文件/目录的权限"></a>文件/目录的权限</h4><h5 id="文件的权限"><a href="#文件的权限" class="headerlink" title="文件的权限"></a>文件的权限</h5><h6 id="每个文件都有其所有者-u-user-、所属组-g-group-和其他人-o-other-对它的操作权限，a-all则同时代表这3者。权限包括读-r-read-、写-w-write-、执行-x-execute-。在不同类型的文件上读、写、执行权限的体现有所不同，所以目录权限和普通文件权限要区分开来。"><a href="#每个文件都有其所有者-u-user-、所属组-g-group-和其他人-o-other-对它的操作权限，a-all则同时代表这3者。权限包括读-r-read-、写-w-write-、执行-x-execute-。在不同类型的文件上读、写、执行权限的体现有所不同，所以目录权限和普通文件权限要区分开来。" class="headerlink" title="每个文件都有其所有者(u:user)、所属组(g:group)和其他人(o:other)对它的操作权限，a:all则同时代表这3者。权限包括读(r:read)、写(w:write)、执行(x:execute)。在不同类型的文件上读、写、执行权限的体现有所不同，所以目录权限和普通文件权限要区分开来。"></a>每个文件都有其所有者(u:user)、所属组(g:group)和其他人(o:other)对它的操作权限，a:all则同时代表这3者。权限包括读(r:read)、写(w:write)、执行(x:execute)。在不同类型的文件上读、写、执行权限的体现有所不同，所以目录权限和普通文件权限要区分开来。</h6><h5 id="在普通文件上："><a href="#在普通文件上：" class="headerlink" title="在普通文件上："></a>在普通文件上：</h5><blockquote>
-<p>r：可读，可以使用类似cat等命令查看文件内容；读是文件的最基本权限，没有读权限，普通文件的一切操作行为都被限制。<br>
+            <h2 id="实验：-实现基于文件验证的-vsftpd-虚拟用户"><a href="#实验：-实现基于文件验证的-vsftpd-虚拟用户" class="headerlink" title="实验： 实现基于文件验证的 vsftpd 虚拟用户"></a>实验： 实现基于文件验证的 vsftpd 虚拟用户</h2><h5 id="先创建一个存放虚拟用户的账号密码的文件-vim-etc-vsftpd-vsftpusers"><a href="#先创建一个存放虚拟用户的账号密码的文件-vim-etc-vsftpd-vsftpusers" class="headerlink" title="先创建一个存放虚拟用户的账号密码的文件      vim /etc/vsftpd/vsftpusers"></a>先创建一个存放虚拟用户的账号密码的文件      vim /etc/vsftpd/vsftpusers</h5><p> 在里面添加               ftpuser1<br>                                  centos<br>                                  ftpuser2<br>                                  magedu<br>                                   ftpuser3<br>                                   rhel  </p>
+<h5 id="这个文件中奇数行是虚拟账户，偶数行是密码。"><a href="#这个文件中奇数行是虚拟账户，偶数行是密码。" class="headerlink" title="这个文件中奇数行是虚拟账户，偶数行是密码。"></a>这个文件中奇数行是虚拟账户，偶数行是密码。</h5>
         </div>
         <div class="abstract-post-meta">
             <!-- date  -->
             <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/03/12</span>
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/06/24</span>
             </div>
             <!-- tags  -->
             
@@ -407,7 +404,7 @@ height:50vh;
     
         <a class="post-tag" href="javascript:void(0);" data-tags = "Linux">Linux</a>
     
-        <a class="post-tag" href="javascript:void(0);" data-tags = "权限管理">权限管理</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags = "共享服务">共享服务</a>
     
 </div>
             
@@ -420,24 +417,20 @@ height:50vh;
     
     
     <article class="index-post">
-        <a class="abstract-title" href = "/2017/03/08/LINUX系统中用户、组管理/" >
+        <a class="abstract-title" href = "/2017/06/20/网络文件共享服务：FTP    NFS   SAMBA/" >
             
-                <span>安装管理包：LINUX系统中用户、组管理</span>
+                <span>网络文件共享服务：FTP    NFS   SAMBA</span>
         </a>
         <div class="abstract-content">
-            <h4 id="用户和组的基本概念"><a href="#用户和组的基本概念" class="headerlink" title="用户和组的基本概念"></a>用户和组的基本概念</h4><blockquote>
-<p>用户和组是操作系统中一种身份认证资源。  </p>
-</blockquote>
-<blockquote>
-<p>每个用户都有用户名、用户的唯一编号uid(user id)、所属组及其默认的shell，可能还有密码、家目录、附属组、注释信息等。  </p>
-</blockquote>
-<blockquote>
-<p>每个组也有自己的名称、组唯一编号gid(group id)。一般来说，gid和uid是可以不相同的，但绝大多数都会让它们保持一致，大致属于约定俗成类的概念吧。<br>
+            <p>FTP服务   </p>
+<p>NFS服务   </p>
+<p>SAMBA服务<br><img src="http://i2.bvimg.com/657107/f69a81c483abce89.png" alt="Markdown"></p>
+<h4 id="文件传输协议（FTP）"><a href="#文件传输协议（FTP）" class="headerlink" title="文件传输协议（FTP）"></a>文件传输协议（FTP）</h4><p>File Transfer Protocol 早期的三个应用级协议之一<br>三个协议分别是： ftp    http      smtp<br>基于C/S结构<br>双通道协议：数据和命令连接<br>数据传输格式：二进制（默认）和文本<br>两种模式：服务器角度<br> 主动(PORT style)：服务器主动连接<br>       命令（控制）：客户端：随机port —&gt;服务器：tcp21<br>        数据：客户端：随机port &lt;—服务器 ：tcp20<br> 被动(PASV style)：客户端主动连接<br>        命令（控制）：客户端：随机port —&gt;服务器：tcp21<br>        数据：客户端：随机port —&gt;服务器：随机port<br>
         </div>
         <div class="abstract-post-meta">
             <!-- date  -->
             <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/03/08</span>
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/06/20</span>
             </div>
             <!-- tags  -->
             
@@ -445,7 +438,7 @@ height:50vh;
     
         <a class="post-tag" href="javascript:void(0);" data-tags = "Linux">Linux</a>
     
-        <a class="post-tag" href="javascript:void(0);" data-tags = "用户组">用户组</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags = "共享服务">共享服务</a>
     
 </div>
             
@@ -458,25 +451,17 @@ height:50vh;
     
     
     <article class="index-post">
-        <a class="abstract-title" href = "/2017/02/28/搭建DNS服务器，实现主DNS服务器，负责解析一个域/" >
+        <a class="abstract-title" href = "/2017/06/11/LAMP 架构的各种演示/" >
             
-                <span>搭建DNS服务器，实现主DNS服务器，负责解析一个域</span>
+                <span>LAMP 架构的各种演示</span>
         </a>
         <div class="abstract-content">
-            <h4 id="搭建DNS服务器，实现主DNS服务器，负责解析一个域"><a href="#搭建DNS服务器，实现主DNS服务器，负责解析一个域" class="headerlink" title="搭建DNS服务器，实现主DNS服务器，负责解析一个域"></a>搭建DNS服务器，实现主DNS服务器，负责解析一个域</h4><blockquote>
-<p>先装包     yum install bind   </p>
-<p>然后查看下包的组成结构     rpm -ql bind </p>
-<p>  /etc/named.conf      这是他的配置文件</p>
-<p>/var/named     这是存放名字跟IP的数据库</p>
-<p>/var/log/named.log     这是存放日志的</p>
-<p>/usr/sbin/named      主程序文件</p>
-<p>服务名    named.service</p>
-</blockquote>
+            <h2 id="实验：-LAMP-实现phpMyadmin"><a href="#实验：-LAMP-实现phpMyadmin" class="headerlink" title="实验：    LAMP  实现phpMyadmin"></a>实验：    LAMP  实现phpMyadmin</h2><p>先装包<br>yum -y install httpd mariadb-server php php-mysql<br>systemctl start httpd<br>systemctl start mariadb<br>然后从官网上下载对应版本的phpMyadmin<br>下载：<a href="https://www.phpmyadmin.net/downloads/" target="_blank" rel="noopener">https://www.phpmyadmin.net/downloads/</a><br>然后进行解包，注意解包时一定要解在 /var/www/html 目录下<br>cd /var/www/html<br>  unzip phpMyAdmin-4.0.10.20-all-languages.zip<br>解完包后给改个名<br>mv  phpMyAdmin-4.0.10.20-all-languages  pma<br>找到类似于配置文件的一个文件给他改名<br>cp config.sample.inc.php config.inc.php<br>还需要安装一个工具包<br>yum -y install php-mbstring<br>安装完重启服务<br>systemctl reload httpd<br>这样就可以打开浏览器进行访问了，但是显示的界面让输入账号密码。<br>注意这儿的账号密码是相对于 mysql 的账号密码<br>所以还要在数据库中设置账号密码，我们可以跑一下安全脚本来生成账号密码。<br>mysql_secure_installation<br>然后就可以在浏览器上输入账号密码就入了，这样就可以在图形界面来管理数据库了。  </p>
         </div>
         <div class="abstract-post-meta">
             <!-- date  -->
             <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/02/28</span>
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/06/11</span>
             </div>
             <!-- tags  -->
             
@@ -484,7 +469,7 @@ height:50vh;
     
         <a class="post-tag" href="javascript:void(0);" data-tags = "Linux">Linux</a>
     
-        <a class="post-tag" href="javascript:void(0);" data-tags = "DNS">DNS</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags = "LAMP">LAMP</a>
     
 </div>
             
@@ -497,20 +482,21 @@ height:50vh;
     
     
     <article class="index-post">
-        <a class="abstract-title" href = "/2017/02/15/DNS 服务从基础到深入/" >
+        <a class="abstract-title" href = "/2017/06/01/介绍 MYSQL的事务日志/" >
             
-                <span>DNS 服务从基础到深入</span>
+                <span>介绍 MYSQL的事务日志</span>
         </a>
         <div class="abstract-content">
-            <h2 id="一-简介"><a href="#一-简介" class="headerlink" title="一 简介"></a>一 简介</h2><blockquote>
-<p>DNS是Domain name system的简称，有些地方也称为Domain name server，这东西是一个很大的话题。如果不是要配置DNS服务，只需要理解DNS的解析流程和DNS有关的基本知识即可。如果要配置DNS服务，则可以看完全文。<br>推荐阅读书籍：《DNS &amp; bind》，第四版有中文版，第五版目前只有英文版。  </p>
+            <h6 id="innodb事务日志包括redo-log和undo-log。redo-log是重做日志，提供前滚操作，undo-log是回滚日志，提供回滚操作"><a href="#innodb事务日志包括redo-log和undo-log。redo-log是重做日志，提供前滚操作，undo-log是回滚日志，提供回滚操作" class="headerlink" title="innodb事务日志包括redo log和undo log。redo log是重做日志，提供前滚操作，undo log是回滚日志，提供回滚操作"></a>innodb事务日志包括redo log和undo log。redo log是重做日志，提供前滚操作，undo log是回滚日志，提供回滚操作</h6><h6 id="undo-log不是redo-log的逆向过程，其实它们都算是用来恢复的日志："><a href="#undo-log不是redo-log的逆向过程，其实它们都算是用来恢复的日志：" class="headerlink" title="undo log不是redo log的逆向过程，其实它们都算是用来恢复的日志："></a>undo log不是redo log的逆向过程，其实它们都算是用来恢复的日志：</h6><blockquote>
+<p>1.redo log通常是物理日志，记录的是数据页的物理修改，而不是某一行或某几行修改成怎样怎样，它用来恢复提交后的物理数据页(恢复数据页，且只能恢复到最后一次提交的位置)。  </p>
+<p>2.undo用来回滚行记录到某个版本。undo log一般是逻辑日志，根据每行记录进行记录。  </p>
 </blockquote>
-<h5 id="DNS必懂基础"><a href="#DNS必懂基础" class="headerlink" title="DNS必懂基础"></a>DNS必懂基础</h5>
+<h4 id="redo-log"><a href="#redo-log" class="headerlink" title="redo log"></a>redo log</h4>
         </div>
         <div class="abstract-post-meta">
             <!-- date  -->
             <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/02/15</span>
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/06/01</span>
             </div>
             <!-- tags  -->
             
@@ -518,7 +504,7 @@ height:50vh;
     
         <a class="post-tag" href="javascript:void(0);" data-tags = "Linux">Linux</a>
     
-        <a class="post-tag" href="javascript:void(0);" data-tags = "DNS">DNS</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags = "MYSQL">MYSQL</a>
     
 </div>
             
@@ -531,22 +517,22 @@ height:50vh;
     
     
     <article class="index-post">
-        <a class="abstract-title" href = "/2017/02/10/SSH端口转发实验/" >
+        <a class="abstract-title" href = "/2017/05/22/MYSQL 数据库的日志介绍/" >
             
-                <span>SSH端口转发实验</span>
+                <span>MYSQL 数据库的日志介绍</span>
         </a>
         <div class="abstract-content">
-            <h4 id="一、SSH端口转发相关概念"><a href="#一、SSH端口转发相关概念" class="headerlink" title="一、SSH端口转发相关概念"></a>一、SSH端口转发相关概念</h4><h4 id="二、实验：模拟SSH本地端口转发"><a href="#二、实验：模拟SSH本地端口转发" class="headerlink" title="二、实验：模拟SSH本地端口转发"></a>二、实验：模拟SSH本地端口转发</h4><h4 id="三、实验：模拟SSH远程端口转发"><a href="#三、实验：模拟SSH远程端口转发" class="headerlink" title="三、实验：模拟SSH远程端口转发"></a>三、实验：模拟SSH远程端口转发</h4><h4 id="四、实验：模拟SSH动态端口转发"><a href="#四、实验：模拟SSH动态端口转发" class="headerlink" title="四、实验：模拟SSH动态端口转发"></a>四、实验：模拟SSH动态端口转发</h4><h5 id="一、SSH端口转发相关概念-1"><a href="#一、SSH端口转发相关概念-1" class="headerlink" title="一、SSH端口转发相关概念"></a>一、SSH端口转发相关概念</h5><blockquote>
-<p>   在上一节我们知道，SSH会自动加密和解密所有SSH客户端和服务器之间的网络数据。<br>   但是，SSH还同时<br>提供了一个非常有用的功能，这就是端口转发。它能够将其他TCP端口的网络数据通过安全的SSH协议</p>
-</blockquote>
-<blockquote>
-<p>转发，例如：Telnet，SMTP等这些TCP应用都能从中受益，避免了用户名，密码以及隐私信息的明文传<br>输。而与此同时，如果在你的工作环境中防火墙限制了一些网络端口的使用，但是允许SSH的连接，那么<br>端口转发功能也能够将TCP端口转发来使用SSH进行通信。</p>
-</blockquote>
+            <p>不管是哪个数据库产品，一定会有日志文件。在MariaDB/MySQL中，主要有5种日志文件：  </p>
+<p>1.错误日志(error log)：记录mysql服务的启停时正确和错误的信息，还记录启动、停止、运行过程中的错误信息。  </p>
+<p>2.查询日志(general log)：记录建立的客户端连接和执行的语句。  </p>
+<p>3.二进制日志(bin log)：记录所有更改数据的语句，可用于数据复制。  </p>
+<p>4.慢查询日志(slow log)：记录所有执行时间超过long_query_time的所有查询或不使用索引的查询。  </p>
+<p>5.中继日志(relay log)：主从复制时使用的日志。  </p>
         </div>
         <div class="abstract-post-meta">
             <!-- date  -->
             <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/02/10</span>
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/05/22</span>
             </div>
             <!-- tags  -->
             
@@ -554,7 +540,7 @@ height:50vh;
     
         <a class="post-tag" href="javascript:void(0);" data-tags = "Linux">Linux</a>
     
-        <a class="post-tag" href="javascript:void(0);" data-tags = "SSH">SSH</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags = "MYSQL">MYSQL</a>
     
 </div>
             
@@ -567,21 +553,17 @@ height:50vh;
     
     
     <article class="index-post">
-        <a class="abstract-title" href = "/2017/02/08/实现PXE自动安装/" >
+        <a class="abstract-title" href = "/2017/05/15/MYSQL MariaDB 的事务和事务隔离级别/" >
             
-                <span>实现PXE自动安装</span>
+                <span>MYSQL MariaDB 的事务和事务隔离级别</span>
         </a>
         <div class="abstract-content">
-            <h2 id="实现PXE自动安装"><a href="#实现PXE自动安装" class="headerlink" title="实现PXE自动安装"></a>实现PXE自动安装</h2><h3 id="1、基础网络建设与搭建DHCP服务"><a href="#1、基础网络建设与搭建DHCP服务" class="headerlink" title="1、基础网络建设与搭建DHCP服务"></a>1、基础网络建设与搭建DHCP服务</h3><h5 id="配置静态IP地址并重起网卡"><a href="#配置静态IP地址并重起网卡" class="headerlink" title="配置静态IP地址并重起网卡"></a>配置静态IP地址并重起网卡</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">cat /etc/sysconfig/network-scripts/ifcfg-eth0   </span><br><span class="line">DEVICE=eth0  </span><br><span class="line">TYPE=Ethernet  </span><br><span class="line">ONBOOT=yes  </span><br><span class="line">NM_CONTROLLED=yes  </span><br><span class="line">BOOTPROTO=static  </span><br><span class="line">IPADDR=10.0.0.4  </span><br><span class="line">NETMASK=255.255.255.0  </span><br><span class="line">GATEWAY=10.0.0.2</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>/etc/init.d/network restart<br>ifconfig eth0</p>
-</blockquote>
-<h5 id="2）安装配置DHCP服务"><a href="#2）安装配置DHCP服务" class="headerlink" title="2）安装配置DHCP服务"></a>2）安装配置DHCP服务</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">yum -y install dhcp  </span><br><span class="line">vim /etc/dhcp/dhcpd.conf  </span><br><span class="line">default-lease-time 600;  </span><br><span class="line">max-lease-time 7200;  </span><br><span class="line">ddns-update-style none;  </span><br><span class="line">option domain-name-servers 202.106.0.20;  </span><br><span class="line">#DNS地址可配置2个用逗号分隔  </span><br><span class="line">ignore client-updates;</span><br></pre></td></tr></table></figure>
+            <h3 id="事务特性"><a href="#事务特性" class="headerlink" title="事务特性"></a>事务特性</h3><h6 id="事务具有ACID特性：原子性-A-atomicity-、一致性-C-consistency-、隔离性-I-isolation-、持久性-D-durabulity-。"><a href="#事务具有ACID特性：原子性-A-atomicity-、一致性-C-consistency-、隔离性-I-isolation-、持久性-D-durabulity-。" class="headerlink" title="事务具有ACID特性：原子性(A,atomicity)、一致性(C,consistency)、隔离性(I,isolation)、持久性(D,durabulity)。"></a>事务具有ACID特性：原子性(A,atomicity)、一致性(C,consistency)、隔离性(I,isolation)、持久性(D,durabulity)。</h6><h6 id="原子性：事务内的所有操作要么都执行，要么都不执行。"><a href="#原子性：事务内的所有操作要么都执行，要么都不执行。" class="headerlink" title="原子性：事务内的所有操作要么都执行，要么都不执行。"></a>原子性：事务内的所有操作要么都执行，要么都不执行。</h6><h6 id="一致性：事务开始和结束前后，数据都满足数据一致性约束，而不是经过事务控制之后数据变得不满足条件或业务规则。"><a href="#一致性：事务开始和结束前后，数据都满足数据一致性约束，而不是经过事务控制之后数据变得不满足条件或业务规则。" class="headerlink" title="一致性：事务开始和结束前后，数据都满足数据一致性约束，而不是经过事务控制之后数据变得不满足条件或业务规则。"></a>一致性：事务开始和结束前后，数据都满足数据一致性约束，而不是经过事务控制之后数据变得不满足条件或业务规则。</h6><h6 id="隔离性：事务之间不能互影响，它们必须完全的各行其道，互不可见。"><a href="#隔离性：事务之间不能互影响，它们必须完全的各行其道，互不可见。" class="headerlink" title="隔离性：事务之间不能互影响，它们必须完全的各行其道，互不可见。"></a>隔离性：事务之间不能互影响，它们必须完全的各行其道，互不可见。</h6>
         </div>
         <div class="abstract-post-meta">
             <!-- date  -->
             <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/02/08</span>
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/05/15</span>
             </div>
             <!-- tags  -->
             
@@ -589,7 +571,7 @@ height:50vh;
     
         <a class="post-tag" href="javascript:void(0);" data-tags = "Linux">Linux</a>
     
-        <a class="post-tag" href="javascript:void(0);" data-tags = "自动化安装">自动化安装</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags = "MYSQL">MYSQL</a>
     
 </div>
             
@@ -602,18 +584,18 @@ height:50vh;
     
     
     <article class="index-post">
-        <a class="abstract-title" href = "/2017/02/01/rpm管理包 和 yum管理包(1)/" >
+        <a class="abstract-title" href = "/2017/05/08/MASQL MariaDB 用户权限管理/" >
             
-                <span>安装管理包：rpm包和yum包</span>
+                <span>MASQL MariaDB 用户权限管理</span>
         </a>
         <div class="abstract-content">
-            <h4 id="包基础知识"><a href="#包基础知识" class="headerlink" title="包基础知识"></a>包基础知识</h4><h5 id="包名称"><a href="#包名称" class="headerlink" title="包名称"></a>包名称</h5><blockquote>
-<p>在rhel/centos/fedora上，包的名称以rpm结尾，分为二进制包和源码包。源码包以”.src.rpm”结尾，它是未编译过的包，可以自行进行编译或者用其制作自己的二进制rpm包，非”.src.rpm”结尾的包都是二进制包，都是已经编译完成的，安装rpm包的过程实际上就是将包中的文件复制到Linux上，有可能还会在复制文件的前后执行一些命令，如创建一个必要的用户，删除非必要文件等。<br>
+            <h6 id="MariaDB-MySQL中的user由用户名和主机名构成，如”root-localhost”，同用户名但不同主机名对MySQL-MariaDB来讲是不同的，也就是说”root-localhost”和”root-127-0-0-1“是不同的用户，尽管它们都是本机的root。"><a href="#MariaDB-MySQL中的user由用户名和主机名构成，如”root-localhost”，同用户名但不同主机名对MySQL-MariaDB来讲是不同的，也就是说”root-localhost”和”root-127-0-0-1“是不同的用户，尽管它们都是本机的root。" class="headerlink" title="MariaDB/MySQL中的user由用户名和主机名构成，如”root@localhost”，同用户名但不同主机名对MySQL/MariaDB来讲是不同的，也就是说”root@localhost”和”root@127.0.0.1“是不同的用户，尽管它们都是本机的root。"></a>MariaDB/MySQL中的user由用户名和主机名构成，如”root@localhost”，同用户名但不同主机名对MySQL/MariaDB来讲是不同的，也就是说”root@localhost”和”<a href="mailto:root@127.0.0.1" target="_blank" rel="noopener">root@127.0.0.1</a>“是不同的用户，尽管它们都是本机的root。</h6><h3 id="权限验证"><a href="#权限验证" class="headerlink" title="权限验证"></a>权限验证</h3><blockquote>
+<p>在MariaDB/MySQL服务器启动后会载入权限表到内存中，当用户要连接服务器，会读取权限表来验证和分配权限，即在内存中进行权限的读取和写入。<br>
         </div>
         <div class="abstract-post-meta">
             <!-- date  -->
             <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/02/01</span>
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/05/08</span>
             </div>
             <!-- tags  -->
             
@@ -621,7 +603,7 @@ height:50vh;
     
         <a class="post-tag" href="javascript:void(0);" data-tags = "Linux">Linux</a>
     
-        <a class="post-tag" href="javascript:void(0);" data-tags = "rpm">rpm</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags = "MYSQL">MYSQL</a>
     
 </div>
             
@@ -634,23 +616,19 @@ height:50vh;
     
     
     <article class="index-post">
-        <a class="abstract-title" href = "/2017/01/20/搭建CA/" >
+        <a class="abstract-title" href = "/2017/04/20/ext 文件系统机制原理/" >
             
-                <span>如何搭建CA（向CA申请证书）</span>
+                <span>ext 文件系统机制原理</span>
         </a>
         <div class="abstract-content">
-            <h2 id="系统中搭建CA"><a href="#系统中搭建CA" class="headerlink" title="系统中搭建CA"></a>系统中搭建CA</h2><h3 id="CA的配置文件"><a href="#CA的配置文件" class="headerlink" title="CA的配置文件"></a>CA的配置文件</h3><blockquote>
-<p>vim /etc/pki/tls/openssl.cnf</p>
-<p>默认 CA_default  （可建多个）</p>
-</blockquote>
-<blockquote>
-<p>[ CA_default ]</p>
-<p>dir             = /etc/pki/CA      # Where everything is kept  CA的工作目录<br>
+            <p>将磁盘进行分区，分区是将磁盘按柱面进行物理上的划分。划分好分区后还要进行格式化，然后再挂载才能使用(不考虑其他方法)。格式化分区的过程其实就是创建文件系统。  </p>
+<p>文件系统的类型有很多种，如CentOS 5和CentOS 6上默认使用的ext2/ext3/ext4，CentOS 7上默认使用的xfs，windows上的NTFS，光盘类的文件系统ISO9660，MAC上的混合文件系统HFS，网络文件系统NFS，Oracle研发的btrfs，还有老式的FAT/FAT32等。  </p>
+<p>本文将非常全面且详细地对ext家族的文件系统进行介绍。有ext2/ext3/ext4，ext3是有日志的ext2改进版，ext4对相比ext3做了非常多的改进。虽然xfs/btrfs等文件系统有所不同，但它们只是在实现方式上不太同，再加上属于自己的特性而已。<br>
         </div>
         <div class="abstract-post-meta">
             <!-- date  -->
             <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/01/20</span>
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/04/20</span>
             </div>
             <!-- tags  -->
             
@@ -658,7 +636,7 @@ height:50vh;
     
         <a class="post-tag" href="javascript:void(0);" data-tags = "Linux">Linux</a>
     
-        <a class="post-tag" href="javascript:void(0);" data-tags = "CA">CA</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags = "文件系统">文件系统</a>
     
 </div>
             
@@ -671,26 +649,19 @@ height:50vh;
     
     
     <article class="index-post">
-        <a class="abstract-title" href = "/2017/01/08/自制一个mini 的Linux系统/" >
+        <a class="abstract-title" href = "/2017/04/15/Linux分区信息与管理文件系统/" >
             
-                <span>自制一个mini 的Linux系统</span>
+                <span>Linux分区信息与管理文件系统</span>
         </a>
         <div class="abstract-content">
-            <h3 id="步骤概略："><a href="#步骤概略：" class="headerlink" title="步骤概略："></a>步骤概略：</h3><blockquote>
-<p>　　　　　　（1）划分一块磁盘，用来装系统</p>
-<p>（2）给硬盘划分至少两个分区，一个为boot引导分区，一个为/根分区</p>
-<p>（3）为分区创建文件系统，并挂载到两个不同目录</p>
-<p>（4）在挂载boot的分区创建grub引导目录</p>
-<p>（5）复制内核vmlinux与initrd文件到boot目录下，然后根据文件编写grub下的引导配置文件</p>
-<p>（6）创建根文件系统</p>
-<p>（7）移植bash等命令到根目录下</p>
-<p>（8）启动测试</p>
-</blockquote>
+            <h3 id="分区"><a href="#分区" class="headerlink" title="分区"></a>分区</h3><p>分区是为了在逻辑上将某些柱面隔开形成边界。它是以柱面为单位来划分的，首先划分外圈柱面，然后不断向内划分。  </p>
+<p>由于读写越外圈磁道中的数据比越内圈更快，所以第一个分区在读写性能上比后面的分区更好。在Windows操作系统上，C盘的速度是最快的，越后面的区越慢就是这个原因。  </p>
+<p>在磁盘数据量非常大的情况下，划分分区的好处是扫描块位图等更快速：不用再扫描整块磁盘的块位图，只需扫描对应分区的块位图。<br>
         </div>
         <div class="abstract-post-meta">
             <!-- date  -->
             <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/01/08</span>
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/04/15</span>
             </div>
             <!-- tags  -->
             
@@ -698,7 +669,7 @@ height:50vh;
     
         <a class="post-tag" href="javascript:void(0);" data-tags = "Linux">Linux</a>
     
-        <a class="post-tag" href="javascript:void(0);" data-tags = "mini系统">mini系统</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags = "文件系统">文件系统</a>
     
 </div>
             
@@ -708,7 +679,7 @@ height:50vh;
     <!-- paginator  -->
     
     <nav class="page-nav">
-        <a class="extend prev" rel="prev" href="/">&#60; PREV</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/3/">NEXT &#62;</a>
+        <a class="extend prev" rel="prev" href="/">&#60; PREV</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/3/">NEXT &#62;</a>
     </nav>
     
 </main>
@@ -1203,9 +1174,246 @@ height:50vh;
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 24
+        Total : 39
         </div>
         <!-- search  -->
         
@@ -1216,8 +1424,77 @@ height:50vh;
     
     
     
+    <div class="archive-year"> 2018 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/09</span><a class="archive-post-title" href= "/2018/08/09/Linux 防火墙各种规则实战应用/" >[Untitled Post]</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/09</span><a class="archive-post-title" href= "/2018/08/09/Nginx 详细介绍/" >[Untitled Post]</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
     <div class="archive-year"> 2017 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/15</span><a class="archive-post-title" href= "/2017/10/15/memcache  缓存原理介绍/" >memcache  缓存原理介绍</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/08</span><a class="archive-post-title" href= "/2017/10/08/tomcat 各种架构实验演示/" >tomcat 各种架构实验演示</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/05</span><a class="archive-post-title" href= "/2017/10/05/浅谈 tomcat 原理/" >浅谈 tomcat 原理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/25</span><a class="archive-post-title" href= "/2017/09/25/Varnish 缓存服务器介绍/" >Varnish 缓存服务器介绍</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/14</span><a class="archive-post-title" href= "/2017/09/14/keepalived 各种高可用实战演练/" >keepalived 各种高可用实战演练</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/28</span><a class="archive-post-title" href= "/2017/08/28/HAproxy 原理介绍/" >HAproxy 原理介绍</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/19</span><a class="archive-post-title" href= "/2017/08/19/lvs 详细介绍/" >lvs 详细介绍</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/24</span><a class="archive-post-title" href= "/2017/06/24/各种网络共享服务实验演示/" >各种网络共享服务实验演示</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/20</span><a class="archive-post-title" href= "/2017/06/20/网络文件共享服务：FTP    NFS   SAMBA/" >网络文件共享服务：FTP    NFS   SAMBA</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/11</span><a class="archive-post-title" href= "/2017/06/11/LAMP 架构的各种演示/" >LAMP 架构的各种演示</a>
+        </li>
     
     
         <li class="archive-post-item">
@@ -1335,8 +1612,36 @@ height:50vh;
     
     
         <li class="archive-post-item">
+            <span class="archive-post-date">12/15</span><a class="archive-post-title" href= "/2016/12/15/文本处理工具：sed/" >文本处理工具：sed</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
             <span class="archive-post-date">12/08</span><a class="archive-post-title" href= "/2016/12/08/TCP、IP协议三次握手与四次握手流程解析（）/" >TCP、IP协议三次握手与四次握手流程解析</a>
         </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> Invalid date </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">Invalid date</span><a class="archive-post-title" href= "/2018/08/09/Nginx 各种实验演示/" >[Untitled Post]</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2016 </div>
+    <ul class="year-list">
     
     
         <li class="archive-post-item">
@@ -1348,6 +1653,20 @@ height:50vh;
             <span class="archive-post-date">11/23</span><a class="archive-post-title" href= "/2016/11/23/对正则表达式，VIM编辑器命令的基本操作（三）/" >对正则表达式，VIM编辑器命令的基本操作</a>
         </li>
     
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> Invalid date </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">Invalid date</span><a class="archive-post-title" href= "/2018/08/09/日志管理介绍/" >[Untitled Post]</a>
+        </li>
+    
     </div>
   </div>
         <div class="sidebar-panel-tags">
@@ -1357,31 +1676,49 @@ height:50vh;
     
         <span class="sidebar-tag-name" data-tags="DHCP"><span class="iconfont-archer">&#xe606;</span>DHCP</span>
     
+        <span class="sidebar-tag-name" data-tags="haproxy"><span class="iconfont-archer">&#xe606;</span>haproxy</span>
+    
+        <span class="sidebar-tag-name" data-tags="LAMP"><span class="iconfont-archer">&#xe606;</span>LAMP</span>
+    
         <span class="sidebar-tag-name" data-tags="DNS"><span class="iconfont-archer">&#xe606;</span>DNS</span>
     
         <span class="sidebar-tag-name" data-tags="权限管理"><span class="iconfont-archer">&#xe606;</span>权限管理</span>
     
-        <span class="sidebar-tag-name" data-tags="练习题"><span class="iconfont-archer">&#xe606;</span>练习题</span>
-    
         <span class="sidebar-tag-name" data-tags="用户组"><span class="iconfont-archer">&#xe606;</span>用户组</span>
     
-        <span class="sidebar-tag-name" data-tags="MYSQL"><span class="iconfont-archer">&#xe606;</span>MYSQL</span>
+        <span class="sidebar-tag-name" data-tags="练习题"><span class="iconfont-archer">&#xe606;</span>练习题</span>
     
         <span class="sidebar-tag-name" data-tags="文件系统"><span class="iconfont-archer">&#xe606;</span>文件系统</span>
     
-        <span class="sidebar-tag-name" data-tags="TCP/IP"><span class="iconfont-archer">&#xe606;</span>TCP/IP</span>
+        <span class="sidebar-tag-name" data-tags="MYSQL"><span class="iconfont-archer">&#xe606;</span>MYSQL</span>
+    
+        <span class="sidebar-tag-name" data-tags="su和sudo"><span class="iconfont-archer">&#xe606;</span>su和sudo</span>
     
         <span class="sidebar-tag-name" data-tags="SSH"><span class="iconfont-archer">&#xe606;</span>SSH</span>
     
-        <span class="sidebar-tag-name" data-tags="su和sudo"><span class="iconfont-archer">&#xe606;</span>su和sudo</span>
+        <span class="sidebar-tag-name" data-tags="varnish"><span class="iconfont-archer">&#xe606;</span>varnish</span>
+    
+        <span class="sidebar-tag-name" data-tags="TCP/IP"><span class="iconfont-archer">&#xe606;</span>TCP/IP</span>
+    
+        <span class="sidebar-tag-name" data-tags="keepalied"><span class="iconfont-archer">&#xe606;</span>keepalied</span>
+    
+        <span class="sidebar-tag-name" data-tags="lvs"><span class="iconfont-archer">&#xe606;</span>lvs</span>
+    
+        <span class="sidebar-tag-name" data-tags="memcache"><span class="iconfont-archer">&#xe606;</span>memcache</span>
+    
+        <span class="sidebar-tag-name" data-tags="tomcat"><span class="iconfont-archer">&#xe606;</span>tomcat</span>
+    
+        <span class="sidebar-tag-name" data-tags="rpm"><span class="iconfont-archer">&#xe606;</span>rpm</span>
+    
+        <span class="sidebar-tag-name" data-tags="共享服务"><span class="iconfont-archer">&#xe606;</span>共享服务</span>
     
         <span class="sidebar-tag-name" data-tags="自动化安装"><span class="iconfont-archer">&#xe606;</span>自动化安装</span>
     
         <span class="sidebar-tag-name" data-tags="基本命令"><span class="iconfont-archer">&#xe606;</span>基本命令</span>
     
-        <span class="sidebar-tag-name" data-tags="rpm"><span class="iconfont-archer">&#xe606;</span>rpm</span>
-    
         <span class="sidebar-tag-name" data-tags="CA"><span class="iconfont-archer">&#xe606;</span>CA</span>
+    
+        <span class="sidebar-tag-name" data-tags="sed"><span class="iconfont-archer">&#xe606;</span>sed</span>
     
         <span class="sidebar-tag-name" data-tags="dns"><span class="iconfont-archer">&#xe606;</span>dns</span>
     

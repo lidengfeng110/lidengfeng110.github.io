@@ -1,0 +1,2466 @@
+<!DOCTYPE html>
+<html>
+    <!-- title -->
+
+
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" >
+    <meta name="author" content="John Doe">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="John Doe">
+    <meta name="keywords" content="Hexo | John Doe">
+    <meta name="description" content="">
+    <meta name="Cache-Control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <title>浅谈 tomcat 原理 · 李登峰</title>
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s 1;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+
+</style>
+
+    <link rel="preload" href= /css/style.css?v=20180630 as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    <link rel="stylesheet" href= /css/mobile.css?v=20180630 media="(max-width: 980px)">
+    
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+(function( w ){
+	"use strict";
+	// rel=preload support test
+	if( !w.loadCSS ){
+		w.loadCSS = function(){};
+	}
+	// define on the loadCSS obj
+	var rp = loadCSS.relpreload = {};
+	// rel=preload feature support test
+	// runs once and returns a function for compat purposes
+	rp.support = (function(){
+		var ret;
+		try {
+			ret = w.document.createElement( "link" ).relList.supports( "preload" );
+		} catch (e) {
+			ret = false;
+		}
+		return function(){
+			return ret;
+		};
+	})();
+
+	// if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+	// then change that media back to its intended value on load
+	rp.bindMediaToggle = function( link ){
+		// remember existing media attr for ultimate state, or default to 'all'
+		var finalMedia = link.media || "all";
+
+		function enableStylesheet(){
+			link.media = finalMedia;
+		}
+
+		// bind load handlers to enable media
+		if( link.addEventListener ){
+			link.addEventListener( "load", enableStylesheet );
+		} else if( link.attachEvent ){
+			link.attachEvent( "onload", enableStylesheet );
+		}
+
+		// Set rel and non-applicable media type to start an async request
+		// note: timeout allows this to happen async to let rendering continue in IE
+		setTimeout(function(){
+			link.rel = "stylesheet";
+			link.media = "only x";
+		});
+		// also enable media after 3 seconds,
+		// which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+		setTimeout( enableStylesheet, 3000 );
+	};
+
+	// loop through link elements in DOM
+	rp.poly = function(){
+		// double check this to prevent external calls from running
+		if( rp.support() ){
+			return;
+		}
+		var links = w.document.getElementsByTagName( "link" );
+		for( var i = 0; i < links.length; i++ ){
+			var link = links[ i ];
+			// qualify links to those with rel=preload and as=style attrs
+			if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+				// prevent rerunning on link
+				link.setAttribute( "data-loadcss", true );
+				// bind listeners to toggle media back
+				rp.bindMediaToggle( link );
+			}
+		}
+	};
+
+	// if unsupported, run the polyfill
+	if( !rp.support() ){
+		// run once at least
+		rp.poly();
+
+		// rerun poly on an interval until onload
+		var run = w.setInterval( rp.poly, 500 );
+		if( w.addEventListener ){
+			w.addEventListener( "load", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		} else if( w.attachEvent ){
+			w.attachEvent( "onload", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		}
+	}
+
+
+	// commonjs
+	if( typeof exports !== "undefined" ){
+		exports.loadCSS = loadCSS;
+	}
+	else {
+		w.loadCSS = loadCSS;
+	}
+}( typeof global !== "undefined" ? global : this ) );
+</script>
+
+    <link rel="icon" href= "/assets/favicon.ico" />
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js" as="script" />
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" as="script" />
+    <link rel="preload" href="/scripts/main.js" as="script" />
+    <link rel="preload" as="font" href="/font/Oswald-Regular.ttf" crossorigin>
+    <link rel="preload" as="font" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" crossorigin>
+    
+    <!-- fancybox -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script>
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  -->
+    
+</head>
+
+    
+        <body class="post-body">
+    
+    
+<header class="header">
+
+    <div class="read-progress"></div>
+    <div class="header-sidebar-menu">&#xe775;</div>
+    <!-- post页的toggle banner  -->
+    
+    <div class="banner">
+            <div class="blog-title">
+                <a href="/" >博客</a>
+            </div>
+            <div class="post-title">
+                <a href="#" class="post-name">浅谈 tomcat 原理</a>
+            </div>
+    </div>
+    
+    <a class="home-link" href=/>博客</a>
+</header>
+    <div class="wrapper">
+        <div class="site-intro" style=
+
+
+
+
+
+
+
+
+height:50vh;
+
+>
+    
+    <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
+            
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+            浅谈 tomcat 原理
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+            
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class= post-intro-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "Linux">Linux</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "tomcat">tomcat</a>
+    
+</div>
+                
+                
+                    <div class="post-intro-read">
+                        <span>Word count: <span class="post-count">6,282</span> / Reading time: <span class="post-count">28 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                    <span class="post-intro-time">2017/10/05</span>
+                    
+                    <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                        <span class="iconfont-archer">&#xe602;</span>
+                        <span id="busuanzi_value_page_pv"></span>
+                    </span>
+                    
+                    <span class="shareWrapper">
+                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
+                        <span class="shareText">Share</span>
+                        <ul class="shareList">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        
+    </div>
+</div> 
+        <script>
+ 
+  // get user agent
+  var browser = {
+    versions: function () {
+      var u = window.navigator.userAgent;
+      return {
+        userAgent: u,
+        trident: u.indexOf('Trident') > -1, //IE内核
+        presto: u.indexOf('Presto') > -1, //opera内核
+        webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+        gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+        mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+        ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+        android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+        iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+        iPad: u.indexOf('iPad') > -1, //是否为iPad
+        webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+        weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+        uc: u.indexOf('UCBrowser') > -1 //是否为android下的UC浏览器
+      };
+    }()
+  }
+  console.log("userAgent:" + browser.versions.userAgent);
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded');
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document.getElementsByClassName('intro-title')[0].classList.add('intro-fade-in');
+      document.getElementsByClassName('intro-subtitle')[0].classList.add('intro-fade-in');
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in');
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb(){
+    if (browser.versions.uc) {
+      console.log("UCBrowser");
+      fontLoaded();
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular']
+        },
+        loading: function () {  //所有字体开始加载
+          // console.log('loading');
+        },
+        active: function () {  //所有字体已渲染
+          fontLoaded();
+        },
+        inactive: function () { //字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout');
+          fontLoaded();
+        },
+        timeout: 5000 // Set the timeout to two seconds
+      });
+    }
+  }
+
+  function asyncErr(){
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (cb) { o.addEventListener('load', function (e) { cb(null, e); }, false); }
+    if (err) { o.addEventListener('error', function (e) { err(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+
+  var asyncLoadWithFallBack = function(arr, success, reject) {
+      var currReject = function(){
+        reject()
+        arr.shift()
+        if(arr.length)
+          async(arr[0], success, currReject)
+        }
+
+      async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack([
+    "https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js", 
+    "https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js",
+    "/lib/webfontloader.min.js"
+  ], asyncCb, asyncErr)
+</script>        
+        <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+        <div class="container container-unloaded">
+            <main class="main post-page">
+    <article class="article-entry">
+        <p>程序=指令+数据<br>    程序=算法+数据结构<br>    编程范式：<br>        一算法为中心，数据结构服务于算法：过程式编程<br>        以数据为中心，代码服务于数据：对象式编程<br>            对象：属性、方法<br>            类别：实例化–对象，对象互操作<br>    过程式编程： C，bash ，Python , golang…<br>    对象式编程：java , Kotlin , c++  , Ruby , Pthon…</p>
+<pre><code>golang:docker , etcd , kubernetes,...
+java:hadoop, hbase , zookeeper , kafka , ...
+
+
+write once,run anywhere : 一次编写，到处运行。
+
+java 的核心目标在于不同的系统环境上，不同的底层硬件平台上都能够使一个代码在不同的环境下运行
+库：代码 标注库， 3rd party（第三方库）
+java:编程语言，类库，JVM（java虚拟机），类文件格式（字节码文件）
+
+java 虚拟机是不能直接执行 java 的源代码的，需要先进行编译，编译是针对 java 虚拟机进行编译的 ，但 java 虚拟机所接受进来的也是字节码（bytecode）,
+cgi ：通用网关接口技术
+</code></pre> <a id="more"></a>   
+<pre><code>jsp： java 服务器页面
+
+执行过程： .jsp -&gt; jasper -&gt; .java(servlet) -&gt; javac -&gt; .class -&gt; jvm 
+
+
+java 在2006年分为 标准版 java se 和 企业版 java ee 两个版本
+java ee 相当于在 se 的基础上添加了一些企业级的类库
+    如： servlet : 主要是以类似 cgi 的方式运行 cs 架构或者 bs 架构当中的服务端程序的
+         但 servlet 无论是程序本身应该处理的问题并生成结果还是 html 的标签等一应的信息都必须用程序来进行输出，后来为了能够实现类似嵌入的方式把 java 代码嵌入在 html 的文档中，就有了 jsp 类库。
+
+         当然这两个类库只是 java 企业级类库中的两个，一般来讲，拥有这两个类库的组建就称为 java ee ，而这个 ee 自身也能实现外部服务并能够容纳其他 java 企业级程序运行起来，就可以称之为这是一个 web container （外部容器）
+
+
+tomcat:
+    自身也是 java 语言所开发，而它自己额外又实现的是 java 企业级类库 java ee
+    所以要运行 tomcat server ，首先要把它跑在 jvm 之上，运行为一个 java 进程
+
+tomcat 算上是 java ee 的不完整实现，但所实现的类库也是 java ee 中最主流，最核心，最常用的两个类库。
+
+
+tomcat 是纯 java 代码实现的，那么它应该每个组建都是由 类来实现是的。
+    tomcat 为了能够实现作为一个外部服务器并能支撑外部服务器所能够具有的功能，他通过很多的类所生成的组建来处理并响应用户请求，最外层的组建叫 server ，一个 server 进程就相当于一个实例。
+
+连接器不能跟引擎直接产生关系。
+    一个 server 内可以有多个引擎，一个连接器只能属于一个引擎，而一个引擎可以有多个连接器，那么一个 server 内的多个连接器到底属于哪个引擎，就由 service 来决定的，一个 service 内只能有一个引擎但可以有多个连接器，所有要执行的 jsp 代码要放在引擎内才能执行。
+    一个引擎就代表了一个 httpd 的服务实例，而一个 httpd 的服务可以有多个虚拟主机，而这的虚拟主机不定义在 server 中，而定义在enginer(引擎)中，一个 engine 中有多个 host ，一个 host 内部有多个 context 
+
+
+
+  接下来安装 tomcat ，安装 tomcat 首先要把 JDK 安装上。
+
+  安装 JDK 的方法：
+        可以直接在 centos 系统上安装 rpm 包就可以。
+        yum install java-1.8.0-openjdk-devel
+        不过这种包是开源的版本。
+
+        也可以在官网上下载oracle  版本的 JDK 
+        先下载包： 
+            jdk-8u144-linux-x64.rpm
+        安装包：
+            rpm -ihv jdk-8u144-linux-x64.rpm
+        然后在配置文件中把一些工具加入 PATH 变量
+            vim /etc/profile.d/java.sh
+            export JAVA_HOME=/usr/java/latest/
+            export PATH=$JAVA_HOME/bin:$PAth
+
+            在生效一下     exec bash 
+
+    这就是使用 oracle 官方的 RPM 包的安装和环境的设定方式
+     yum 安装的不用设定这些就可以直接使用的
+     安装完可以查看当前的 java 环境 ： java -version
+
+
+
+    接下来安装 tomcat 
+        安装 tomcat 也有两种方法
+        一种也是直接在本机用 yum install 安装就行。
+        yum install tomcat tomcat-webapps tomcat-admin-webapps tomcat-docs-webapp
+        安装完重启
+        syatemctl start tomcat
+        启动后开启三个端口   8080  8009  8005 
+        8080  HTTP 连接器
+        8009  ajp 连接器
+        8005  本地管理接口
+       由rpm 包安装的 tomcat 的配置文件都放在
+
+
+
+
+
+        另一种是在 ASF 官网上下载一个 tomcat 版本，下载的版本必须是编译完成的版本
+        下载包：
+            apache-tomcat-8.5.32.tar.gz
+        安装包：
+            tar xf apache-tomcat-8.5.32.tar.gz -C /usr/local/
+        cd /usr/local
+        ln -sv apache-tomcat-8.5.32 tomcat
+        cd tomcat/
+        创建一个普通用户
+        useradd tomcat
+        chown tomcat.tomcat tomcat
+        chown -R :tomcat ./*
+        chown -R tomcat logs/ temp/ work/
+        chmod g+rx conf/
+        chmod g+rx conf/*
+        把相关工具加进 PATH 变量
+        vim /etc/profile.d/tomcat.sh
+        export CATALINA_BASE=/usr/local/tomcat
+        export PATH=$CATALINA_BASE/bin:$PATH
+        生效一下
+        . /etc/profile.d/tomcat.sh 
+        然后切换到普通用户 tomcat 
+        执行 catalina.sh start
+        服务就起来了
+        相应的三个端口也开启了   8080  8009  8005
+        由官网下载编译完的包安装的 tomcat 来讲，他的配置文件都放在 /usr/local/tomcat/ 目录下
+        主站点的根目录都放在这个目录的 ROOT 目录下。
+
+
+编程语言：
+硬件级：微码编程，汇编语言
+系统级：C，C++，...
+应用级：Java, PHP, Python, Ruby, Perl, C#, ...
+    Python： PVM
+        Standard Library
+            Web Framework：Django, Flask, ...
+    Java：JVM，JDK
+    bash：bash explainer
+    ...
+
+程序：指令+数据
+    过程式编程：以指令为中心，数据服务于代码；
+    对象式编程：以数据为中心，指令服务于数据；
+        对象，方法（method）
+
+Java：
+    Sun, Green Project, Oak,  James Gosling;
+    1995：Java 1.0, Write once, Run Anywhere;
+    1996：JDK（Java Development Kit），包含类库(API)、开发工具(javac)、JVM（SUN Classic VM）  
+        JDK 1.0,  Applet, AWT
+    1997：JDK 1.1
+    1998: JDK  1.2
+        Sun分拆Java技术为三个方向：
+            J2SE：Standard Edition
+            J2EE：Enterprise Edition
+            J2ME：Mobile Edition
+
+        代表性技术：EJB，java plugin, Swing, JIT(Just In Time，即时编译)
+
+    2000：JDK 1.3
+        HotSpot VM
+    2002：JDK 1.4
+
+    2006：Sun开源了Java技术，GPL，建立一个称为OpenJDK组织；
+        Java 2 SE, Java 2 EE, Java 2 ME
+
+    2011：JDK 1.7
+    2014：JDK 1.8
+    2016：JDK 1.9
+
+Java代码的运行：
+    *.java(source code) --&gt; javac --&gt; *.class(bytecode)
+        jvm：class loader，加载程序的类文件，及程序的类文件依赖到的其它的类文件而后运行； 整个运行表现为一个jvm进程；
+            threads；
+
+java技术体系：
+    Java编程语言
+    Java Class文件格式
+    Java API 
+    Java VM 
+        class loader
+        执行引擎
+
+    JVM运行时区域：
+        方法区：线程共享； 用于存储被JVM加载的class信息、常量、静态变量、方法等；
+        堆：是jvm所管理的内存中占用空间最大的一部分；也是GC管理的主要区域；存储对象；
+        Java栈：线程私有，存储 线程自己的局部变量；
+        PC寄存器：线程私有的内存空间，程序的指令指针；
+        本地方法栈：    
+
+安装JDK
+    了解当前的java环境：
+         ~]# java  -version
+
+    OpenJDK： 
+        java-VERSION-openjdk：
+            The OpenJDK runtime environment.
+        java-VERSION-openjdk-headless：
+             The OpenJDK runtime environment without audio and video support.
+        java-VERSION-openjdk-devel：
+            The OpenJDK development tools.
+
+        CentOS 7：
+            VERSION：1.6.0, 1.7.0, 1.8.0
+
+        注意：多版本并存时，可使用 alternatives命令设定默认使用的版本；
+
+    Oracle JDK：
+        安装相应版本的rpm包；
+            jdk-VERSION-OS-ARCH.rpm
+            例如:jdk-1.8.0_25-linux-x64.rpm 
+
+        注意：安装完成后，要配置JAVA_HOME环境变量，指向java的安装路径；
+            OpenJDK：
+                JAVA_HOME=/usr
+            Oracle JDK:
+                JAVA_HOME=/usr/java/jdk_VERSION
+
+
+
+Java 2 EE：
+    CGI: Common Gateway Interface
+
+    Servlet：
+        类库；web app；
+        Servlet container, Servlet Engine
+
+    JSP: Java Server Page
+        类库：
+        &lt;html&gt;
+            &lt;title&gt;TITLE&lt;/title&gt;
+            &lt;body&gt;
+                &lt;h1&gt;...&lt;/h1&gt;
+                &lt;%
+                    ... java code...
+                %&gt;
+            &lt;/body&gt;
+        &lt;/html&gt;
+
+        .jsp --&gt;jasper--&gt; .java --&gt; javac --&gt; .class --&gt; jvm 
+
+        注意：基于jasper将静态输出的数据转为java代码进行输出，结果为servlet规范的代码；
+
+    JSP Container：
+        JSP + Servlet Container
+
+        Java Web Server：JWS
+        ASF：JServ
+
+            O&apos;Reilly
+
+            Tomcat 3.x
+            Tomcat 4.x
+                Catalina
+
+            http://tomcat.apache.org/
+
+        商业实现：
+            WebSphere, WebLogic, Oc4j, Glassfish, Geronimo, JOnAS, JBoss, ...
+        开源实现：
+            Tomcat, Jetty, Resin, ...
+
+        Tomcat： Java 2 EE技术体系的不完整实现； 
+
+    安装Tomcat:
+        Base Repo：
+            tomcat, tomcat-lib, tomcat-admin-webapps, tomcat-webapps, tomcat-docs-webapp
+
+        Tomcat binary release：
+            # tar xf apache-tomcat-VERSION.tar.gz  -C /usr/local/
+            # cd /usr/local
+            # ln -sv apache-tomcat-VERSION  tomcat
+
+
+            /etc/profile.d/tomcat.sh 
+                export CATALINA_BASE=/usr/local/tomcat
+                export PATH=$CATALINA_BASE/bin:$PATH    
+
+tomcat程序环境：
+
+    tomcat的目录结构
+        bin：脚本，及启动时用到的类；
+        conf：配置文件目录；
+        lib：库文件，Java类库，jar；
+        logs：日志文件目录；
+        temp：临时文件目录；
+        webapps：webapp的默认目录；
+        work：工作目录，存放编译后的字节码文件；
+
+
+    # catalina.sh --help
+        debug             Start Catalina in a debugger
+        debug -security   Debug Catalina with a security manager
+        jpda start        Start Catalina under JPDA debugger
+        run               Start Catalina in the current window
+        run -security     Start in the current window with security manager
+        start             Start Catalina in a separate window
+        start  -security   Start in a separate window with security manager
+        stop              Stop Catalina, waiting up to 5 seconds for the process to end
+        stop n            Stop Catalina, waiting up to n seconds for the process to end
+        stop -force       Stop Catalina, wait up to 5 seconds and then use kill -KILL if still running
+        stop n -force     Stop Catalina, wait up to n seconds and then use kill -KILL if still running
+        configtest        Run a basic syntax check on server.xml - check exit code for result
+        version           What version of tomcat are you running?                
+
+
+    rpm包安装的程序环境：
+        配置文件目录：/etc/tomcat
+            主配置文件：server.xml 
+        webapps存放位置：/var/lib/tomcat/webapps/
+            examples
+            manager
+            host-manager
+            docs
+        Unit File：tomcat.service
+        环境配置文件：/etc/sysconfig/tomcat
+
+
+
+Tomcat：
+    使用java语言编写：
+
+    tomcat的配置文件构成：
+        server.xml：主配置文件；
+        web.xml：每个webapp只有“部署”后才能被访问，它的部署方式通常由web.xml进行定义，其存放位置为WEB-INF/目录中；此文件为所有的webapps提供默认部署相关的配置；
+        context.xml：每个webapp都可以使用的配置文件，它通常由专用的配置文件context.xml来定义，其存放位置为WEB-INF/目录中；此文件为所有的webapps提供默认配置；
+        tomcat-users.xml：用户认证的账号和密码文件；角色（role），用户（User）；此文件在tomcat启动时被装入内存；
+        catalina.policy：当使用-security选项启动tomcat时，用于为tomcat设置安全策略； 
+        catalina.properties：Java属性的定义文件，用于设定类加载器路径，以及一些与JVM调优相关参数；
+        logging.properties：日志系统相关的配置；    
+        tomcat.conf或/etc/sysconfig/tomcat:定义tomcat 相关的java进程的，做系统资源配置的
+                    在较早版本是只有 /etc/sysconfig/tomcat 这一个文件  ，这两个文件是兼容的
+
+    Tomcat的核心组件：server.xml
+        &lt;Server&gt;
+            &lt;Service&gt;
+                &lt;connector/&gt;
+                &lt;connector/&gt;
+                ...
+                &lt;Engine&gt;
+                    &lt;Host&gt;
+                        &lt;Context/&gt;
+                        &lt;Context/&gt;
+                        ...
+                    &lt;/Host&gt;
+                    &lt;Host&gt;
+                        ...
+                    &lt;/Host&gt;
+                    ...
+                &lt;/Engine&gt;
+            &lt;/Service&gt;
+        &lt;/Server&gt;
+
+
+
+
+        每一个组件都由一个Java“类”实现，这些组件大体可分为以下几个类型：
+            顶级组件：Server，代表一个运行的 tomcat 实例
+            服务类组件：Service
+            连接器组件：http, https, ajp（apache jserv protocol）
+            容器类：Engine, Host, Context
+            被嵌套类：valve（过滤器）, logger（日志记录器）, realm（认证工具）, loader（类加载器）, manager（会话管理器）, ...
+            集群类组件：listener, cluster, ...
+</code></pre><h4 id="tomcat-常用的配置文件的组件信息："><a href="#tomcat-常用的配置文件的组件信息：" class="headerlink" title="tomcat 常用的配置文件的组件信息："></a>tomcat 常用的配置文件的组件信息：</h4><pre><code>        server : 指定默认的端口，不指定IP 默认监听在 127.0.0.1 上。
+
+        service ： 只是用来把连接器关联至 engine 之上的
+
+
+
+    JSP WebAPP的组织结构：
+        /: webapps的根目录
+            index.jsp, index.html：主页；
+            ...
+            WEB-INF/：当前webapp的私有资源路径；通常用于存储当前webapp的web.xml和context.xml配置文件；
+            META-INF/：类似于WEB-INF/；
+            classes/：类文件，当前webapp所提供的类；
+            lib/：类文件，当前webapp所提供的类，被打包为jar格式；
+
+            DocumentRooot /webdata/htdocs/
+                /images/
+
+                http://www.ilinux.io/images/
+
+    webapp归档格式：
+        .war：webapp; （外部 app 的归档文件）
+        .jar：EJB的类打包文件(类库)；
+        .rar：资源适配器类打包文件；
+        .ear：企业级webapp；
+        ...
+什么是部署？
+    把一个应用程序及应用程序所依赖的类文件根据 web.xml 以及 context.xml 中的定义由类加载器加载至 JVM 之上，这就是部署。
+    部署完以后要想能够响应并处理客户端请求，那要 start 起来，要先启动，不过在一般情况下自动启动的。但想停止就直接 stop 。停止仅仅是暂停在内存中，而不是拆除。
+
+部署(deploy)webapp的相关操作：
+    deploy：将webapp的源文件放置于目标目录(网页程序文件存放目录)，配置tomcat服务器能够基于web.xml和context.xml文件中定义的路径来访问此webapp；将其特有的类和依赖的类通过class loader装载至JVM；
+        部署有两种方式：
+            自动部署：auto deploy
+            手动部署:
+                冷部署：把webapp复制到指定的位置，而后才启动tomcat；
+                热部署：在不停止tomcat的前提下进行部署；
+                    部署工具：manager、ant脚本、tcd(tomcat client deployer  tomcat 部署器)等；                    
+    undeploy：拆除（反部署），停止webapp，并从tomcat实例上卸载webapp；
+    start：启动处于停止状态的webapp；
+    stop：停止webapp，不再向用户提供服务；其类依然在jvm上；
+    redeploy：重新部署；
+
+手动提供一测试类应用，并冷部署：
+    # mkidr  -pv  /usr/local/tomcat/webapps/test/{classes,lib,WEB-INF}
+    创建文件/usr/local/tomcat/webapps/test/index.jsp 
+        &lt;%@ page language=&quot;java&quot; %&gt;
+        &lt;%@ page import=&quot;java.util.*&quot; %&gt;
+        &lt;html&gt;
+            &lt;head&gt;
+                &lt;title&gt;Test Page&lt;/title&gt;
+            &lt;/head&gt;
+            &lt;body&gt;
+                &lt;% out.println(&quot;hello world&quot;);
+                %&gt;
+            &lt;/body&gt;
+        &lt;/html&gt;        
+
+
+一般在生产中，怎么获取开发人员开发的代码？
+    在一般生产中，代码都是存放一个指定的 GIT 上，然后运维人员到 GIT 上去脱代码。如：
+    代码路径在 http://gitlab.ilinux.io/test.git
+    运维人员去的时候在本机输入   git clona http://gitlab.ilinux.io/test.git
+   克隆到本地以后就会在当前目录下生成一个 ./test/目录，代码都放在这个目录下。
+  另外托代码时 很有可能也是打包后的格式，
+
+
+tomcat的两个管理应用:
+    manager
+    host-manager
+
+tomcat的常用组件配置：
+
+    Server：代表tomcat instance，即表现出的一个java进程；监听在8005端口，只接收“SHUTDOWN”。各server监听的端口不能相同，因此，在同一物理主机启动多个实例时，需要修改其监听端口为不同的端口； 
+        port=&quot;-1&quot;,
+        shutdown=&quot;RANDOM_CHARCTER&quot;
+
+    Service：用于实现将一个或多个connector组件关联至一个engine组件；
+
+    Connector组件：
+        负责接收请求，常见的有三类http/https/ajp；
+
+        进入tomcat的请求可分为两类：
+            (1) standalone : 请求来自于客户端浏览器；
+            (2) 由其它的web server反代：来自前端的反代服务器；
+                nginx --&gt; http connector --&gt; tomcat 
+                httpd(proxy_http_module) --&gt; http connector --&gt; tomcat
+                httpd(proxy_ajp_module) --&gt; ajp connector --&gt; tomcat 
+                httpd(mod_jk) --&gt; ajp connector --&gt; tomcat 
+
+        属性：
+            port=&quot;8080&quot; 
+            protocol=&quot;HTTP/1.1&quot;
+            connectionTimeout=&quot;20000&quot;
+
+            address：监听的IP地址；默认为本机所有可用地址；
+            maxThreads：最大并发连接数，默认为200；
+            enableLookups：是否启用DNS查询功能；
+            acceptCount：等待队列的最大长度；
+            secure：
+            sslProtocol：
+
+    Engine组件：Servlet实例，即servlet引擎，其内部可以一个或多个host组件来定义站点； 通常需要通过defaultHost来定义默认的虚拟主机；
+
+        属性：
+            name=
+            defaultHost=&quot;localhost&quot;
+            jvmRoute=
+
+    Host组件：位于engine内部用于接收请求并进行相应处理的主机或虚拟主机，示例：
+         &lt;Host name=&quot;localhost&quot;  appBase=&quot;webapps&quot;
+            unpackWARs=&quot;true&quot; autoDeploy=&quot;true&quot;&gt;
+        &lt;/Host&gt;
+
+        常用属性说明：
+            (1) appBase：此Host的webapps的默认存放目录，指存放非归档的web应用程序的目录或归档的WAR文件目录路径；可以使用基于$CATALINA_BASE变量所定义的路径的相对路径；
+            (2) autoDeploy：在Tomcat处于运行状态时，将某webapp放置于appBase所定义的目录中时，是否自动将其部署至tomcat；
+
+            示例：
+              &lt;Host name=&quot;tc1.magedu.com&quot; appBase=&quot;/appdata/webapps&quot; unpackWARs=&quot;true&quot; autoDeploy=&quot;true&quot;&gt;
+            &lt;/Host&gt;
+
+            # mkdir -pv /appdata/webapps
+            # mkdir -pv /appdata/webapps/ROOT/{lib,classes,WEB-INF}
+            提供一个测试页即可；
+
+    Context组件:
+        示例：
+            &lt;Context path=&quot;/PATH&quot; docBase=&quot;/PATH/TO/SOMEDIR&quot; reloadable=&quot;&quot;/&gt;
+
+    综合示例：
+        &lt;Host name=&quot;node1.magedu.com&quot; appBase=&quot;/web/apps&quot; unpackWARs=&quot;true&quot; autoDeploy=&quot;true&quot;&gt;
+            &lt;Valve className=&quot;org.apache.catalina.valves.AccessLogValve&quot; directory=&quot;logs&quot;
+                prefix=&quot;node1_access&quot; suffix=&quot;.log&quot;
+                pattern=&quot;%h %l %u %t &amp;quot;%r&amp;quot; %s %b&quot; /&gt;
+            &lt;Context path=&quot;/test&quot; docBase=&quot;test&quot; reloadable=&quot;&quot;&gt;
+                &lt;Valve className=&quot;org.apache.catalina.valves.AccessLogValve&quot; directory=&quot;logs&quot;
+                prefix=&quot;node1_test_access_&quot; suffix=&quot;.log&quot;
+                pattern=&quot;%h %l %u %t &amp;quot;%r&amp;quot; %s %b&quot; /&gt;
+            &lt;/Context&gt;
+        &lt;/Host&gt;        
+
+    Valve组件：
+        &lt;Valve className=&quot;org.apache.catalina.valves.AccessLogValve&quot; directory=&quot;logs&quot;
+            prefix=&quot;localhost_access_log&quot; suffix=&quot;.txt&quot;
+            pattern=&quot;%h %l %u %t &amp;quot;%r&amp;quot; %s %b&quot; /&gt;
+
+        Valve存在多种类型：
+            定义访问日志：org.apache.catalina.valves.AccessLogValve
+            定义访问控制：org.apache.catalina.valves.RemoteAddrValve 
+
+             &lt;Valve className=&quot;org.apache.catalina.valves.RemoteAddrValve&quot; deny=&quot;172\.16\.100\.67&quot;/&gt;
+
+
+
+LNMT：Linux Nginx MySQL Tomcat 
+    Client (http) --&gt; nginx (reverse proxy)(http) --&gt; tomcat  (http connector)
+
+    location / {
+        proxy_pass http://tc1.magedu.com:8080;
+    }
+
+    location ~* \.(jsp|do)$ {
+        proxy_pass http://tc1.magedu.com:8080;
+    }
+
+LAMT：Linux Apache(httpd) MySQL Tomcat 
+    httpd的代理模块：
+        proxy_module
+        proxy_http_module：适配http协议客户端；
+        proxy_ajp_module：适配ajp协议客户端；
+
+    Client (http) --&gt; httpd (proxy_http_module)(http) --&gt; tomcat  (http connector)
+    Client (http) --&gt; httpd (proxy_ajp_module)(ajp) --&gt; tomcat  (ajp connector)
+    Client (http) --&gt; httpd (mod_jk)(ajp) --&gt; tomcat  (ajp connector)
+
+    proxy_http_module代理配置示例：
+        &lt;VirtualHost *:80&gt;
+            ServerName      tc1.magedu.com
+            ProxyRequests Off
+            ProxyVia        On
+            ProxyPreserveHost On
+            &lt;Proxy *&gt;
+                Require all granted
+            &lt;/Proxy&gt;
+            ProxyPass / http://tc1.magedu.com:8080/
+            ProxyPassReverse / http://tc1.magedu.com:8080/ 
+            &lt;Location /&gt;
+                Require all granted
+            &lt;/Location&gt;
+        &lt;/VirtualHost&gt;
+
+
+        location /test/ {
+            proxy_pass http://172.16.0.76:8080/;
+        }
+
+    proxy_ajp_module代理配置示例：
+        &lt;VirtualHost *:80&gt;
+            ServerName      tc1.magedu.com
+            ProxyRequests Off    关闭正向代理
+            ProxyVia        On
+            ProxyPreserveHost On
+            &lt;Proxy *&gt;
+                Require all granted
+            &lt;/Proxy&gt;
+                ProxyPass / ajp://tc1.magedu.com:8009/ 
+                ProxyPassReverse / ajp://tc1.magedu.com:8009/ 
+            &lt;Location /&gt;
+                Require all granted
+            &lt;/Location&gt;
+        &lt;/VirtualHost&gt;
+
+    /data/webapps/eshop
+        eshop-1.1
+        eshop-1.2
+        eshop-1.3
+        eshop-1.4
+
+
+课外实践：
+    client --&gt; nginx --&gt; httpd --&gt; tomcat
+    proxy_http_module)(http) --&gt; tomcat  (http connector)
+    Client (http) --&gt; httpd (proxy_ajp_module)(ajp) --&gt; tomcat  (ajp connector)
+
+课外练习：
+    根据文档，部署javaee-bbs或solo；
+</code></pre><p>回顾：</p>
+<pre><code>jsp: java server page 
+Java 2 SE --&gt; Java 2 EE
+    Tomcat：JDK + Servlet, JSP
+
+server.xml：
+    &lt;server&gt;
+        &lt;service&gt;
+            &lt;connector /&gt;
+            ...
+            &lt;Engine&gt;
+                &lt;Host&gt;
+                    &lt;Context/&gt;
+                    ...
+                &lt;/Host&gt;
+                ...
+            &lt;/Engine&gt;
+        &lt;/service&gt;
+    &lt;/server&gt;
+
+Tomcat处理的请求：
+    nt：nginx-&gt;http-&gt;tomcat(http connector)
+    at：httpd-&gt;http-&gt;tomcat(http connector)
+        httpd-&gt;ajp-&gt;tomcat(ajp connector)
+
+    nat, hat
+
+
+会话保持：
+    (1) session sticky
+        source_ip
+            nginx: ip_hash
+            haproxy: source
+            lvs: sh
+        cookie：
+            nginx：hash 
+            haproxy: cookie
+    (2) session cluster：delta session manager
+    (3) session server：redis(store), memcached(cache)
+
+Tomcat Cluster(session)
+    (1) session sticky
+    (2) session cluster
+        tomcat delta manager
+    (3) session server 
+        memcached
+
+Tomcat Cluster
+    (1) httpd + tomcat cluster
+        httpd: mod_proxy, mod_proxy_http, mod_proxy_balancer
+        tomcat cluster：http connector
+    (2) httpd + tomcat cluster
+        httpd: mod_proxy, mod_proxy_ajp, mod_proxy_balancer
+        tomcat cluster：ajp connector
+    (3) httpd + tomcat cluster
+        httpd: mod_jk
+        tomcat cluster：ajp connector
+    (4) nginx + tomcat cluster
+
+
+    第一种方法的实现：
+        &lt;proxy balancer://tcsrvs&gt;
+            BalancerMember http://172.18.100.67:8080
+            BalancerMember http://172.18.100.68:8080
+            ProxySet lbmethod=byrequests
+        &lt;/Proxy&gt;
+
+        &lt;VirtualHost *:80&gt;
+            ServerName lb.magedu.com
+            ProxyVia On
+            ProxyRequests Off
+            ProxyPreserveHost On
+            &lt;Proxy *&gt;
+                Require all granted
+            &lt;/Proxy&gt;
+            ProxyPass / balancer://tcsrvs/
+            ProxyPassReverse / balancer://tcsrvs/
+            &lt;Location /&gt;
+                Require all granted
+            &lt;/Location&gt;
+        &lt;/VirtualHost&gt;    
+
+    BalancerMember：
+        BalancerMember [balancerurl] url [key=value [key=value ...]]
+            status：
+                D: Worker is disabled and will not accept any requests.
+                S: Worker is administratively stopped.
+                I: Worker is in ignore-errors mode and will always be considered available.
+                H: Worker is in hot-standby mode and will only be used if no other viable workers are available.
+                E: Worker is in an error state.
+                N: Worker is in drain mode and will only accept existing sticky sessions destined for itself and ignore all other requests.
+            loadfactor：
+                负载因子，即权重；
+            lbmethod：
+                Balancer load-balance method. Select the load-balancing scheduler method to use. Either byrequests, to perform weighted request counting; bytraffic, to perform weighted traffic byte count balancing; or bybusyness, to perform pending request balancing. The default is byrequests.
+            stickysession
+                Balancer sticky session name. The value is usually set to something like JSESSIONID or PHPSESSIONID, and it depends on the backend application server that support sessions. If the backend application server uses different name for cookies and url encoded id (like servlet containers) use | to separate them. The first part is for the cookie the second for the path.
+                Available in Apache HTTP Server 2.4.4 and later.
+
+    会话粘性的实现方法：
+        Header add Set-Cookie &quot;ROUTEID=.%{BALANCER_WORKER_ROUTE}e; path=/&quot; env=BALANCER_ROUTE_CHANGED
+
+        &lt;proxy balancer://tcsrvs&gt;
+            BalancerMember http://172.18.100.67:8080 route=TomcatA loadfactor=1
+            BalancerMember http://172.18.100.68:8080 route=TomcatB loadfactor=2
+            ProxySet lbmethod=byrequests
+            ProxySet stickysession=ROUTEID
+        &lt;/Proxy&gt;
+
+        &lt;VirtualHost *:80&gt;
+            ServerName lb.magedu.com
+            ProxyVia On
+            ProxyRequests Off
+            ProxyPreserveHost On
+            &lt;Proxy *&gt;
+                Require all granted
+            &lt;/Proxy&gt;
+            ProxyPass / balancer://tcsrvs/
+            ProxyPassReverse / balancer://tcsrvs/
+            &lt;Location /&gt;
+                Require all granted
+            &lt;/Location&gt;
+        &lt;/VirtualHost&gt;    
+
+        启用管理接口：
+            &lt;Location /balancer-manager&gt;
+                SetHandler balancer-manager
+                ProxyPass !
+                Require all granted
+            &lt;/Location&gt;                
+
+            示例程序：
+                演示效果，在TomcatA上某context中（如/test），提供如下页面
+                &lt;%@ page language=&quot;java&quot; %&gt;
+                &lt;html&gt;
+                    &lt;head&gt;&lt;title&gt;TomcatA&lt;/title&gt;&lt;/head&gt;
+                    &lt;body&gt;
+                        &lt;h1&gt;&lt;font color=&quot;red&quot;&gt;TomcatA.magedu.com&lt;/font&gt;&lt;/h1&gt;
+                        &lt;table align=&quot;centre&quot; border=&quot;1&quot;&gt;
+                            &lt;tr&gt;
+                                &lt;td&gt;Session ID&lt;/td&gt;
+                            &lt;% session.setAttribute(&quot;magedu.com&quot;,&quot;magedu.com&quot;); %&gt;
+                                &lt;td&gt;&lt;%= session.getId() %&gt;&lt;/td&gt;
+                            &lt;/tr&gt;
+                            &lt;tr&gt;
+                                &lt;td&gt;Created on&lt;/td&gt;
+                                &lt;td&gt;&lt;%= session.getCreationTime() %&gt;&lt;/td&gt;
+                            &lt;/tr&gt;
+                        &lt;/table&gt;
+                    &lt;/body&gt;
+                &lt;/html&gt;
+
+
+                演示效果，在TomcatB上某context中（如/test），提供如下页面
+                &lt;%@ page language=&quot;java&quot; %&gt;
+                &lt;html&gt;
+                    &lt;head&gt;&lt;title&gt;TomcatB&lt;/title&gt;&lt;/head&gt;
+                        &lt;body&gt;
+                        &lt;h1&gt;&lt;font color=&quot;blue&quot;&gt;TomcatB.magedu.com&lt;/font&gt;&lt;/h1&gt;
+                        &lt;table align=&quot;centre&quot; border=&quot;1&quot;&gt;
+                            &lt;tr&gt;
+                                &lt;td&gt;Session ID&lt;/td&gt;
+                            &lt;% session.setAttribute(&quot;magedu.com&quot;,&quot;magedu.com&quot;); %&gt;
+                                &lt;td&gt;&lt;%= session.getId() %&gt;&lt;/td&gt;
+                            &lt;/tr&gt;
+                            &lt;tr&gt;
+                                &lt;td&gt;Created on&lt;/td&gt;
+                                &lt;td&gt;&lt;%= session.getCreationTime() %&gt;&lt;/td&gt;
+                            &lt;/tr&gt;
+                        &lt;/table&gt;
+                        &lt;/body&gt;
+                &lt;/html&gt;            
+
+    第二种方式：
+            &lt;proxy balancer://tcsrvs&gt;
+                BalancerMember ajp://172.18.100.67:8009
+                BalancerMember ajp://172.18.100.68:8009
+                ProxySet lbmethod=byrequests
+            &lt;/Proxy&gt;
+
+            &lt;VirtualHost *:80&gt;
+                ServerName lb.magedu.com
+                ProxyVia On
+                ProxyRequests Off
+                ProxyPreserveHost On
+                &lt;Proxy *&gt;
+                    Require all granted
+                &lt;/Proxy&gt;
+                ProxyPass / balancer://tcsrvs/
+                ProxyPassReverse / balancer://tcsrvs/
+                &lt;Location /&gt;
+                    Require all granted
+                &lt;/Location&gt;
+                &lt;Location /balancer-manager&gt;
+                    SetHandler balancer-manager
+                    ProxyPass !
+                    Require all granted
+                &lt;/Location&gt;
+            &lt;/VirtualHost&gt;    
+
+        保持会话的方式参考前一种方式。    
+
+Tomcat Session Replication Cluster：
+        (1) 配置启用集群，将下列配置放置于&lt;engine&gt;或&lt;host&gt;中；
+            &lt;Cluster className=&quot;org.apache.catalina.ha.tcp.SimpleTcpCluster&quot;
+                    channelSendOptions=&quot;8&quot;&gt;
+
+                &lt;Manager className=&quot;org.apache.catalina.ha.session.DeltaManager&quot;
+                    expireSessionsOnShutdown=&quot;false&quot;
+                    notifyListenersOnReplication=&quot;true&quot;/&gt;
+
+                &lt;Channel className=&quot;org.apache.catalina.tribes.group.GroupChannel&quot;&gt;
+                &lt;Membership className=&quot;org.apache.catalina.tribes.membership.McastService&quot;
+                        address=&quot;228.0.0.4&quot;
+                        port=&quot;45564&quot;
+                        frequency=&quot;500&quot;
+                        dropTime=&quot;3000&quot;/&gt;
+                &lt;Receiver className=&quot;org.apache.catalina.tribes.transport.nio.NioReceiver&quot;
+                    address=&quot;auto&quot;
+                    port=&quot;4000&quot;
+                    autoBind=&quot;100&quot;
+                    selectorTimeout=&quot;5000&quot;
+                    maxThreads=&quot;6&quot;/&gt;
+
+                &lt;Sender className=&quot;org.apache.catalina.tribes.transport.ReplicationTransmitter&quot;&gt;
+                &lt;Transport className=&quot;org.apache.catalina.tribes.transport.nio.PooledParallelSender&quot;/&gt;
+                &lt;/Sender&gt;
+                &lt;Interceptor className=&quot;org.apache.catalina.tribes.group.interceptors.TcpFailureDetector&quot;/&gt;
+                &lt;Interceptor className=&quot;org.apache.catalina.tribes.group.interceptors.MessageDispatch15Interceptor&quot;/&gt;
+                &lt;/Channel&gt;
+
+                &lt;Valve className=&quot;org.apache.catalina.ha.tcp.ReplicationValve&quot;
+                    filter=&quot;&quot;/&gt;
+                &lt;Valve className=&quot;org.apache.catalina.ha.session.JvmRouteBinderValve&quot;/&gt;
+
+                &lt;Deployer className=&quot;org.apache.catalina.ha.deploy.FarmWarDeployer&quot;
+                    tempDir=&quot;/tmp/war-temp/&quot;
+                    deployDir=&quot;/tmp/war-deploy/&quot;
+                    watchDir=&quot;/tmp/war-listen/&quot;
+                    watchEnabled=&quot;false&quot;/&gt;
+
+                &lt;ClusterListener className=&quot;org.apache.catalina.ha.session.JvmRouteSessionIDBinderListener&quot;/&gt;
+                &lt;ClusterListener className=&quot;org.apache.catalina.ha.session.ClusterSessionListener&quot;/&gt;
+                &lt;/Cluster&gt;    
+
+            确保Engine的jvmRoute属性配置正确。
+
+        (2) 配置webapps
+            编辑WEB-INF/web.xml，添加&lt;distributable/&gt;元素；
+
+        注意：CentOS 7上的tomcat自带的文档中的配置示例有语法错误；
+            &lt;ClusterListener className=&quot;org.apache.catalina.ha.session.JvmRouteSessionIDBinderListener&quot;/&gt;
+            &lt;ClusterListener className=&quot;org.apache.catalina.ha.session.ClusterSessionListener&quot;/&gt;
+
+            绑定的地址为auto时，会自动解析本地主机名，并解析得出的IP地址作为使用的地址；
+
+Tomcat的常用优化配置：
+    (1) 内存空间：
+        /etc/sysconfig/tomcat, /etc/tomcat/tomcat.conf, /usr/local/tomcat/bin/catalina.sh
+            JAVA_OPTS=&quot;-server -Xms32g -Xmx32g -XX:NewSize= -XX:MaxNewSize= -XX:PermSize= -XX:MaxPermSize=&quot;
+                -server：服务器模型
+                -Xms：堆内存初始化大小；
+                -Xmx：堆内存空间上限；
+                -XX:NewSize=：新生代空间初始化大小；                    
+                -XX:MaxNewSize=：新生代空间最大值；
+                -XX:PermSize=：持久代空间初始化大小；
+                -XX:MaxPermSize=：持久代空间最大值； 
+
+    (2) 线程池设置：
+        &lt;Connector port=&quot;8080&quot; protocol=&quot;HTTP/1.1&quot;  connectionTimeout=&quot;20000&quot; redirectPort=&quot;8443&quot; /&gt;
+
+        常用属性：
+            maxThreads：最大线程数；最大并发连接数；
+            minSpareThreads：最小空闲线程数；
+            maxSpareThreads：最大空闲线程数；
+            acceptCount：等待队列的最大长度；
+            URIEncoding：URI地址编码格式，建议使用UTF-8；
+            enableLookups：是否启用dns解析，建议禁用； 
+            compression：是否启用传输压缩机制，建议“on&quot;;
+            compressionMinSize：启用压缩传输的数据流最小值，单位是字节；
+            compressableMimeType：定义启用压缩功能的MIME类型；
+                text/html, text/xml, text/css, text/javascript
+
+
+    (3) 禁用8005端口；
+        &lt;Server port=&quot;-1&quot; shutdown=&quot;SHUTDOWN&quot;&gt;
+
+    (4) 隐藏版本信息：
+        &lt;Connector port=&quot;8080&quot; protocol=&quot;HTTP/1.1&quot;  connectionTimeout=&quot;20000&quot; redirectPort=&quot;8443&quot; /&gt;
+
+        Server=&quot;SOME STRING&quot;
+
+Tomcat Session Server (memcached)
+
+    https://github.com/magro/memcached-session-manager
+
+    支持的session server类型：
+        memcached：
+        couchbase：
+        redis：
+
+    示例方案：
+        Tomcat7：
+            memcached
+            javolution
+
+博客作业：tomcat
+    (1) nginx + tomcat cluster, httpd(proxy_http_module)+tomcat cluster, httpd(proxy_ajp_module)+tomcat cluster；
+        特别说明会话保持的实现方式；
+    (2) tomcat cluster升级为session cluster, 使用deltaManager；
+    (3) tomcat cluster将会话保存至memcached中；
+
+
+实践作业：
+    hat或nat集群，用session server方式部署solo，javaee-bbs二者之一；
+
+
+JVM常用的分析工具： 
+    jps：用来查看运行的所有jvm进程；
+    jinfo：查看进程的运行环境参数，主要是jvm命令行参数；
+    jstat：对jvm应用程序的资源和性能进行实时监控；
+    jstack：查看所有线程的运行状态；
+    jmap：查看jvm占用物理内存的状态；
+    jconsole：
+    jvisualvm：
+
+    jps：Java virutal machine Process Status tool，
+        jps [-q] [-mlvV] [&lt;hostid&gt;]
+            -q：静默模式；
+            -v：显示传递给jvm的命令行参数；
+            -m：输出传入main方法的参数；
+            -l：输出main类或jar完全限定名称；
+            -V：显示通过flag文件传递给jvm的参数；
+            [&lt;hostid&gt;]：主机id，默认为localhost；
+
+    jinfo：输出给定的java进程的所有配置信息；
+        jinfo [option] &lt;pid&gt;
+            -flags：to print VM flags
+            -sysprops：to print Java system properties
+            -flag &lt;name&gt;：to print the value of the named VM flag
+
+    jstack：查看指定的java进程的线程栈的相关信息；
+        jstack [-l] &lt;pid&gt;
+        jstack -F [-m] [-l] &lt;pid&gt;
+            -l：long listings，会显示额外的锁信息，因此，发生死锁时常用此选项；
+            -m：混合模式，既输出java堆栈信息，也输出C/C++堆栈信息；
+            -F：当使用“jstack -l PID&quot;无响应，可以使用-F强制输出信息；
+
+    jstat：输出指定的java进程的统计信息
+        jstat -help|-options
+        jstat -&lt;option&gt; [-t] [-h&lt;lines&gt;] &lt;vmid&gt; [&lt;interval&gt; [&lt;count&gt;]]
+
+        # jstat -options
+            -class：class loader
+            -compiler：JIT
+            -gc：gc
+            -gccapacity：统计堆中各代的容量
+            -gccause：
+            -gcmetacapacity
+            -gcnew：新生代
+            -gcnewcapacity
+            -gcold：老年代
+            -gcoldcapacity
+            -gcutil
+            -printcompilation
+
+        [&lt;interval&gt; [&lt;count&gt;]]
+            interval：时间间隔，单位是毫秒；
+            count：显示的次数；
+
+        -gc：
+            YGC：新生代的垃圾回收次数；
+            YGCT：新生代垃圾回收消耗的时长； 
+            FGC：Full GC的次数；
+            FGCT：Full GC消耗的时长；
+            GCT：GC消耗的总时长；
+
+
+    图形工具：
+        jconsole
+        jvisualvm
+
+    jmap：Memory Map, 用于查看堆内存的使用状态； 
+    jhat：Java Heap Analysis Tool
+        jmap [option] &lt;pid&gt;
+
+        查看堆空间的详细信息：
+            jmap -heap &lt;pid&gt;
+
+        查看堆内存中的对象的数目：
+            jmap -histo[:live] &lt;pid&gt;
+                live：只统计活动对象；
+
+        保存堆内存数据至文件中，而后使用jvisualvm或jhat进行查看：
+            jmap -dump:&lt;dump-options&gt; &lt;pid&gt;
+                dump-options:
+                live         dump only live objects; if not specified, all objects in the heap are dumped.
+                format=b     binary format
+                file=&lt;file&gt;  dump heap to &lt;file&gt;    
+
+课外作业：了解何为full gc，如何应对；
+</code></pre><p><img src="https://s1.ax1x.com/2018/07/17/Pl6td1.png" alt="Pl6td1.png"></p>
+
+    </article>
+    <!-- license  -->
+    
+        <div class="license-wrapper">
+            <p>原文作者: <a href="http://yoursite.com">John Doe</a>
+            <p>原文链接: <a href="http://yoursite.com/2017/10/05/浅谈 tomcat 原理/">http://yoursite.com/2017/10/05/浅谈 tomcat 原理/</a>
+            <p>发表日期: <a href="http://yoursite.com/2017/10/05/浅谈 tomcat 原理/">October 5th 2017, 12:00:00 am</a>
+            <p>版权声明: 本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+        </div>
+    
+    <!-- paginator  -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+                <div class="nextSlogan">Next Post</div>
+                <a href= "/2017/10/08/tomcat 各种架构实验演示/" title= tomcat 各种架构实验演示 >
+                    <div class="nextTitle">tomcat 各种架构实验演示</div>
+                </a>
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href= "/2017/09/25/Varnish 缓存服务器介绍/" title= Varnish 缓存服务器介绍 >
+                    <div class="prevTitle">Varnish 缓存服务器介绍</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+<!-- City版安装代码已完成 -->
+    
+    
+    <!--PC和WAP自适应版-->
+
+    <!--PC版-->
+
+
+    
+    
+
+    <!-- 评论 -->
+</main>
+            <!-- profile -->
+            
+        </div>
+        <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+    <div class="social">
+        
+    
+        
+            
+                <a href="mailto:1020846215@qq.com" class="iconfont-archer email" title=email ></a>
+            
+        
+    
+        
+            
+                <a href="//github.com/fi3ework" class="iconfont-archer github" target="_blank" title=github></a>
+            
+        
+    
+        
+            
+                <span class="iconfont-archer wechat" title=wechat>
+                  
+                  <img class="profile-qr" src="/assets/example_qr.png" />
+                </span>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+    </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- 不蒜子  -->
+    
+    <div class="busuanzi-container">
+    
+     
+    <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+    
+    </div>
+    
+</footer>
+    </div>
+    <!-- toc -->
+    
+    <div class="toc-wrapper" style=
+    
+
+
+
+
+
+
+
+top:50vh;
+
+    >
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#tomcat-常用的配置文件的组件信息："><span class="toc-number">1.</span> <span class="toc-text">tomcat 常用的配置文件的组件信息：</span></a></li></ol>
+    </div>
+    
+    <div class="back-top iconfont-archer">&#xe639;</div>
+    <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+          <div class="sidebar-panel-archives">
+    <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 39
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+    
+    
+    
+    <div class="archive-year"> 2018 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/09</span><a class="archive-post-title" href= "/2018/08/09/Linux 防火墙各种规则实战应用/" >[Untitled Post]</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/09</span><a class="archive-post-title" href= "/2018/08/09/Nginx 详细介绍/" >[Untitled Post]</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2017 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/15</span><a class="archive-post-title" href= "/2017/10/15/memcache  缓存原理介绍/" >memcache  缓存原理介绍</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/08</span><a class="archive-post-title" href= "/2017/10/08/tomcat 各种架构实验演示/" >tomcat 各种架构实验演示</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/05</span><a class="archive-post-title" href= "/2017/10/05/浅谈 tomcat 原理/" >浅谈 tomcat 原理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/25</span><a class="archive-post-title" href= "/2017/09/25/Varnish 缓存服务器介绍/" >Varnish 缓存服务器介绍</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/14</span><a class="archive-post-title" href= "/2017/09/14/keepalived 各种高可用实战演练/" >keepalived 各种高可用实战演练</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/28</span><a class="archive-post-title" href= "/2017/08/28/HAproxy 原理介绍/" >HAproxy 原理介绍</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/19</span><a class="archive-post-title" href= "/2017/08/19/lvs 详细介绍/" >lvs 详细介绍</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/24</span><a class="archive-post-title" href= "/2017/06/24/各种网络共享服务实验演示/" >各种网络共享服务实验演示</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/20</span><a class="archive-post-title" href= "/2017/06/20/网络文件共享服务：FTP    NFS   SAMBA/" >网络文件共享服务：FTP    NFS   SAMBA</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/11</span><a class="archive-post-title" href= "/2017/06/11/LAMP 架构的各种演示/" >LAMP 架构的各种演示</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/01</span><a class="archive-post-title" href= "/2017/06/01/介绍 MYSQL的事务日志/" >介绍 MYSQL的事务日志</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/22</span><a class="archive-post-title" href= "/2017/05/22/MYSQL 数据库的日志介绍/" >MYSQL 数据库的日志介绍</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/15</span><a class="archive-post-title" href= "/2017/05/15/MYSQL MariaDB 的事务和事务隔离级别/" >MYSQL MariaDB 的事务和事务隔离级别</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/08</span><a class="archive-post-title" href= "/2017/05/08/MASQL MariaDB 用户权限管理/" >MASQL MariaDB 用户权限管理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/20</span><a class="archive-post-title" href= "/2017/04/20/ext 文件系统机制原理/" >ext 文件系统机制原理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/15</span><a class="archive-post-title" href= "/2017/04/15/Linux分区信息与管理文件系统/" >Linux分区信息与管理文件系统</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/10</span><a class="archive-post-title" href= "/2017/04/10/DHCP 服务/" >DHCP服务</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/01</span><a class="archive-post-title" href= "/2017/04/01/Linux系统中su 和 sudo 的用法/" >Linux系统中su 和 sudo 的用法</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/22</span><a class="archive-post-title" href= "/2017/03/22/实现DNS服务主从复制/" >实现DNS服务主从复制</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/20</span><a class="archive-post-title" href= "/2017/03/20/搭建DNS互联网架构服务器(一）/" >搭建DNS互联网架构服务器</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/15</span><a class="archive-post-title" href= "/2017/03/15/搭建DNS 服务，实现主服务器，邮件服务器，泛域名解析，反向解析等/" >搭建DNS 服务，实现主服务器，邮件服务器，泛域名解析，反向解析等</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/12</span><a class="archive-post-title" href= "/2017/03/12/Linux 文件权限管理/" >Linux 文件权限管理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/08</span><a class="archive-post-title" href= "/2017/03/08/LINUX系统中用户、组管理/" >安装管理包：LINUX系统中用户、组管理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/28</span><a class="archive-post-title" href= "/2017/02/28/搭建DNS服务器，实现主DNS服务器，负责解析一个域/" >搭建DNS服务器，实现主DNS服务器，负责解析一个域</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/15</span><a class="archive-post-title" href= "/2017/02/15/DNS 服务从基础到深入/" >DNS 服务从基础到深入</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/10</span><a class="archive-post-title" href= "/2017/02/10/SSH端口转发实验/" >SSH端口转发实验</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/08</span><a class="archive-post-title" href= "/2017/02/08/实现PXE自动安装/" >实现PXE自动安装</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/01</span><a class="archive-post-title" href= "/2017/02/01/rpm管理包 和 yum管理包(1)/" >安装管理包：rpm包和yum包</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/20</span><a class="archive-post-title" href= "/2017/01/20/搭建CA/" >如何搭建CA（向CA申请证书）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/08</span><a class="archive-post-title" href= "/2017/01/08/自制一个mini 的Linux系统/" >自制一个mini 的Linux系统</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2016 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/20</span><a class="archive-post-title" href= "/2016/12/20/进程管理和计划任务的知识点()/" >进程管理与计划任务的知识点</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/15</span><a class="archive-post-title" href= "/2016/12/15/文本处理工具：sed/" >文本处理工具：sed</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/08</span><a class="archive-post-title" href= "/2016/12/08/TCP、IP协议三次握手与四次握手流程解析（）/" >TCP、IP协议三次握手与四次握手流程解析</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> Invalid date </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">Invalid date</span><a class="archive-post-title" href= "/2018/08/09/Nginx 各种实验演示/" >[Untitled Post]</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2016 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/29</span><a class="archive-post-title" href= "/2016/11/29/Linux 的一些基础练习题/" >Linux 的一些基础练习题</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/23</span><a class="archive-post-title" href= "/2016/11/23/对正则表达式，VIM编辑器命令的基本操作（三）/" >对正则表达式，VIM编辑器命令的基本操作</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> Invalid date </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">Invalid date</span><a class="archive-post-title" href= "/2018/08/09/日志管理介绍/" >[Untitled Post]</a>
+        </li>
+    
+    </div>
+  </div>
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+    
+        <span class="sidebar-tag-name" data-tags="Linux"><span class="iconfont-archer">&#xe606;</span>Linux</span>
+    
+        <span class="sidebar-tag-name" data-tags="DHCP"><span class="iconfont-archer">&#xe606;</span>DHCP</span>
+    
+        <span class="sidebar-tag-name" data-tags="haproxy"><span class="iconfont-archer">&#xe606;</span>haproxy</span>
+    
+        <span class="sidebar-tag-name" data-tags="LAMP"><span class="iconfont-archer">&#xe606;</span>LAMP</span>
+    
+        <span class="sidebar-tag-name" data-tags="DNS"><span class="iconfont-archer">&#xe606;</span>DNS</span>
+    
+        <span class="sidebar-tag-name" data-tags="权限管理"><span class="iconfont-archer">&#xe606;</span>权限管理</span>
+    
+        <span class="sidebar-tag-name" data-tags="用户组"><span class="iconfont-archer">&#xe606;</span>用户组</span>
+    
+        <span class="sidebar-tag-name" data-tags="练习题"><span class="iconfont-archer">&#xe606;</span>练习题</span>
+    
+        <span class="sidebar-tag-name" data-tags="文件系统"><span class="iconfont-archer">&#xe606;</span>文件系统</span>
+    
+        <span class="sidebar-tag-name" data-tags="MYSQL"><span class="iconfont-archer">&#xe606;</span>MYSQL</span>
+    
+        <span class="sidebar-tag-name" data-tags="su和sudo"><span class="iconfont-archer">&#xe606;</span>su和sudo</span>
+    
+        <span class="sidebar-tag-name" data-tags="SSH"><span class="iconfont-archer">&#xe606;</span>SSH</span>
+    
+        <span class="sidebar-tag-name" data-tags="varnish"><span class="iconfont-archer">&#xe606;</span>varnish</span>
+    
+        <span class="sidebar-tag-name" data-tags="TCP/IP"><span class="iconfont-archer">&#xe606;</span>TCP/IP</span>
+    
+        <span class="sidebar-tag-name" data-tags="keepalied"><span class="iconfont-archer">&#xe606;</span>keepalied</span>
+    
+        <span class="sidebar-tag-name" data-tags="lvs"><span class="iconfont-archer">&#xe606;</span>lvs</span>
+    
+        <span class="sidebar-tag-name" data-tags="memcache"><span class="iconfont-archer">&#xe606;</span>memcache</span>
+    
+        <span class="sidebar-tag-name" data-tags="tomcat"><span class="iconfont-archer">&#xe606;</span>tomcat</span>
+    
+        <span class="sidebar-tag-name" data-tags="rpm"><span class="iconfont-archer">&#xe606;</span>rpm</span>
+    
+        <span class="sidebar-tag-name" data-tags="共享服务"><span class="iconfont-archer">&#xe606;</span>共享服务</span>
+    
+        <span class="sidebar-tag-name" data-tags="自动化安装"><span class="iconfont-archer">&#xe606;</span>自动化安装</span>
+    
+        <span class="sidebar-tag-name" data-tags="基本命令"><span class="iconfont-archer">&#xe606;</span>基本命令</span>
+    
+        <span class="sidebar-tag-name" data-tags="CA"><span class="iconfont-archer">&#xe606;</span>CA</span>
+    
+        <span class="sidebar-tag-name" data-tags="sed"><span class="iconfont-archer">&#xe606;</span>sed</span>
+    
+        <span class="sidebar-tag-name" data-tags="dns"><span class="iconfont-archer">&#xe606;</span>dns</span>
+    
+        <span class="sidebar-tag-name" data-tags="mini系统"><span class="iconfont-archer">&#xe606;</span>mini系统</span>
+    
+        <span class="sidebar-tag-name" data-tags="进程管理、计划任务"><span class="iconfont-archer">&#xe606;</span>进程管理、计划任务</span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+    缺失模块。<br/>
+    1、请确保node版本大于6.2<br/>
+    2、在博客根目录（注意不是archer根目录）执行以下命令：<br/>
+    <span style="color: #f75357; font-size: 1rem; line-height: 2rem;">npm i hexo-generator-json-content --save</span><br/>
+    3、在根目录_config.yml里添加配置：
+    <pre style="color: #787878; font-size: 0.6rem;">
+jsonContent:
+  meta: false
+  pages: false
+  posts:
+    title: true
+    date: true
+    path: true
+    text: false
+    raw: false
+    content: false
+    slug: false
+    updated: false
+    comments: false
+    link: false
+    permalink: false
+    excerpt: false
+    categories: true
+    tags: true</pre>
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+    </div>
+</div> 
+    <script>
+    var siteMeta = {
+        root: "/",
+        author: "John Doe"
+    }
+</script>
+    <!-- CDN failover -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ === 'undefined')
+        {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js">\x3C/script>')
+        }
+    </script>
+    <script src="/scripts/main.js"></script>
+    <!-- algolia -->
+    
+    <!-- busuanzi  -->
+    
+    <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+    <!-- CNZZ  -->
+    
+    </div>
+    <!-- async load share.js -->
+    
+        <script src="/scripts/share.js" async></script>    
+     
+    </body>
+</html>
+
+

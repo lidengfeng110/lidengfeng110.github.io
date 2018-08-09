@@ -1,0 +1,1544 @@
+<!DOCTYPE html>
+<html>
+    <!-- title -->
+
+
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" >
+    <meta name="author" content="John Doe">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="John Doe">
+    <meta name="keywords" content="Hexo | John Doe">
+    <meta name="description" content="">
+    <meta name="Cache-Control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <title>lvs 详细介绍 · 李登峰</title>
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s 1;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+
+</style>
+
+    <link rel="preload" href= /css/style.css?v=20180630 as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    <link rel="stylesheet" href= /css/mobile.css?v=20180630 media="(max-width: 980px)">
+    
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+(function( w ){
+	"use strict";
+	// rel=preload support test
+	if( !w.loadCSS ){
+		w.loadCSS = function(){};
+	}
+	// define on the loadCSS obj
+	var rp = loadCSS.relpreload = {};
+	// rel=preload feature support test
+	// runs once and returns a function for compat purposes
+	rp.support = (function(){
+		var ret;
+		try {
+			ret = w.document.createElement( "link" ).relList.supports( "preload" );
+		} catch (e) {
+			ret = false;
+		}
+		return function(){
+			return ret;
+		};
+	})();
+
+	// if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+	// then change that media back to its intended value on load
+	rp.bindMediaToggle = function( link ){
+		// remember existing media attr for ultimate state, or default to 'all'
+		var finalMedia = link.media || "all";
+
+		function enableStylesheet(){
+			link.media = finalMedia;
+		}
+
+		// bind load handlers to enable media
+		if( link.addEventListener ){
+			link.addEventListener( "load", enableStylesheet );
+		} else if( link.attachEvent ){
+			link.attachEvent( "onload", enableStylesheet );
+		}
+
+		// Set rel and non-applicable media type to start an async request
+		// note: timeout allows this to happen async to let rendering continue in IE
+		setTimeout(function(){
+			link.rel = "stylesheet";
+			link.media = "only x";
+		});
+		// also enable media after 3 seconds,
+		// which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+		setTimeout( enableStylesheet, 3000 );
+	};
+
+	// loop through link elements in DOM
+	rp.poly = function(){
+		// double check this to prevent external calls from running
+		if( rp.support() ){
+			return;
+		}
+		var links = w.document.getElementsByTagName( "link" );
+		for( var i = 0; i < links.length; i++ ){
+			var link = links[ i ];
+			// qualify links to those with rel=preload and as=style attrs
+			if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+				// prevent rerunning on link
+				link.setAttribute( "data-loadcss", true );
+				// bind listeners to toggle media back
+				rp.bindMediaToggle( link );
+			}
+		}
+	};
+
+	// if unsupported, run the polyfill
+	if( !rp.support() ){
+		// run once at least
+		rp.poly();
+
+		// rerun poly on an interval until onload
+		var run = w.setInterval( rp.poly, 500 );
+		if( w.addEventListener ){
+			w.addEventListener( "load", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		} else if( w.attachEvent ){
+			w.attachEvent( "onload", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		}
+	}
+
+
+	// commonjs
+	if( typeof exports !== "undefined" ){
+		exports.loadCSS = loadCSS;
+	}
+	else {
+		w.loadCSS = loadCSS;
+	}
+}( typeof global !== "undefined" ? global : this ) );
+</script>
+
+    <link rel="icon" href= "/assets/favicon.ico" />
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js" as="script" />
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" as="script" />
+    <link rel="preload" href="/scripts/main.js" as="script" />
+    <link rel="preload" as="font" href="/font/Oswald-Regular.ttf" crossorigin>
+    <link rel="preload" as="font" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" crossorigin>
+    
+    <!-- fancybox -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script>
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  -->
+    
+</head>
+
+    
+        <body class="post-body">
+    
+    
+<header class="header">
+
+    <div class="read-progress"></div>
+    <div class="header-sidebar-menu">&#xe775;</div>
+    <!-- post页的toggle banner  -->
+    
+    <div class="banner">
+            <div class="blog-title">
+                <a href="/" >博客</a>
+            </div>
+            <div class="post-title">
+                <a href="#" class="post-name">lvs 详细介绍</a>
+            </div>
+    </div>
+    
+    <a class="home-link" href=/>博客</a>
+</header>
+    <div class="wrapper">
+        <div class="site-intro" style=
+
+
+
+
+
+
+
+
+height:50vh;
+
+>
+    
+    <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
+            
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+            lvs 详细介绍
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+            
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class= post-intro-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "Linux">Linux</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "lvs">lvs</a>
+    
+</div>
+                
+                
+                    <div class="post-intro-read">
+                        <span>Word count: <span class="post-count">4,447</span> / Reading time: <span class="post-count">19 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                    <span class="post-intro-time">2017/08/19</span>
+                    
+                    <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                        <span class="iconfont-archer">&#xe602;</span>
+                        <span id="busuanzi_value_page_pv"></span>
+                    </span>
+                    
+                    <span class="shareWrapper">
+                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
+                        <span class="shareText">Share</span>
+                        <ul class="shareList">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        
+    </div>
+</div> 
+        <script>
+ 
+  // get user agent
+  var browser = {
+    versions: function () {
+      var u = window.navigator.userAgent;
+      return {
+        userAgent: u,
+        trident: u.indexOf('Trident') > -1, //IE内核
+        presto: u.indexOf('Presto') > -1, //opera内核
+        webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+        gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+        mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+        ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+        android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+        iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+        iPad: u.indexOf('iPad') > -1, //是否为iPad
+        webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+        weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+        uc: u.indexOf('UCBrowser') > -1 //是否为android下的UC浏览器
+      };
+    }()
+  }
+  console.log("userAgent:" + browser.versions.userAgent);
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded');
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document.getElementsByClassName('intro-title')[0].classList.add('intro-fade-in');
+      document.getElementsByClassName('intro-subtitle')[0].classList.add('intro-fade-in');
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in');
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb(){
+    if (browser.versions.uc) {
+      console.log("UCBrowser");
+      fontLoaded();
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular']
+        },
+        loading: function () {  //所有字体开始加载
+          // console.log('loading');
+        },
+        active: function () {  //所有字体已渲染
+          fontLoaded();
+        },
+        inactive: function () { //字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout');
+          fontLoaded();
+        },
+        timeout: 5000 // Set the timeout to two seconds
+      });
+    }
+  }
+
+  function asyncErr(){
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (cb) { o.addEventListener('load', function (e) { cb(null, e); }, false); }
+    if (err) { o.addEventListener('error', function (e) { err(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+
+  var asyncLoadWithFallBack = function(arr, success, reject) {
+      var currReject = function(){
+        reject()
+        arr.shift()
+        if(arr.length)
+          async(arr[0], success, currReject)
+        }
+
+      async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack([
+    "https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js", 
+    "https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js",
+    "/lib/webfontloader.min.js"
+  ], asyncCb, asyncErr)
+</script>        
+        <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+        <div class="container container-unloaded">
+            <main class="main post-page">
+    <article class="article-entry">
+        <h4 id="Cluster概念"><a href="#Cluster概念" class="headerlink" title="Cluster概念"></a>Cluster概念</h4><p> 系统扩展方式：<br>      Scale UP：向上扩展,增强<br>       Scale Out：向外扩展,增加设备，调度分配问题，Cluster<br> Cluster：集群,为解决某个特定问题将多台计算机组合起来形成的单个系统<br> Linux Cluster类型：<br>    LB：Load Balancing，负载均衡<br>    HA：High Availiablity，高可用，SPOF（single Point Of failure）<br>       MTBF:Mean Time Between Failure 平均无故障时间<br>       MTTR:Mean Time To Restoration（ repair）平均恢复前时间<br>        A=MTBF/（MTBF+MTTR） (0,1)：99%, 99.5%, 99.9%, 99.99%, 99.999%<br>     HPC：High-performance computing，高性能 <a href="http://www.top500.org" target="_blank" rel="noopener">www.top500.org</a><br> 分布式系统：<br>       分布式存储：云盘<br>       分布式计算：hadoop， park<br><a id="more"></a><br><img src="http://i1.bvimg.com/657107/b614f05beca4c422.png" alt="Markdown"></p>
+<h4 id="Cluster分类"><a href="#Cluster分类" class="headerlink" title="Cluster分类"></a>Cluster分类</h4><p>LB Cluster的实现<br>硬件<br>      F5 Big-IP<br>      Citrix Netscaler<br>       A10 A10<br>软件<br>       lvs：Linux Virtual Server<br>       nginx：支持七层调度<br>      haproxy：支持七层调度<br>       ats：apache traffic server，yahoo捐助<br>       perlbal：Perl 编写<br>       pound  </p>
+<h4 id="Cluster分类-1"><a href="#Cluster分类-1" class="headerlink" title="Cluster分类"></a>Cluster分类</h4><p>基于工作的协议层次划分：<br>传输层（通用）：DPORT<br>      LVS：<br>       nginx：stream<br>        haproxy：mode tcp<br>应用层（专用）：针对特定协议，自定义的请求模型分类<br> proxy server：<br>       http：nginx, httpd, haproxy(mode http), …<br>       fastcgi：nginx, httpd, …<br>        mysql：mysql-proxy, …      </p>
+<h4 id="Cluster相关"><a href="#Cluster相关" class="headerlink" title="Cluster相关"></a>Cluster相关</h4><p> 会话保持：负载均衡<br>     (1) session sticky：同一用户调度固定服务器<br>           Source IP：LVS sh算法（对某一特定服务而言）<br>            Cookie<br>      (2) session replication：每台服务器拥有全部session<br>              session multicast cluster<br>       (3) session server：专门的session服务器<br>               Memcached，Redis<br>  HA集群实现方案<br>        keepalived:vrrp协议<br>        ais:应用接口规范<br>               heartbeat<br>               cman+rgmanager(RHCS)<br>                coresync_pacemaker  </p>
+<h4 id="LVS介绍"><a href="#LVS介绍" class="headerlink" title="LVS介绍"></a>LVS介绍</h4><p>LVS：Linux Virtual Server，负载调度器，集成内核 章文嵩 阿里<br>           官网：<a href="http://www.linuxvirtualserver.org/" target="_blank" rel="noopener">http://www.linuxvirtualserver.org/</a><br>           VS: Virtual Server，负责调度<br>           RS: Real Server，负责真正提供服务<br>            L4：四层路由器或交换机<br> 工作原理：VS根据请求报文的目标IP和目标协议及端口将其调度转发至某RS，根据调度 算法来挑选RS<br> iptables/netfilter：<br>        iptables：用户空间的管理工具<br>        netfilter：内核空间上的框架<br>        流入：PREROUTING –&gt; INPUT<br>        流出：OUTPUT –&gt; POSTROUTING<br>        转发：PREROUTING –&gt; FORWARD –&gt; POSTROUTING<br>         DNAT：目标地址转换； PREROUTING  </p>
+<p><img src="http://i1.bvimg.com/657107/eaccd751e9cd9a16.png" alt="Markdown"></p>
+<h4 id="LVS概念"><a href="#LVS概念" class="headerlink" title="LVS概念"></a>LVS概念</h4><p>lvs集群类型中的术语：<br> VS：Virtual Server，Director Server(DS)<br>        Dispatcher(调度器)，Load Balancer<br>RS：Real Server(lvs), upstream server(nginx)<br>         backend server(haproxy)<br>CIP：Client IP<br>VIP: Virtual serve IP         VS外网的IP<br>DIP: Director IP                VS内网的IP<br>RIP: Real server IP   </p>
+<p>访问流程：CIP <--> VIP == DIP <--> RIP    </--></--></p>
+<h4 id="lvs集群的类型"><a href="#lvs集群的类型" class="headerlink" title="lvs集群的类型"></a>lvs集群的类型</h4><p>lvs: ipvsadm/ipvs<br>      ipvsadm：用户空间的命令行工具，规则管理器<br>               用于管理集群服务及RealServer<br>       ipvs：工作于内核空间netfilter的INPUT钩子上的框架<br>lvs集群的类型：<br>          lvs-nat：修改请求报文的目标IP,多目标IP的DNAT<br>          lvs-dr：操纵封装新的MAC地址<br>          lvs-tun：在原请求IP报文之外新加一个IP首部<br>          lvs-fullnat：修改请求报文的源和目标IP    </p>
+<p>lvs-nat模式<br>lvs-nat：<br> 本质是多目标IP的DNAT，通过将请求报文中的目标地址和目标端口修改为某挑 出的RS的RIP和PORT实现转发<br>  （1）RIP和DIP应在同一个IP网络，且应使用私网地址；RS的网关要指向DIP<br>   （2）请求报文和响应报文都必须经由Director转发，Director易于成为系统瓶颈<br>   （3）支持端口映射，可修改请求报文的目标PORT<br>   （4）VS必须是Linux系统，RS可以是任意OS系统    </p>
+<p><img src="http://i1.bvimg.com/657107/2c8edbe656589106.png" alt="Markdown"></p>
+<p><img src="http://i1.bvimg.com/657107/7751293d39b64faa.png" alt="Markdown"></p>
+<p><img src="http://i1.bvimg.com/657107/77fe2ea8a515ea72.png" alt="Markdown"></p>
+<h4 id="LVS-DR模式"><a href="#LVS-DR模式" class="headerlink" title="LVS-DR模式"></a>LVS-DR模式</h4><p> LVS-DR：Direct Routing，直接路由，LVS默认模式,应用最广泛,通过为请求报文重新 封装一个MAC首部进行转发，源MAC是DIP所在的接口的MAC，目标MAC是某挑选出 的RS的RIP所在接口的MAC地址；源IP/PORT，以及目标IP/PORT均保持不变<br>（1） Director和各RS都配置有VIP<br>（2） 确保前端路由器将目标IP为VIP的请求报文发往Director<br>        在前端网关做静态绑定VIP和Director的MAC地址<br>         在RS上使用arptables工具<br>arptables -A IN -d $VIP -j DROP<br> arptables -A OUT -s $VIP -j mangle –m  angle-ip-s $RIP<br>        在RS上修改内核参数以限制arp通告及应答级别/proc/sys/net/ipv4/conf/all/arp_ignore<br>/proc/sys/net/ipv4/conf/all/arp_announce  </p>
+<p>LVS-DR模式<br>（3）RS的RIP可以使用私网地址，也可以是公网地址；RIP与DIP在同一IP网络；   RIP的网关不能指向DIP，以确保响应报文不会经由Director<br>（4）RS和Director要在同一个物理网络<br>（5）请求报文要经由Director，但响应报文不经由Director，而由RS直接发往 Client<br>（6）不支持端口映射（端口不能修败）<br> （7）RS可使用大多数OS系统  </p>
+<p><img src="http://i1.bvimg.com/657107/6cd7161fbd72f49c.png" alt="Markdown"></p>
+<p><img src="http://i1.bvimg.com/657107/167c009286b929ee.png" alt="Markdown"></p>
+<p><img src="http://i1.bvimg.com/657107/7fb9a2b8ba837741.png" alt="Markdown"></p>
+<h4 id="lvs-tun模式"><a href="#lvs-tun模式" class="headerlink" title="lvs-tun模式"></a>lvs-tun模式</h4><p>lvs-tun：<br> 转发方式：不修改请求报文的IP首部（源IP为CIP，目标IP为VIP），而在原IP报文 之外再封装一个IP首部（源IP是DIP，目标IP是RIP），将报文发往挑选出的目标 RS；RS直接响应给客户端（源IP是VIP，目标IP是CIP）<br>    (1) DIP, VIP, RIP可以是公网地址，DIP 和 RIP 也可以是私网地址<br>     (2) RS的网关一般不能指向DIP<br>     (3) 请求报文要经由Director，但响应不能经由Director<br>     (4) 不支持端口映射<br>     (5) RS的OS须支持隧道功能  </p>
+<p><img src="http://i1.bvimg.com/657107/7fb9a2b8ba837741.png" alt="Markdown"></p>
+<p><img src="http://i2.bvimg.com/657107/a49de805e179aba6.png" alt="Markdown"></p>
+<h4 id="lvs-fullnat模式"><a href="#lvs-fullnat模式" class="headerlink" title="lvs-fullnat模式"></a>lvs-fullnat模式</h4><p>lvs-fullnat：通过同时修改请求报文的源IP地址和目标IP地址进行转发<br>          CIP –&gt; DIP<br>           VIP –&gt; RIP<br>    (1) VIP是公网地址，RIP和DIP是私网地址，且通常不在同一IP网络；因此， RIP的网关一般不会指向DIP<br>    (2) RS收到的请求报文源地址是DIP，因此，只需响应给DIP；但Director还 要将其发往Client<br>    (3) 请求和响应报文都经由Director<br>    (4) 支持端口映射<br>注意：此类型kernel默认不支持    </p>
+<p><img src="http://i2.bvimg.com/657107/f12883aaf575c9eb.png" alt="Markdown"></p>
+<p>lvs-nat与lvs-fullnat：请求和响应报文都经由Director<br> lvs-nat：RIP的网关要指向DIP<br> lvs-fullnat：RIP和DIP未必在同一IP网络，但要能通信<br> lvs-dr与lvs-tun：请求报文要经由Director，但响应报文由RS直接发往Client<br> lvs-dr：通过封装新的MAC首部实现，通过MAC网络转发<br>lvs-tun：通过在原IP报文外封装新IP头实现转发，支持远距离通信  </p>
+<h4 id="ipvs-scheduler"><a href="#ipvs-scheduler" class="headerlink" title="ipvs scheduler"></a>ipvs scheduler</h4><p>ipvs scheduler：根据其调度时是否考虑各RS当前的负载状态<br>      两种：静态方法和动态方法<br>静态方法：仅根据算法本身进行调度<br> 1、RR：roundrobin，轮询<br> 2、WRR：Weighted RR，加权轮询<br>3、SH：Source Hashing，实现session sticky，源IP地址hash；将来自于同一 个IP地址的请求始终发往第一次挑中的RS，从而实现会话绑定<br> 4、DH：Destination Hashing；目标地址哈希，将发往同一个目标地址的请求 始终转发至第一次挑中的RS，典型使用场景是正向代理缓存场景中的负载均衡， 如：宽带运营商  </p>
+<p>ipvs scheduler<br>动态方法：主要根据每RS当前的负载状态及调度算法进行调度Overhead=value 较小的RS将被调度<br> 1、LC：least connections 适用于长连接应用<br>      Overhead=activeconns<em>256+inactiveconns<br> 2、WLC：Weighted LC，默认调度方法<br>      Overhead=(activeconns</em>256+inactiveconns)/weight<br> 3、SED：Shortest Expection Delay,初始连接高权重优先<br>       Overhead=(activeconns+1)*256/weight<br> 4、NQ：Never Queue，第一轮均匀分配，后续SED<br>5、LBLC：Locality-Based LC，动态的DH算法，使用场景：根据负载状态实现 正向代理<br>6、LBLCR：LBLC with Replication，带复制功能的LBLC<br> 解决LBLC负载不均衡问题，从负载重的复制到负载轻的RS  </p>
+<h4 id="ipvs"><a href="#ipvs" class="headerlink" title="ipvs"></a>ipvs</h4><p>ipvsadm/ipvs：<br>ipvs： grep -i -C 10 “ipvs” /boot/config-VERSION-RELEASE.x86_64<br> 支持的协议：TCP， UDP， AH， ESP， AH_ESP, SCTP<br>ipvs集群：<br> 管理集群服务<br> 管理服务上的RS  </p>
+<p>ipvsadm包构成<br>ipvsadm：<br>程序包：ipvsadm<br>    Unit File: ipvsadm.service<br>    主程序：/usr/sbin/ipvsadm<br>    规则保存工具：/usr/sbin/ipvsadm-save<br>    规则重载工具：/usr/sbin/ipvsadm-restore<br>    配置文件：/etc/sysconfig/ipvsadm-config    </p>
+<h4 id="ipvsadm命令"><a href="#ipvsadm命令" class="headerlink" title="ipvsadm命令"></a>ipvsadm命令</h4><p>ipvsadm命令：<br> 核心功能：<br>       集群服务管理：增、删、改<br>       集群服务的RS管理：增、删、改<br>       查看<br> ipvsadm -A|E -t|u|f service-address [-s scheduler] [-p [timeout]] [-M netmask] [–pe persistence_engine] [-b sched-flags]<br> ipvsadm -D -t|u|f service-address 删除<br> ipvsadm –C 清空<br> ipvsadm –R 重载<br> ipvsadm -S [-n] 保存<br> ipvsadm -a|e -t|u|f service-address -r server-address [options]<br> ipvsadm -d -t|u|f service-address -r server-address<br> ipvsadm -L|l [options]<br> ipvsadm -Z [-t|u|f service-address]  </p>
+<h4 id="ipvsadm命令-1"><a href="#ipvsadm命令-1" class="headerlink" title="ipvsadm命令"></a>ipvsadm命令</h4><p>管理集群服务：增、改、删<br>增、改：<br> ipvsadm -A|E -t|u|f service-address [-s scheduler] [-p [timeout]]<br>删除：<br>      ipvsadm -D -t|u|f service-address<br>service-address：<br>   -t|u|f：<br>         -t: TCP协议的端口，VIP:TCP_PORT<br>         -u: UDP协议的端口，VIP:UDP_PORT<br>           -f：firewall MARK，标记，一个数字<br>[-s scheduler]：指定集群的调度算法，默认为wlc  </p>
+<h4 id="ipvsadm命令-2"><a href="#ipvsadm命令-2" class="headerlink" title="ipvsadm命令"></a>ipvsadm命令</h4><p>管理集群上的RS：增、改、删<br>增、改：<br>ipvsadm -a|e -t|u|f service-address -r server-address [-g|i|m] [-w weight]<br>删：ipvsadm -d -t|u|f service-address -r server-address<br>server-address：<br>        rip[:port] 如省略port，不作端口映射<br>选项：<br> lvs类型：<br>        -g: gateway, dr类型，默认<br>        -i: ipip, tun类型<br>           -m: masquerade, nat类型<br> -w weight：权重  </p>
+<h4 id="ipvsadm命令-3"><a href="#ipvsadm命令-3" class="headerlink" title="ipvsadm命令"></a>ipvsadm命令</h4><p>清空定义的所有内容：ipvsadm –C<br>清空计数器：ipvsadm -Z [-t|u|f service-address]<br>查看：ipvsadm -L|l [options]<br>          –numeric, -n：以数字形式输出地址和端口号<br>           –exact：扩展信息，精确值<br>          –connection，-c：当前IPVS连接输出<br>            –stats：统计信息<br>             –rate ：输出速率信息<br>ipvs规则： /proc/net/ip_vs<br>ipvs连接：/proc/net/ip_vs_conn  </p>
+<p>保存及重载规则<br>保存：建议保存至/etc/sysconfig/ipvsadm<br>        ipvsadm-save -n &gt; /PATH/TO/IPVSADM_FILE<br>        ipvsadm -Sn &gt; /PATH/TO/IPVSADM_FILE<br>         systemctl stop ipvsadm.service<br>重载：<br>       ipvsadm-restore &lt; /PATH/FROM/IPVSADM_FILE<br>       ipvsadm -R &lt; /PATH/FROM/IPVSADM_FILE<br>        systemctl restart ipvsadm.service  </p>
+<h4 id="LVS"><a href="#LVS" class="headerlink" title="LVS"></a>LVS</h4><p>负载均衡集群设计时要注意的问题<br> (1) 是否需要会话保持<br>(2) 是否需要共享存储<br>       共享存储：NAS， SAN，   DS（分布式存储）<br>         数据同步：<br>lvs-nat：<br> 设计要点：<br> (1) RIP与DIP在同一IP网络, RIP的网关要指向DIP<br> (2) 支持端口映射<br> (3) Director要打开核心转发功能  </p>
+<p>作业<br>NAT模型实现http负载均衡集群<br>NAT模型实现https负载均衡集群<br>注意：RS: 都要提供同一个私钥和同一个证书  </p>
+<h4 id="LVS-DR"><a href="#LVS-DR" class="headerlink" title="LVS-DR"></a>LVS-DR</h4><p> DR模型中各主机上均需要配置VIP，解决地址冲突的方式有三种：<br> (1) 在前端网关做静态绑定<br> (2) 在各RS使用arptables<br> (3) 在各RS修改内核参数，来限制arp响应和通告的级别<br> 限制响应级别：arp_ignore<br>0：默认值，表示可使用本地任意接口上配置的任  意地址进行响应<br>1: 仅在请求的目标IP配置在本地主机的接收到请求报文的接口上时，才给予响应<br> 限制通告级别：arp_announce<br>0：默认值，把本机所有接口的所有信息向每个接口的网络进行通告<br> 1：尽量避免将接口信息向非直接连接网络进行通告<br> 2：必须避免将接口信息向非本网络进行通告  </p>
+<p>RS的配置脚本  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/bash</span><br><span class="line"> vip=10.0.0.100</span><br><span class="line"> mask=&apos;255.255.255.255‘</span><br><span class="line"> dev=lo:1</span><br><span class="line"> case $1 in</span><br><span class="line"> start)</span><br><span class="line">                          echo 1 &gt; /proc/sys/net/ipv4/conf/all/arp_ignore</span><br><span class="line">                          echo 1 &gt; /proc/sys/net/ipv4/conf/lo/arp_ignore</span><br><span class="line">                          echo 2 &gt; /proc/sys/net/ipv4/conf/all/arp_announce </span><br><span class="line">                          echo 2 &gt; /proc/sys/net/ipv4/conf/lo/arp_announce</span><br><span class="line">                          ifconfig $dev $vip netmask $mask #broadcast $vip up</span><br><span class="line">                          #route add -host $vip dev $dev</span><br><span class="line">                           ;; </span><br><span class="line">stop)</span><br><span class="line">                         ifconfig $dev down</span><br><span class="line">                         echo 0 &gt; /proc/sys/net/ipv4/conf/all/arp_ignore</span><br><span class="line">                         echo 0 &gt; /proc/sys/net/ipv4/conf/lo/arp_ignore</span><br><span class="line">                         echo 0 &gt; /proc/sys/net/ipv4/conf/all/arp_announce</span><br><span class="line">                         echo 0 &gt; /proc/sys/net/ipv4/conf/lo/arp_announce</span><br><span class="line">                          ;;</span><br><span class="line"> *)</span><br><span class="line">                          echo &quot;Usage: $(basename $0) start|stop&quot;</span><br><span class="line">                          exit 1</span><br><span class="line">                          ;; </span><br><span class="line">esac</span><br></pre></td></tr></table></figure>
+<p>VS的配置脚本  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/bash </span><br><span class="line">vip=&apos;10.0.0.100&apos;</span><br><span class="line"> iface=&apos;eth0:1&apos; </span><br><span class="line">mask=&apos;255.255.255.255&apos;</span><br><span class="line"> port=&apos;80&apos;</span><br><span class="line"> rs1=&apos;192.168.0.101&apos;</span><br><span class="line"> rs2=&apos;192.168.0.102&apos;</span><br><span class="line"> scheduler=&apos;wrr&apos; </span><br><span class="line">type=&apos;-g&apos;</span><br><span class="line"> case $1 in</span><br><span class="line"> start)</span><br><span class="line">                  ifconfig $iface $vip netmask $mask #broadcast $vip up</span><br><span class="line">                  iptables -F</span><br><span class="line">                  ipvsadm -A -t $&#123;vip&#125;:$&#123;port&#125; -s $scheduler</span><br><span class="line">                   ipvsadm -a -t $&#123;vip&#125;:$&#123;port&#125; -r $&#123;rs1&#125; $type -w 1</span><br><span class="line">                  ipvsadm -a -t $&#123;vip&#125;:$&#123;port&#125; -r $&#123;rs2&#125; $type -w 1</span><br><span class="line">                   ;;</span><br><span class="line"> stop)</span><br><span class="line">                 ipvsadm -C</span><br><span class="line">                 ifconfig $iface down</span><br><span class="line">                  ;;</span><br><span class="line"> *)</span><br><span class="line">                 echo &quot;Usage $(basename $0) start|stop“ </span><br><span class="line">                 exit 1</span><br><span class="line"> esac</span><br></pre></td></tr></table></figure>
+<p>作业<br>实现NAT模式<br>网络拓扑要求：VIP与DIP/RIP不在同一网络<br>DR模型实现http负载均衡集群<br>DR模型实现https负载均衡集群<br> 注意：RS: 都要提供同一个私钥和同一个证书<br>DR模型实现mysql负载均衡集群  </p>
+<h4 id="FireWall-Mark"><a href="#FireWall-Mark" class="headerlink" title="FireWall Mark"></a>FireWall Mark</h4><p>FWM：FireWall Mark<br>MARK target 可用于给特定的报文打标记<br>        –set-mark value<br>        其中：value 可为0xffff格式，表示十六进制数字<br>借助于防火墙标记来分类报文，而后基于标记定义集群服务；可将多个不同的 应用使用同一个集群服务进行调度<br>实现方法：<br>     在Director主机打标记：<br>         iptables -t mangle -A PREROUTING -d $vip -p $proto –m multiport –dports $port1,$port2,… -j MARK –set-mark NUMBER<br>     在Director主机基于标记定义集群服务：<br>         ipvsadm -A -f NUMBER [options]  </p>
+<h4 id="持久连接"><a href="#持久连接" class="headerlink" title="持久连接"></a>持久连接</h4><p>session 绑定：对共享同一组RS的多个集群服务，需要统一进行绑定，lvs sh算法无法实现<br> 持久连接（ lvs persistence  ）模板：实现无论使用任何调度算法，在一段时间内（默认 360s ），能够实现将来自同一个地址的请求始终发往同一个RS<br> ipvsadm -A|E -t|u|f service-address [-s scheduler] [-p [timeout]]<br> 持久连接实现方式：<br>       每端口持久（PPC）：每个端口对应定义为一个集群服务，每集群服务单独调度<br>       每防火墙标记持久（PFWMC）：基于防火墙标记定义集群服务；可实现将多个端口上的应 用统一调度，即所谓的port Affinity<br>        每客户端持久（PCC）：基于0端口（表示所有服务）定义集群服务，即将客户端对所有应 用的请求都调度至后端主机，必须定义为持久模式  </p>
+<h4 id="LVS高可用性"><a href="#LVS高可用性" class="headerlink" title="LVS高可用性"></a>LVS高可用性</h4><p> 1 Director不可用，整个系统将不可用；SPoF Single Point of Failure<br>          解决方案：高可用<br> keepalived heartbeat/corosync<br> 2 某RS不可用时，Director依然会调度请求至此RS<br>       解决方案： 由Director对各RS健康状态进行检查，失败时禁用，成功时启用<br>              keepalived heartbeat/coro sync ldirectord<br>       检测方式：<br>      (a) 网络层检测，icmp<br>       (b) 传输层检测，端口探测<br>       (c) 应用层检测，请求某关键资源<br>       RS全不用时：backup server, sorry server  </p>
+<p> ldirectord<br>ldirectord：监控和控制LVS守护进程，可管理LVS规则<br>包名：ldirectord-3.9.6-0rc1.1.1.x86_64.rpm<br>文件：<br> /etc/ha.d/ldirectord.cf         主配置文件<br> /usr/share/doc/ldirectord-3.9.6/ldirectord.cf    配置模版<br> /usr/lib/systemd/system/ldirectord.service     服务<br> /usr/sbin/ldirectord     主程序<br> /var/log/ldirectord.log     日志<br> /var/run/ldirectord.ldirectord.pid pid    文件   </p>
+<p>Ldirectord配置文件示例<br> checktimeout=3<br>checkinterval=1<br> autoreload=yes<br> logfile=“/var/log/ldirectord.log“          #日志文件<br> quiescent=no                                       #down时yes权重为0，no为删除<br> virtual=5                                              #指定VS的FWM或IP：port<br>            real=172.16.0.7:80 gate 2<br>            real=172.16.0.8:80 gate 1<br>             fallback=127.0.0.1:80 gate      #sorry server<br>            service=http<br>            scheduler=wrr<br> checktype=negotiate<br> checkport=80<br> request=”index.html”<br> receive=“Test Ldirectord”  </p>
+<pre><code>  在生产中，假如，LVS  服务器后端有很多外部服务器，如果按照 rr 算法，轮询的方式进行调度，也就是说每个服务器都会被调度到，但是其中一台服务器宕机，不能提供外部服务， LVS 服务器还会把请求调度到这台服务器上，这是就会报错，所以 LVS 调度器没有健康检查的功能，宕机了还会调度，这就不好了，所以就有  ldirectord  这个工具来完成这个任务，这个工具是用来监控和控制 LVS 进程，可以把出故障的服务器在 LVS 规则中删除掉，进而解决用户访问出错的问题。所以要在 lvs 调度器上安装这个工具。  
+要用这个工具，必须安装相应的包，但是这个包在 base源 和 epel 源中都没有，只能自己在网上找相应的 epel 源进行安装。还有就是如果安装这个包，就不用在手动添加 ipvs 规则，都直接在这个包的配置文件中进行修改即可。  
+   下载包    ldirectord-3.9.6-0rc1.1.1  
+</code></pre><p>下载完后   /etc/ha.d     是他的主配置文件,但是这个文件是空的<br>                 /usr/share/doc/ldirectord-3.9.6/ldirectord.cf         这个也是配置文件，但是这个里面全是一些案例。<br>   我们可以把 ldirectord.cf  这个文件拷贝 到主配置文件中   /etc/ha.d  然后进行修改就可以了。<br>   cp /usr/share/doc/ldirectord-3.9.6/ldirectord.cf  /etc/ha.d/<br>  然后进行修改    vim  /etc/ha.d/ldirectord.cf  </p>
+<p>   这样基本上就修改完毕了，接下来重启服务，第一次设置还要重启服务，以后就不用了。<br>systemctl restart ldirectord.service<br>这个配置文件重启服务后，就会在 LVS 服务器上自动生成相应的规则，所以在前面说不用手动配规则。<br>     还有就是，假如后端有两个外部服务器，有一个宕机了，这时 LVS 调度器就不会把客户的访问调度到宕机的服务器上了，如果都宕机，也会显示系统维修或 抱歉 的一些信息。<br>      但是不跑上面的脚本加调度规则了，还有一个就是 VIP 地址就得手动添加了，也可以先跑一边脚本，    这样 VIP 地址就加上了，然后把规则清空，在重启下 ldirectord.service 这个服务也是可以的。<br>      注意： 安装这个服务，一定是在 LVS 调度器上安装，还有要在这台服务器上安装 外部服务 httpd ，以便提供 维护信息等。  </p>
+<p>如果要把 http  和  https  当成一个集群服务的话，就要定义防火墙标签，但是定义标签后 ldirectord 这个包的配置文件就得修改<br>     标签如：<br> iptables -t mangle -A PREROUTING -d 10.0.0.100 -p tcp -m multiport –dports 443,80 -j MARK –set-mark 10<br>   修改  ldirectord  配置文件       vim  /etc/ha.d/ldirectord.cf  </p>
+<p>注意上面的配置文件还得添加 fallback=127.0.0.1:80 gate这条记录，不然 维护信息不能显示。  </p>
+<p>修改完要重启服务<br>systemctl restart ldirectord.service  </p>
+
+    </article>
+    <!-- license  -->
+    
+        <div class="license-wrapper">
+            <p>原文作者: <a href="http://yoursite.com">John Doe</a>
+            <p>原文链接: <a href="http://yoursite.com/2017/08/19/lvs 详细介绍/">http://yoursite.com/2017/08/19/lvs 详细介绍/</a>
+            <p>发表日期: <a href="http://yoursite.com/2017/08/19/lvs 详细介绍/">August 19th 2017, 12:00:00 am</a>
+            <p>版权声明: 本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+        </div>
+    
+    <!-- paginator  -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+                <div class="nextSlogan">Next Post</div>
+                <a href= "/2017/08/28/HAproxy 原理介绍/" title= HAproxy 原理介绍 >
+                    <div class="nextTitle">HAproxy 原理介绍</div>
+                </a>
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href= "/2017/06/24/各种网络共享服务实验演示/" title= 各种网络共享服务实验演示 >
+                    <div class="prevTitle">各种网络共享服务实验演示</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+<!-- City版安装代码已完成 -->
+    
+    
+    <!--PC和WAP自适应版-->
+
+    <!--PC版-->
+
+
+    
+    
+
+    <!-- 评论 -->
+</main>
+            <!-- profile -->
+            
+        </div>
+        <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+    <div class="social">
+        
+    
+        
+            
+                <a href="mailto:1020846215@qq.com" class="iconfont-archer email" title=email ></a>
+            
+        
+    
+        
+            
+                <a href="//github.com/fi3ework" class="iconfont-archer github" target="_blank" title=github></a>
+            
+        
+    
+        
+            
+                <span class="iconfont-archer wechat" title=wechat>
+                  
+                  <img class="profile-qr" src="/assets/example_qr.png" />
+                </span>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+    </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- 不蒜子  -->
+    
+    <div class="busuanzi-container">
+    
+     
+    <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+    
+    </div>
+    
+</footer>
+    </div>
+    <!-- toc -->
+    
+    <div class="toc-wrapper" style=
+    
+
+
+
+
+
+
+
+top:50vh;
+
+    >
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#Cluster概念"><span class="toc-number">1.</span> <span class="toc-text">Cluster概念</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Cluster分类"><span class="toc-number">2.</span> <span class="toc-text">Cluster分类</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Cluster分类-1"><span class="toc-number">3.</span> <span class="toc-text">Cluster分类</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Cluster相关"><span class="toc-number">4.</span> <span class="toc-text">Cluster相关</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#LVS介绍"><span class="toc-number">5.</span> <span class="toc-text">LVS介绍</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#LVS概念"><span class="toc-number">6.</span> <span class="toc-text">LVS概念</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#lvs集群的类型"><span class="toc-number">7.</span> <span class="toc-text">lvs集群的类型</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#LVS-DR模式"><span class="toc-number">8.</span> <span class="toc-text">LVS-DR模式</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#lvs-tun模式"><span class="toc-number">9.</span> <span class="toc-text">lvs-tun模式</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#lvs-fullnat模式"><span class="toc-number">10.</span> <span class="toc-text">lvs-fullnat模式</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#ipvs-scheduler"><span class="toc-number">11.</span> <span class="toc-text">ipvs scheduler</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#ipvs"><span class="toc-number">12.</span> <span class="toc-text">ipvs</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#ipvsadm命令"><span class="toc-number">13.</span> <span class="toc-text">ipvsadm命令</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#ipvsadm命令-1"><span class="toc-number">14.</span> <span class="toc-text">ipvsadm命令</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#ipvsadm命令-2"><span class="toc-number">15.</span> <span class="toc-text">ipvsadm命令</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#ipvsadm命令-3"><span class="toc-number">16.</span> <span class="toc-text">ipvsadm命令</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#LVS"><span class="toc-number">17.</span> <span class="toc-text">LVS</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#LVS-DR"><span class="toc-number">18.</span> <span class="toc-text">LVS-DR</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#FireWall-Mark"><span class="toc-number">19.</span> <span class="toc-text">FireWall Mark</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#持久连接"><span class="toc-number">20.</span> <span class="toc-text">持久连接</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#LVS高可用性"><span class="toc-number">21.</span> <span class="toc-text">LVS高可用性</span></a></li></ol>
+    </div>
+    
+    <div class="back-top iconfont-archer">&#xe639;</div>
+    <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+          <div class="sidebar-panel-archives">
+    <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 39
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+    
+    
+    
+    <div class="archive-year"> 2018 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/09</span><a class="archive-post-title" href= "/2018/08/09/Linux 防火墙各种规则实战应用/" >[Untitled Post]</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/09</span><a class="archive-post-title" href= "/2018/08/09/Nginx 详细介绍/" >[Untitled Post]</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2017 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/15</span><a class="archive-post-title" href= "/2017/10/15/memcache  缓存原理介绍/" >memcache  缓存原理介绍</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/08</span><a class="archive-post-title" href= "/2017/10/08/tomcat 各种架构实验演示/" >tomcat 各种架构实验演示</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/05</span><a class="archive-post-title" href= "/2017/10/05/浅谈 tomcat 原理/" >浅谈 tomcat 原理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/25</span><a class="archive-post-title" href= "/2017/09/25/Varnish 缓存服务器介绍/" >Varnish 缓存服务器介绍</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/14</span><a class="archive-post-title" href= "/2017/09/14/keepalived 各种高可用实战演练/" >keepalived 各种高可用实战演练</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/28</span><a class="archive-post-title" href= "/2017/08/28/HAproxy 原理介绍/" >HAproxy 原理介绍</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/19</span><a class="archive-post-title" href= "/2017/08/19/lvs 详细介绍/" >lvs 详细介绍</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/24</span><a class="archive-post-title" href= "/2017/06/24/各种网络共享服务实验演示/" >各种网络共享服务实验演示</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/20</span><a class="archive-post-title" href= "/2017/06/20/网络文件共享服务：FTP    NFS   SAMBA/" >网络文件共享服务：FTP    NFS   SAMBA</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/11</span><a class="archive-post-title" href= "/2017/06/11/LAMP 架构的各种演示/" >LAMP 架构的各种演示</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/01</span><a class="archive-post-title" href= "/2017/06/01/介绍 MYSQL的事务日志/" >介绍 MYSQL的事务日志</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/22</span><a class="archive-post-title" href= "/2017/05/22/MYSQL 数据库的日志介绍/" >MYSQL 数据库的日志介绍</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/15</span><a class="archive-post-title" href= "/2017/05/15/MYSQL MariaDB 的事务和事务隔离级别/" >MYSQL MariaDB 的事务和事务隔离级别</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/08</span><a class="archive-post-title" href= "/2017/05/08/MASQL MariaDB 用户权限管理/" >MASQL MariaDB 用户权限管理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/20</span><a class="archive-post-title" href= "/2017/04/20/ext 文件系统机制原理/" >ext 文件系统机制原理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/15</span><a class="archive-post-title" href= "/2017/04/15/Linux分区信息与管理文件系统/" >Linux分区信息与管理文件系统</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/10</span><a class="archive-post-title" href= "/2017/04/10/DHCP 服务/" >DHCP服务</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/01</span><a class="archive-post-title" href= "/2017/04/01/Linux系统中su 和 sudo 的用法/" >Linux系统中su 和 sudo 的用法</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/22</span><a class="archive-post-title" href= "/2017/03/22/实现DNS服务主从复制/" >实现DNS服务主从复制</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/20</span><a class="archive-post-title" href= "/2017/03/20/搭建DNS互联网架构服务器(一）/" >搭建DNS互联网架构服务器</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/15</span><a class="archive-post-title" href= "/2017/03/15/搭建DNS 服务，实现主服务器，邮件服务器，泛域名解析，反向解析等/" >搭建DNS 服务，实现主服务器，邮件服务器，泛域名解析，反向解析等</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/12</span><a class="archive-post-title" href= "/2017/03/12/Linux 文件权限管理/" >Linux 文件权限管理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/08</span><a class="archive-post-title" href= "/2017/03/08/LINUX系统中用户、组管理/" >安装管理包：LINUX系统中用户、组管理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/28</span><a class="archive-post-title" href= "/2017/02/28/搭建DNS服务器，实现主DNS服务器，负责解析一个域/" >搭建DNS服务器，实现主DNS服务器，负责解析一个域</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/15</span><a class="archive-post-title" href= "/2017/02/15/DNS 服务从基础到深入/" >DNS 服务从基础到深入</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/10</span><a class="archive-post-title" href= "/2017/02/10/SSH端口转发实验/" >SSH端口转发实验</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/08</span><a class="archive-post-title" href= "/2017/02/08/实现PXE自动安装/" >实现PXE自动安装</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/01</span><a class="archive-post-title" href= "/2017/02/01/rpm管理包 和 yum管理包(1)/" >安装管理包：rpm包和yum包</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/20</span><a class="archive-post-title" href= "/2017/01/20/搭建CA/" >如何搭建CA（向CA申请证书）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/08</span><a class="archive-post-title" href= "/2017/01/08/自制一个mini 的Linux系统/" >自制一个mini 的Linux系统</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2016 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/20</span><a class="archive-post-title" href= "/2016/12/20/进程管理和计划任务的知识点()/" >进程管理与计划任务的知识点</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/15</span><a class="archive-post-title" href= "/2016/12/15/文本处理工具：sed/" >文本处理工具：sed</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/08</span><a class="archive-post-title" href= "/2016/12/08/TCP、IP协议三次握手与四次握手流程解析（）/" >TCP、IP协议三次握手与四次握手流程解析</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> Invalid date </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">Invalid date</span><a class="archive-post-title" href= "/2018/08/09/Nginx 各种实验演示/" >[Untitled Post]</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2016 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/29</span><a class="archive-post-title" href= "/2016/11/29/Linux 的一些基础练习题/" >Linux 的一些基础练习题</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/23</span><a class="archive-post-title" href= "/2016/11/23/对正则表达式，VIM编辑器命令的基本操作（三）/" >对正则表达式，VIM编辑器命令的基本操作</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> Invalid date </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">Invalid date</span><a class="archive-post-title" href= "/2018/08/09/日志管理介绍/" >[Untitled Post]</a>
+        </li>
+    
+    </div>
+  </div>
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+    
+        <span class="sidebar-tag-name" data-tags="Linux"><span class="iconfont-archer">&#xe606;</span>Linux</span>
+    
+        <span class="sidebar-tag-name" data-tags="DHCP"><span class="iconfont-archer">&#xe606;</span>DHCP</span>
+    
+        <span class="sidebar-tag-name" data-tags="haproxy"><span class="iconfont-archer">&#xe606;</span>haproxy</span>
+    
+        <span class="sidebar-tag-name" data-tags="LAMP"><span class="iconfont-archer">&#xe606;</span>LAMP</span>
+    
+        <span class="sidebar-tag-name" data-tags="DNS"><span class="iconfont-archer">&#xe606;</span>DNS</span>
+    
+        <span class="sidebar-tag-name" data-tags="权限管理"><span class="iconfont-archer">&#xe606;</span>权限管理</span>
+    
+        <span class="sidebar-tag-name" data-tags="用户组"><span class="iconfont-archer">&#xe606;</span>用户组</span>
+    
+        <span class="sidebar-tag-name" data-tags="练习题"><span class="iconfont-archer">&#xe606;</span>练习题</span>
+    
+        <span class="sidebar-tag-name" data-tags="文件系统"><span class="iconfont-archer">&#xe606;</span>文件系统</span>
+    
+        <span class="sidebar-tag-name" data-tags="MYSQL"><span class="iconfont-archer">&#xe606;</span>MYSQL</span>
+    
+        <span class="sidebar-tag-name" data-tags="su和sudo"><span class="iconfont-archer">&#xe606;</span>su和sudo</span>
+    
+        <span class="sidebar-tag-name" data-tags="SSH"><span class="iconfont-archer">&#xe606;</span>SSH</span>
+    
+        <span class="sidebar-tag-name" data-tags="varnish"><span class="iconfont-archer">&#xe606;</span>varnish</span>
+    
+        <span class="sidebar-tag-name" data-tags="TCP/IP"><span class="iconfont-archer">&#xe606;</span>TCP/IP</span>
+    
+        <span class="sidebar-tag-name" data-tags="keepalied"><span class="iconfont-archer">&#xe606;</span>keepalied</span>
+    
+        <span class="sidebar-tag-name" data-tags="lvs"><span class="iconfont-archer">&#xe606;</span>lvs</span>
+    
+        <span class="sidebar-tag-name" data-tags="memcache"><span class="iconfont-archer">&#xe606;</span>memcache</span>
+    
+        <span class="sidebar-tag-name" data-tags="tomcat"><span class="iconfont-archer">&#xe606;</span>tomcat</span>
+    
+        <span class="sidebar-tag-name" data-tags="rpm"><span class="iconfont-archer">&#xe606;</span>rpm</span>
+    
+        <span class="sidebar-tag-name" data-tags="共享服务"><span class="iconfont-archer">&#xe606;</span>共享服务</span>
+    
+        <span class="sidebar-tag-name" data-tags="自动化安装"><span class="iconfont-archer">&#xe606;</span>自动化安装</span>
+    
+        <span class="sidebar-tag-name" data-tags="基本命令"><span class="iconfont-archer">&#xe606;</span>基本命令</span>
+    
+        <span class="sidebar-tag-name" data-tags="CA"><span class="iconfont-archer">&#xe606;</span>CA</span>
+    
+        <span class="sidebar-tag-name" data-tags="sed"><span class="iconfont-archer">&#xe606;</span>sed</span>
+    
+        <span class="sidebar-tag-name" data-tags="dns"><span class="iconfont-archer">&#xe606;</span>dns</span>
+    
+        <span class="sidebar-tag-name" data-tags="mini系统"><span class="iconfont-archer">&#xe606;</span>mini系统</span>
+    
+        <span class="sidebar-tag-name" data-tags="进程管理、计划任务"><span class="iconfont-archer">&#xe606;</span>进程管理、计划任务</span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+    缺失模块。<br/>
+    1、请确保node版本大于6.2<br/>
+    2、在博客根目录（注意不是archer根目录）执行以下命令：<br/>
+    <span style="color: #f75357; font-size: 1rem; line-height: 2rem;">npm i hexo-generator-json-content --save</span><br/>
+    3、在根目录_config.yml里添加配置：
+    <pre style="color: #787878; font-size: 0.6rem;">
+jsonContent:
+  meta: false
+  pages: false
+  posts:
+    title: true
+    date: true
+    path: true
+    text: false
+    raw: false
+    content: false
+    slug: false
+    updated: false
+    comments: false
+    link: false
+    permalink: false
+    excerpt: false
+    categories: true
+    tags: true</pre>
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+    </div>
+</div> 
+    <script>
+    var siteMeta = {
+        root: "/",
+        author: "John Doe"
+    }
+</script>
+    <!-- CDN failover -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ === 'undefined')
+        {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js">\x3C/script>')
+        }
+    </script>
+    <script src="/scripts/main.js"></script>
+    <!-- algolia -->
+    
+    <!-- busuanzi  -->
+    
+    <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+    <!-- CNZZ  -->
+    
+    </div>
+    <!-- async load share.js -->
+    
+        <script src="/scripts/share.js" async></script>    
+     
+    </body>
+</html>
+
+

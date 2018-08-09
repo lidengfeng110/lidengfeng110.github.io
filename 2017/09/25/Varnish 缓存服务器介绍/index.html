@@ -1,0 +1,2296 @@
+<!DOCTYPE html>
+<html>
+    <!-- title -->
+
+
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" >
+    <meta name="author" content="John Doe">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="John Doe">
+    <meta name="keywords" content="Hexo | John Doe">
+    <meta name="description" content="">
+    <meta name="Cache-Control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <title>Varnish 缓存服务器介绍 · 李登峰</title>
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s 1;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+
+</style>
+
+    <link rel="preload" href= /css/style.css?v=20180630 as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    <link rel="stylesheet" href= /css/mobile.css?v=20180630 media="(max-width: 980px)">
+    
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+(function( w ){
+	"use strict";
+	// rel=preload support test
+	if( !w.loadCSS ){
+		w.loadCSS = function(){};
+	}
+	// define on the loadCSS obj
+	var rp = loadCSS.relpreload = {};
+	// rel=preload feature support test
+	// runs once and returns a function for compat purposes
+	rp.support = (function(){
+		var ret;
+		try {
+			ret = w.document.createElement( "link" ).relList.supports( "preload" );
+		} catch (e) {
+			ret = false;
+		}
+		return function(){
+			return ret;
+		};
+	})();
+
+	// if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+	// then change that media back to its intended value on load
+	rp.bindMediaToggle = function( link ){
+		// remember existing media attr for ultimate state, or default to 'all'
+		var finalMedia = link.media || "all";
+
+		function enableStylesheet(){
+			link.media = finalMedia;
+		}
+
+		// bind load handlers to enable media
+		if( link.addEventListener ){
+			link.addEventListener( "load", enableStylesheet );
+		} else if( link.attachEvent ){
+			link.attachEvent( "onload", enableStylesheet );
+		}
+
+		// Set rel and non-applicable media type to start an async request
+		// note: timeout allows this to happen async to let rendering continue in IE
+		setTimeout(function(){
+			link.rel = "stylesheet";
+			link.media = "only x";
+		});
+		// also enable media after 3 seconds,
+		// which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+		setTimeout( enableStylesheet, 3000 );
+	};
+
+	// loop through link elements in DOM
+	rp.poly = function(){
+		// double check this to prevent external calls from running
+		if( rp.support() ){
+			return;
+		}
+		var links = w.document.getElementsByTagName( "link" );
+		for( var i = 0; i < links.length; i++ ){
+			var link = links[ i ];
+			// qualify links to those with rel=preload and as=style attrs
+			if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+				// prevent rerunning on link
+				link.setAttribute( "data-loadcss", true );
+				// bind listeners to toggle media back
+				rp.bindMediaToggle( link );
+			}
+		}
+	};
+
+	// if unsupported, run the polyfill
+	if( !rp.support() ){
+		// run once at least
+		rp.poly();
+
+		// rerun poly on an interval until onload
+		var run = w.setInterval( rp.poly, 500 );
+		if( w.addEventListener ){
+			w.addEventListener( "load", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		} else if( w.attachEvent ){
+			w.attachEvent( "onload", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		}
+	}
+
+
+	// commonjs
+	if( typeof exports !== "undefined" ){
+		exports.loadCSS = loadCSS;
+	}
+	else {
+		w.loadCSS = loadCSS;
+	}
+}( typeof global !== "undefined" ? global : this ) );
+</script>
+
+    <link rel="icon" href= "/assets/favicon.ico" />
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js" as="script" />
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" as="script" />
+    <link rel="preload" href="/scripts/main.js" as="script" />
+    <link rel="preload" as="font" href="/font/Oswald-Regular.ttf" crossorigin>
+    <link rel="preload" as="font" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" crossorigin>
+    
+    <!-- fancybox -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script>
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  -->
+    
+</head>
+
+    
+        <body class="post-body">
+    
+    
+<header class="header">
+
+    <div class="read-progress"></div>
+    <div class="header-sidebar-menu">&#xe775;</div>
+    <!-- post页的toggle banner  -->
+    
+    <div class="banner">
+            <div class="blog-title">
+                <a href="/" >博客</a>
+            </div>
+            <div class="post-title">
+                <a href="#" class="post-name">Varnish 缓存服务器介绍</a>
+            </div>
+    </div>
+    
+    <a class="home-link" href=/>博客</a>
+</header>
+    <div class="wrapper">
+        <div class="site-intro" style=
+
+
+
+
+
+
+
+
+height:50vh;
+
+>
+    
+    <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
+            
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+            Varnish 缓存服务器介绍
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+            
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class= post-intro-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "Linux">Linux</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "varnish">varnish</a>
+    
+</div>
+                
+                
+                    <div class="post-intro-read">
+                        <span>Word count: <span class="post-count">4,557</span> / Reading time: <span class="post-count">20 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                    <span class="post-intro-time">2017/09/25</span>
+                    
+                    <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                        <span class="iconfont-archer">&#xe602;</span>
+                        <span id="busuanzi_value_page_pv"></span>
+                    </span>
+                    
+                    <span class="shareWrapper">
+                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
+                        <span class="shareText">Share</span>
+                        <ul class="shareList">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        
+    </div>
+</div> 
+        <script>
+ 
+  // get user agent
+  var browser = {
+    versions: function () {
+      var u = window.navigator.userAgent;
+      return {
+        userAgent: u,
+        trident: u.indexOf('Trident') > -1, //IE内核
+        presto: u.indexOf('Presto') > -1, //opera内核
+        webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+        gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+        mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+        ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+        android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+        iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+        iPad: u.indexOf('iPad') > -1, //是否为iPad
+        webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+        weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+        uc: u.indexOf('UCBrowser') > -1 //是否为android下的UC浏览器
+      };
+    }()
+  }
+  console.log("userAgent:" + browser.versions.userAgent);
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded');
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document.getElementsByClassName('intro-title')[0].classList.add('intro-fade-in');
+      document.getElementsByClassName('intro-subtitle')[0].classList.add('intro-fade-in');
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in');
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb(){
+    if (browser.versions.uc) {
+      console.log("UCBrowser");
+      fontLoaded();
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular']
+        },
+        loading: function () {  //所有字体开始加载
+          // console.log('loading');
+        },
+        active: function () {  //所有字体已渲染
+          fontLoaded();
+        },
+        inactive: function () { //字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout');
+          fontLoaded();
+        },
+        timeout: 5000 // Set the timeout to two seconds
+      });
+    }
+  }
+
+  function asyncErr(){
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (cb) { o.addEventListener('load', function (e) { cb(null, e); }, false); }
+    if (err) { o.addEventListener('error', function (e) { err(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+
+  var asyncLoadWithFallBack = function(arr, success, reject) {
+      var currReject = function(){
+        reject()
+        arr.shift()
+        if(arr.length)
+          async(arr[0], success, currReject)
+        }
+
+      async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack([
+    "https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js", 
+    "https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js",
+    "/lib/webfontloader.min.js"
+  ], asyncCb, asyncErr)
+</script>        
+        <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+        <div class="container container-unloaded">
+            <main class="main post-page">
+    <article class="article-entry">
+        <p>Web Page Cache：</p>
+<pre><code>squid --&gt; varnish
+
+程序的运行具有局部性特征：
+    时间局部性：一个数据被访问过之后，可能很快会被再次访问到；
+    空间局部性：一个数据被访问时，其周边的数据也有可能被访问到
+
+在互联网站点当中存在着两种缓存,一种是用来缓存简单的数据流或者是流失数据，另一种是用来缓存页面数据，但页面缓存也属于流式数据的一种。
+    页面缓存：只是用来缓存外部服务器结构当中能够作为页面或者页面资源而存在的静态或者动态生成的不易发生变化，对不同客户端没有太大区别的。
+
+cache：命中 
+
+    热区：局部性；
+        时效性：
+            缓存空间耗尽：LRU，最近最少使用；
+            过期：缓存清理
+
+缓存命中率：hit/(hit+miss)
+    (0,1)
+    页面命中率：基于页面数量进行衡量
+    字节命中率：基于页面的体积进行衡量
+</code></pre><a id="more"></a>        
+<pre><code>缓存与否：
+    私有数据：private，private cache；
+    公共数据：public, public or private cache;
+
+私有缓存：private cache
+公共缓存：public cache
+    公共缓存可能有多级缓存
+
+Cache-related Headers Fields
+    The most important caching header fields are:
+
+        Expires：过期时间；
+            Expires:Thu, 22 Oct 2026 06:34:30 GMT
+        Cache-Control：max-age=
+
+
+        Etag
+        If-None-Match
+
+        Last-Modified
+        If-Modified-Since
+
+        Vary
+        Age
+
+    缓存有效性判断机制：
+        过期时间：Expires
+            HTTP/1.0
+                Expires：过期
+            HTTP/1.1
+                Cache-Control: maxage=
+                Cache-Control: s-maxage=
+        条件式请求：
+            Last-Modified/If-Modified-Since：基于文件的修改时间戳来判别；
+            Etag/If-None-Match：基于文件的校验码来判别；
+
+        Expires:Thu, 13 Aug 2026 02:05:12 GMT
+        Cache-Control:max-age=315360000
+        ETag:&quot;1ec5-502264e2ae4c0&quot;
+        Last-Modified:Wed, 03 Sep 2014 10:00:27 GMT
+
+    缓存层级：
+        私有缓存：用户代理附带的本地缓存机制；
+        公共缓存：反向代理服务器的缓存功能；
+
+        User-Agent &lt;--&gt; private cache &lt;--&gt; public cache &lt;--&gt; public cache 2 &lt;--&gt; Original Server
+
+        Cache-Control: key=value, key=value
+
+请求报文用于通知缓存服务如何使用缓存响应请求：
+    cache-request-directive = 
+        &quot;no-cache&quot;，                        
+        | &quot;no-store&quot;                         
+        | &quot;max-age&quot; &quot;=&quot; delta-seconds        
+        | &quot;max-stale&quot; [ &quot;=&quot; delta-seconds ]  
+        | &quot;min-fresh&quot; &quot;=&quot; delta-seconds      
+        | &quot;no-transform&quot;                    
+        | &quot;only-if-cached&quot;                  
+        | cache-extension                    
+
+响应报文用于通知缓存服务器如何存储上级服务器响应的内容：
+    cache-response-directive =
+        &quot;public&quot;   （能被所有缓存进行缓存）                            
+        | &quot;private&quot; [ &quot;=&quot; &lt;&quot;&gt; 1#field-name &lt;&quot;&gt; ] （紧能被私有缓存所缓存）
+        | &quot;no-cache&quot; [ &quot;=&quot; &lt;&quot;&gt; 1#field-name &lt;&quot;&gt; ]，可缓存，但响应给客户端之前需要revalidation（即必须发出条件式请求进行缓存有效性验正）；
+        | &quot;no-store&quot; ，不允许存储响应内容于缓存中；                           
+        | &quot;no-transform&quot;     （不能转换格式）                   
+        | &quot;must-revalidate&quot;    （必须做重新验证）                 
+        | &quot;proxy-revalidate&quot;                  
+        | &quot;max-age&quot; &quot;=&quot; delta-seconds    （所有缓存的最大缓存时长）       
+        | &quot;s-maxage&quot; &quot;=&quot; delta-seconds     （公共缓存的缓存时长）     
+        | cache-extension     
+
+
+
+
+外部服务器是如何实现缓存服务的？
+    客户端请求发来以后，缓存服务器会检查请求是不是 GET 或 HEAD 请求，如果是，就查缓存，如果没命中，就到后端提供服务的服务器去取数据，后端服务器响应请求时，会告诉前端服务器这个数据内容能缓存多久，然后在这个时间内，其他客户端请求同样内容时，缓存服务器会把缓存服务器缓存的内容发给客户端，所以在这个缓存有限期内，无论后端服务器的内容发生修改没，缓存服务器都不会去后端获取数据。这样就不能保证数据真实性。
+
+    然后到 HTTP 1.1 时代，就有了条件式验证缓存，就是客户端发来请求时，缓存服务器查缓存发现有缓存，不是立即把缓存的内容发给客户端，而是查到有缓存后，缓存服务器会去查询后端的服务器内容的时间戳，如果时间戳一致，就表示内容没有修改，然后把缓存中的内容发送给客户端。
+    但是这种力度还是不够强硬，因为时间戳最小单位为秒，而很有可有后端服务器上内容在一秒内进行了多次改变，但是时间戳的时间没改，所以这样也不能保证数据的真实性。
+    所以就有了标签验证，就是在缓存服务器从后端服务器取来的数据在本机缓存时，会顺便缓存一个标签（相当于 hash值），然后客户端来访问数据时，缓存服务器有缓存，也不是直接给客户端内容，而是去跟后端服务器内容的标签进行比较，如果标签没变，说明内容没变，如果标签改变，说明数据被修改，然后把新的内容先缓存到本机，在发送给客户。
+    在生产中一般都是把过期时间的方式和条件式验证的方式整合起来使用。
+这就是 HTTP 1.1 时代使用的缓存机制
+        过期时间+条件式验证
+
+
+
+
+
+
+开源解决方案：
+    squid：
+    varnish：
+
+    varnish官方站点： http://www.varnish-cache.org/
+        Community
+        Enterprise
+
+         This is Varnish Cache, a high-performance HTTP accelerator. 
+
+    架构图：
+        [![PG2AeS.md.png](https://s1.ax1x.com/2018/07/22/PG2AeS.md.png)](https://imgchr.com/i/PG2AeS)
+    ![PG2AeS.png](https://s1.ax1x.com/2018/07/22/PG2AeS.png)
+    [![PG2AeS.png](https://s1.ax1x.com/2018/07/22/PG2AeS.png)](https://imgchr.com/i/PG2AeS)
+
+
+    程序架构：
+        Manager进程
+        Cacher进程，包含多种类型的线程：
+            accept, worker, expiry, ... 
+        shared memory log：
+            统计数据：计数器；
+            日志区域：日志记录；
+                varnishlog, varnishncsa, varnishstat... 
+
+    varnish 支持三种缓存方式：
+        内存缓存；
+        磁盘缓存；
+            持久缓存，临时缓存
+     缓存系统一定不能随意重启
+
+        配置接口：VCL
+            Varnish Configuration Language, 
+                vcl complier --&gt; c complier --&gt; shared object 
+
+    varnish 有两套配置
+        第一： 用来配置 varnish 自身的工作特性。
+        第二： 定义缓存规则。
+
+    varnish的程序环境：
+        /etc/varnish/varnish.params： 配置varnish服务进程的工作特性，例如监听的地址和端口，缓存机制；
+            Unit File: EnvironmentFile=&quot;&quot;
+        /etc/varnish/default.vcl：配置各Child/Cache线程的缓存策略；
+            VCL: dsl, subroutines, 子例程
+        主程序：
+            /usr/sbin/varnishd
+        CLI interface：
+            /usr/bin/varnishadm
+        Shared Memory Log交互工具：
+            /usr/bin/varnishhist
+            /usr/bin/varnishlog
+            /usr/bin/varnishncsa
+            /usr/bin/varnishstat
+            /usr/bin/varnishtop        
+        测试工具程序：
+            /usr/bin/varnishtest
+        VCL配置文件重载程序：
+            /usr/sbin/varnish_reload_vcl
+        Systemd Unit File：
+            /usr/lib/systemd/system/varnish.service
+                varnish服务
+            /usr/lib/systemd/system/varnishlog.service
+            /usr/lib/systemd/system/varnishncsa.service    
+                日志持久的服务；
+
+    varnish的缓存存储机制( Storage Types)：
+        -s [name=]type[,options]
+
+        · malloc[,size]
+            内存存储，[,size]用于定义空间大小；重启后所有缓存项失效；
+        · file[,path[,size[,granularity]]]
+            磁盘文件存储，黑盒；重启后所有缓存项失效；
+        · persistent,path,size
+            文件存储，黑盒；重启后所有缓存项有效；实验；
+
+    varnish程序的选项：
+        程序选项：/etc/varnish/varnish.params文件
+            -a address[:port][,address[:port][...]，默认为6081端口； 
+            -T address[:port]，默认为6082端口；
+            -s [name=]type[,options]，定义缓存存储机制；
+            -u user
+            -g group
+            -f config：VCL配置文件；
+            -F：运行于前台；
+            ...
+        运行时参数：/etc/varnish/varnish.params文件， DEAMON_OPTS
+            DAEMON_OPTS=&quot;-p thread_pool_min=5 -p thread_pool_max=500 -p thread_pool_timeout=300&quot;
+
+            -p param=value：设定运行参数及其值； 可重复使用多次；
+            -r param[,param...]: 设定指定的参数为只读状态； 
+
+    重载vcl配置文件：
+        ~ ]# varnish_reload_vcl
+
+    varnishadm
+        -S /etc/varnish/secret -T [ADDRESS:]PORT 
+
+        help [&lt;command&gt;]
+        ping [&lt;timestamp&gt;]
+        auth &lt;response&gt;
+        quit
+        banner
+        status
+        start
+        stop
+        vcl.load &lt;configname&gt; &lt;filename&gt;
+        vcl.inline &lt;configname&gt; &lt;quoted_VCLstring&gt;
+        vcl.use &lt;configname&gt;
+        vcl.discard &lt;configname&gt;
+        vcl.list
+        param.show [-l] [&lt;param&gt;]
+        param.set &lt;param&gt; &lt;value&gt;
+        panic.show
+        panic.clear
+        storage.list
+        vcl.show [-v] &lt;configname&gt;
+        backend.list [&lt;backend_expression&gt;]
+        backend.set_health &lt;backend_expression&gt; &lt;state&gt;
+        ban &lt;field&gt; &lt;operator&gt; &lt;arg&gt; [&amp;&amp; &lt;field&gt; &lt;oper&gt; &lt;arg&gt;]...
+        ban.list    
+
+        配置文件相关：
+            vcl.list 
+            vcl.load：装载，加载并编译；
+            vcl.use：激活；
+            vcl.discard：删除；
+            vcl.show [-v] &lt;configname&gt;：查看指定的配置文件的详细信息；
+
+        运行时参数：
+            param.show -l：显示列表；
+            param.show &lt;PARAM&gt;
+            param.set &lt;PARAM&gt; &lt;VALUE&gt;
+
+        缓存存储：
+            storage.list
+
+        后端服务器：
+            backend.list 
+
+
+
+
+vcl_recv
+    vcl_pass
+    vcl_hash
+    vcl_pipe
+vcl_hash
+    vcl_hit    # 缓存命中
+    vcl_miss   # 缓存没命中
+    vcl_pass
+vcl_backend_fetch     # 表示到后端取数据
+    vcl_backend_respose   # 表示正常响应
+    vcl_backend_error     # 表示响应错误
+vcl_synth  # 合成响应报文的
+vcl_purge   # 作欢村清理用的
+vcl_deliver   # 给客户端发送响应报文的  
+
+varnish 刚启动时，有一个 vci_init ，随后每一个用户请求都将被 vcl_recv 所接受到，接收到以后先去判定是否能够处理请求，如果能够识别，是标准的 HTTP 方法，然后转给下一跳是 vcl_hash ，如果无法处理，就交给 vcl_pipe 做四层管理的管道连接
+
+
+    VCL：
+        ”域“专有类型的配置语言；
+
+        state engine：状态引擎；
+
+        VCL有多个状态引擎，状态之间存在相关性，但状态引擎彼此间互相隔离；每个状态引擎可使用return(x)指明关联至哪个下一级引擎；每个状态引擎对应于vcl文件中的一个配置段，即为subroutine
+
+            vcl_hash --&gt; return(hit) --&gt; vcl_hit
+
+        vcl_recv的默认配置：
+
+            sub vcl_recv {
+                if (req.method == &quot;PRI&quot;) {
+                    /* We do not support SPDY or HTTP/2.0 */
+                    return (synth(405));
+                }
+                if (req.method != &quot;GET&quot; &amp;&amp;
+                req.method != &quot;HEAD&quot; &amp;&amp;
+                req.method != &quot;PUT&quot; &amp;&amp;
+                req.method != &quot;POST&quot; &amp;&amp;
+                req.method != &quot;TRACE&quot; &amp;&amp;
+                req.method != &quot;OPTIONS&quot; &amp;&amp;
+                req.method != &quot;DELETE&quot;) {
+                    /* Non-RFC2616 or CONNECT which is weird. */
+                    return (pipe);
+                }
+
+                if (req.method != &quot;GET&quot; &amp;&amp; req.method != &quot;HEAD&quot;) {
+                    /* We only deal with GET and HEAD by default */
+                    return (pass);
+                }
+                if (req.http.Authorization || req.http.Cookie) {
+                    /* Not cacheable by default */
+                    return (pass);
+                }
+                    return (hash);
+                }
+            }
+
+
+        Client Side：
+            vcl_recv, vcl_pass, vcl_hit, vcl_miss, vcl_pipe, vcl_purge, vcl_synth, vcl_deliver
+
+            vcl_recv：
+                hash：vcl_hash
+                pass: vcl_pass 
+                pipe: vcl_pipe
+                synth: vcl_synth
+                purge: vcl_hash --&gt; vcl_purge
+
+            vcl_hash：
+                lookup：
+                    hit: vcl_hit
+                    miss: vcl_miss
+                    pass, hit_for_pass: vcl_pass
+                    purge: vcl_purge
+
+        Backend Side：
+            vcl_backend_fetch, vcl_backend_response, vcl_backend_error
+
+        两个特殊的引擎：
+            vcl_init：在处理任何请求之前要执行的vcl代码：主要用于初始化VMODs；
+            vcl_fini：所有的请求都已经结束，在vcl配置被丢弃时调用；主要用于清理VMODs；
+
+    vcl的语法格式：
+        (1) VCL files start with vcl 4.0;   标明所使用的版本  
+        (2) //, # and /* foo */ for comments;
+        (3) Subroutines are declared with the sub keyword; 例如sub vcl_recv { ...}； 使用sub 来定义子例程
+        (4) No loops, state-limited variables（受限于引擎的内建变量）；
+        (5) Terminating statements with a keyword for next action as argument of the return() function, i.e.: return(action)；用于实现状态引擎转换； 
+        (6) Domain-specific;   域专用
+
+    The VCL Finite State Machine
+        (1) Each request is processed separately;  每个请求是被 分开 隔离 独立处理的，请求跟请求之间是无关联的
+        (2) Each request is independent from others at any given time;
+        (3) States are related, but isolated;   
+        (4) return(action); exits one state and instructs Varnish to proceed to the next state;
+        (5) Built-in VCL code is always present and appended below your own VCL;
+
+    三类主要语法：
+        sub subroutine {
+            ...
+        }
+
+        if CONDITION {
+            ...
+        } else {    
+            ...
+        }
+
+        return(), hash_data()
+
+    VCL Built-in Functions and Keywords
+        函数：
+            regsub(str, regex, sub)      # 基于正则表达式的查找替换整行第一个匹配到的
+            regsuball(str, regex, sub)     # 替换整行所匹配到的
+            ban(boolean expression)
+            hash_data(input)
+            synthetic(str)
+
+        Keywords:
+            call subroutine， return(action)，new，set，unset 
+
+        操作符：
+            ==, !=, ~, &gt;, &gt;=, &lt;, &lt;=
+            逻辑操作符：&amp;&amp;, ||, !
+            变量赋值：=
+
+        举例：obj.hits是内建变量，用于保存某缓存项的从缓存中命中的次数；
+            if (obj.hits&gt;0) {
+                set resp.http.X-Cache = &quot;HIT via&quot; + &quot; &quot; + server.ip;
+            } else {
+                set resp.http.X-Cache = &quot;MISS from &quot; + server.ip;
+            }
+
+
+    变量类型：
+        内建变量：
+            req.*：request，表示由客户端发来的请求报文相关；
+                req.http.*
+                    req.http.User-Agent, req.http.Referer, ...
+            bereq.*：由varnish发往BE主机的httpd请求相关；
+                bereq.http.*
+            beresp.*：由BE主机响应给varnish的响应报文相关；
+                beresp.http.*
+            resp.*：由varnish响应给client相关；
+            obj.*：存储在缓存空间中的缓存对象的属性；只读；
+
+            常用变量：
+                bereq.*, req.*：
+                    bereq.http.HEADERS
+                    bereq.request，req.request：请求方法；
+                    bereq.url,req.url：请求的url；
+                    bereq.proto：请求的协议版本；
+                    bereq.backend：指明要调用的后端主机；
+
+                    req.http.Cookie：客户端的请求报文中Cookie首部的值； 
+                    req.http.User-Agent ~ &quot;chrome&quot;
+
+
+                beresp.*, resp.*：
+                    beresp.http.HEADERS
+                    beresp.status,resp.status：响应的状态码；
+                    reresp.proto,resp.proto：协议版本；
+                    beresp.backend.name：(后端服务器)BE主机的主机名；
+                    beresp.ttl：BE主机响应的内容的余下的可缓存时长；
+
+                obj.*
+                    obj.hits：此对象从缓存中命中的次数；
+                    obj.ttl：对象的ttl值
+
+                server.*
+                    server.ip：varnish主机的IP；
+                    server.hostname：varnish主机的Hostname；
+                client.*
+                    client.ip：发请求至varnish主机的客户端IP；
+
+        用户自定义：
+            set 
+            unset 
+
+    示例1：强制对某类资源的请求不检查缓存：
+        vcl_recv {
+            if (req.url ~ &quot;(?i)^/(login|admin)&quot;) {
+                return(pass);
+            }
+        }
+
+    示例2：对于特定类型的资源，例如公开的图片等，取消其私有标识，并强行设定其可以由varnish缓存的时长； 定义在vcl_backend_response中；
+        if (beresp.http.cache-control !~ &quot;s-maxage&quot;) {
+            if (bereq.url ~ &quot;(?i)\.(jpg|jpeg|png|gif|css|js)$&quot;) {
+                unset beresp.http.Set-Cookie;
+                set beresp.ttl = 3600s;
+            }
+        }
+
+    示例3：定义在vcl_recv中；
+        if (req.restarts == 0) {
+            if (req.http.X-Fowarded-For) {
+                set req.http.X-Forwarded-For = req.http.X-Forwarded-For + &quot;,&quot; + client.ip;
+            } else {
+                set req.http.X-Forwarded-For = client.ip;
+            }
+        }        
+
+    缓存对象的修剪：purge, ban 
+
+    配置purge操作
+        (1) 能执行purge操作
+            sub vcl_purge {
+                return (synth(200,&quot;Purged&quot;));
+            }
+
+        (2) 何时执行purge操作
+            sub vcl_recv {
+                if (req.method == &quot;PURGE&quot;) {
+                    return(purge);
+                }
+                ...
+            }
+
+        添加此类请求的访问控制法则：
+            acl purgers {
+                &quot;127.0.0.0&quot;/8;
+                &quot;10.1.0.0&quot;/16;
+            }
+
+            sub vcl_recv {
+                if (req.method == &quot;PURGE&quot;) {
+                    if (!client.ip ~ purgers) {
+                        return(synth(405,&quot;Purging not allowed for &quot; + client.ip));
+                    }
+                    return(purge);
+                }
+                ...
+            }
+
+        Banning：
+            (1) varnishadm：
+                ban &lt;field&gt; &lt;operator&gt; &lt;arg&gt;
+
+                示例：
+                    ban req.url ~ ^/javascripts
+
+            (2) 在配置文件中定义，使用ban()函数；
+
+            示例：
+                if (req.method == &quot;BAN&quot;) {
+                    ban(&quot;req.http.host == &quot; + req.http.host + &quot; &amp;&amp; req.url == &quot; + req.url);
+                    # Throw a synthetic page so the request won&apos;t go to the backend.
+                    return(synth(200, &quot;Ban added&quot;));
+                }    
+
+                ban req.http.host==www.ilinux.io &amp;&amp; req.url==/test1.html
+
+                http://www.ilinux.io/test1.html 
+
+
+    如何设定使用多个后端主机：
+        backend default {
+            .host = &quot;172.16.100.6&quot;;
+            .port = &quot;80&quot;;
+        }
+
+        backend appsrv {
+            .host = &quot;172.16.100.7&quot;;
+            .port = &quot;80&quot;;
+        }
+
+        sub vcl_recv {                
+            if (req.url ~ &quot;(?i)\.php$&quot;) {
+                set req.backend_hint = appsrv;
+            } else {
+                set req.backend_hint = default;
+            }    
+
+            ...
+        }
+
+    相当于：
+        nginx : proxy_pass
+        haproxy: use_backend
+
+    Director：
+        varnish module； 
+            使用前需要导入：
+                import directors；
+
+        示例：
+            import directors;    # load the directors
+
+            backend server1 {
+                .host = 
+                .port = 
+            }
+            backend server2 {
+                .host = 
+                .port = 
+            }
+
+            sub vcl_init {
+                new GROUP_NAME = directors.round_robin();
+                GROUP_NAME.add_backend(server1);
+                GROUP_NAME.add_backend(server2);
+            }
+
+            sub vcl_recv {
+                # send all traffic to the bar director:
+                set req.backend_hint = GROUP_NAME.backend();
+            }
+
+        基于cookie的session sticky：
+            sub vcl_init {
+                new h = directors.hash();
+                h.add_backend(one, 1);   // backend &apos;one&apos; with weight &apos;1&apos;
+                h.add_backend(two, 1);   // backend &apos;two&apos; with weight &apos;1&apos;
+            }
+
+            sub vcl_recv {
+                // pick a backend based on the cookie header of the client
+                set req.backend_hint = h.backend(req.http.cookie);
+            }                
+        基于随机的调度方式，支持服务器权重；
+            sub vcl_init {
+                  new websrvs = directors.random();
+                  websrvs.add_backend(srvs1);
+                  websrvs.add_backend(srvs2);
+            }
+
+
+    BE Health Check：
+        backend BE_NAME {
+            .host =  
+            .port = 
+            .probe = {
+                .url=            # 对哪个 url 做请求
+                .timeout=        # 超时时长
+                .interval=       # 每个多长时间检查一次
+                .window=         # 根据最近多少次来进行判断
+                .threshold=      # 基于最近多少次是成功的来进行判断
+            }
+        }
+
+        .probe：定义健康状态检测方法；
+            .url：检测时要请求的URL，默认为”/&quot;; 
+            .request：发出的具体请求；
+                .request = 
+                    &quot;GET /.healthtest.html HTTP/1.1&quot;
+                    &quot;Host: www.magedu.com&quot;
+                    &quot;Connection: close&quot;
+            .window：基于最近的多少次检查来判断其健康状态； 
+            .threshold：最近.window中定义的这么次检查中至有.threshhold定义的次数是成功的；
+            .interval：检测频度； 
+            .timeout：超时时长；
+            .expected_response：期望的响应码，默认为200；
+
+        健康状态检测的配置方式：
+            (1) probe PB_NAME  { }
+                 backend NAME = {
+                .probe = PB_NAME;
+                ...
+                 }
+
+            (2) backend NAME  {
+                .probe = {
+                    ...
+                }
+            }
+
+        示例：
+            probe check {
+                .url = &quot;/.healthcheck.html&quot;;
+                .window = 5;
+                .threshold = 4;
+                .interval = 2s;
+                .timeout = 1s;
+            }
+
+            backend default {
+                .host = &quot;10.1.0.68&quot;;
+                .port = &quot;80&quot;;
+                .probe = check;
+            }
+
+            backend appsrv {
+                .host = &quot;10.1.0.69&quot;;
+                .port = &quot;80&quot;;
+                .probe = check;
+            }
+
+        手动设定BE主机的状态：
+            sick：管理down; 
+            healthy：管理up；
+            auto：probe auto；
+
+    设置后端的主机属性：
+        backend BE_NAME {
+            ...
+            .connect_timeout = 0.5s;   连接超时时间
+            .first_byte_timeout = 20s;      
+            .between_bytes_timeout = 5s;
+            .max_connections = 50;     最大并发连接数
+        }
+
+
+     varnish的运行时参数：
+        线程模型：
+            cache-worker
+            cache-main
+            ban lurker
+            acceptor：
+            epoll/kqueue：
+            ...
+
+        线程相关的参数：使用线程池机制管理线程；
+            在线程池内部，其每一个请求由一个线程来处理； 其worker线程的最大数决定了varnish的并发响应能力；
+
+            thread_pools：Number of worker thread pools. 最好小于或等于CPU核心数量； 
+            thread_pool_max：The maximum number of worker threads in each pool. 每线程池的最大线程数；
+            thread_pool_min：The minimum number of worker threads in each pool. 额外意义为“最大空闲线程数”；
+
+                最大并发连接数 = thread_pools  * thread_pool_max
+
+            thread_pool_timeout：Thread idle threshold.  Threads in excess of thread_pool_min, which have been idle for at least this long, will be destroyed.
+            thread_pool_add_delay：Wait at least this long after creating a thread.
+            thread_pool_destroy_delay：Wait this long after destroying a thread.
+
+        Timer相关的参数：
+            send_timeout：Send timeout for client connections. If the HTTP response hasn&apos;t been transmitted in this many seconds the session is closed.
+            timeout_idle：Idle timeout for client connections. 
+            timeout_req： Max time to receive clients request headers, measured from first non-white-space character to double CRNL.
+            cli_timeout：Timeout for the childs replies to CLI requests from the mgt_param.
+
+            设置方式：
+                vcl.param 
+                param.set
+
+            永久有效的方法：
+                varnish.params
+                    DEAMON_OPTS=&quot;-p PARAM1=VALUE -p PARAM2=VALUE&quot;
+
+    varnish日志区域：
+        shared memory log 
+            计数器
+            日志信息
+
+        1、varnishstat - Varnish Cache statistics
+            -1
+            -1 -f FILED_NAME 
+            -l：可用于-f选项指定的字段名称列表；
+
+            MAIN.cache_hit 
+            MAIN.cache_miss
+
+            # varnishstat -1 -f MAIN.cache_hit -f MAIN.cache_miss
+                显示指定参数的当前统计数据；
+            # varnishstat -l -f MAIN -f MEMPOOL
+                列出指定配置段的每个参数的意义；
+
+        2、varnishtop - Varnish log entry ranking
+            -1     Instead of a continously updated display, print the statistics once and exit.
+            -i taglist，可以同时使用多个-i选项，也可以一个选项跟上多个标签；
+            -I &lt;[taglist:]regex&gt;：对指定的标签的值基于regex进行过滤； 
+            -x taglist：排除列表
+            -X  &lt;[taglist:]regex&gt;：对指定的标签的值基于regex进行过滤，符合条件的予以排除；
+
+        3、varnishlog - Display Varnish logs
+
+        4、 varnishncsa - Display Varnish logs in Apache / NCSA combined log format
+
+    内建函数：
+        hash_data()：指明哈希计算的数据；减少差异，以提升命中率；
+        regsub(str,regex,sub)：把str中被regex第一次匹配到字符串替换为sub；主要用于URL Rewrite
+        regsuball(str,regex,sub)：把str中被regex每一次匹配到字符串均替换为sub；
+        return()：
+        ban(expression) 
+        ban_url(regex)：Bans所有的其URL可以被此处的regex匹配到的缓存对象；
+        synth(status,&quot;STRING&quot;)：生成响应报文；
+
+
+总结：
+    varnish： state engine, vcl 
+        varnish 4.0：
+            vcl_init 
+            vcl_recv
+            vcl_hash 
+            vcl_hit 
+            vcl_pass
+            vcl_miss 
+            vcl_pipe 
+            vcl_waiting
+            vcl_purge 
+            vcl_deliver
+            vcl_synth
+            vcl_fini
+
+            vcl_backend_fetch
+            vcl_backend_response
+            vcl_backend_error 
+
+        sub VCL_STATE_ENGINE {
+            ...
+        }
+        backend BE_NAME {} 
+        probe PB_NAME {}
+        acl ACL_NAME {}
+
+博客作业：以上所有内容； 
+    实战项目：两个lamp部署wordpress，用Nginx反代，做压测；nginx后部署varnish缓存，调整vcl，多次压测；
+
+
+    ab, http_load, webbench, seige, jmeter, loadrunner,...
+</code></pre><p>补充资料：varnish book<br>    <a href="http://book.varnish-software.com/4.0/" target="_blank" rel="noopener">http://book.varnish-software.com/4.0/</a></p>
+<p>示例：<br>    backend imgsrv1 {<br>        .host = “192.168.10.11”;<br>        .port = “80”;<br>    }</p>
+<pre><code>backend imgsrv2 {
+    .host = &quot;192.168.10.12&quot;;
+    .port = &quot;80&quot;;
+}    
+
+backend appsrv1 {
+    .host = &quot;192.168.10.21&quot;;
+    .port = &quot;80&quot;;
+}
+
+backend appsrv2 {
+    .host = &quot;192.168.10.22&quot;;
+    .port = &quot;80&quot;;
+}
+
+sub vcl_init {
+    new imgsrvs = directors.random();
+    imgsrvs.add_backend(imgsrv1,10);
+    imgsrvs.add_backend(imgsrv2,20);
+
+    new staticsrvs = directors.round_robin();
+    appsrvs.add_backend(appsrv1);
+    appsrvs.add_backend(appsrv2);
+
+    new appsrvs = directors.hash();
+    appsrvs.add_backend(appsrv1,1);
+    appsrvs.add_backend(appsrv2,1);        
+}
+
+sub vcl_recv {
+    if (req.url ~ &quot;(?i)\.(css|js)$&quot; {
+        set req.backend_hint = staticsrvs.backend();
+    }         
+    if (req.url ~ &quot;(?i)\.(jpg|jpeg|png|gif)$&quot; {
+        set req.backend_hint = imgsrvs.backend();
+    } else {        
+        set req.backend_hint = appsrvs.backend(req.http.cookie);
+    }
+}
+</code></pre>
+    </article>
+    <!-- license  -->
+    
+        <div class="license-wrapper">
+            <p>原文作者: <a href="http://yoursite.com">John Doe</a>
+            <p>原文链接: <a href="http://yoursite.com/2017/09/25/Varnish 缓存服务器介绍/">http://yoursite.com/2017/09/25/Varnish 缓存服务器介绍/</a>
+            <p>发表日期: <a href="http://yoursite.com/2017/09/25/Varnish 缓存服务器介绍/">September 25th 2017, 12:00:00 am</a>
+            <p>版权声明: 本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+        </div>
+    
+    <!-- paginator  -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+                <div class="nextSlogan">Next Post</div>
+                <a href= "/2017/10/05/浅谈 tomcat 原理/" title= 浅谈 tomcat 原理 >
+                    <div class="nextTitle">浅谈 tomcat 原理</div>
+                </a>
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href= "/2017/09/14/keepalived 各种高可用实战演练/" title= keepalived 各种高可用实战演练 >
+                    <div class="prevTitle">keepalived 各种高可用实战演练</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+<!-- City版安装代码已完成 -->
+    
+    
+    <!--PC和WAP自适应版-->
+
+    <!--PC版-->
+
+
+    
+    
+
+    <!-- 评论 -->
+</main>
+            <!-- profile -->
+            
+        </div>
+        <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+    <div class="social">
+        
+    
+        
+            
+                <a href="mailto:1020846215@qq.com" class="iconfont-archer email" title=email ></a>
+            
+        
+    
+        
+            
+                <a href="//github.com/fi3ework" class="iconfont-archer github" target="_blank" title=github></a>
+            
+        
+    
+        
+            
+                <span class="iconfont-archer wechat" title=wechat>
+                  
+                  <img class="profile-qr" src="/assets/example_qr.png" />
+                </span>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+    </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- 不蒜子  -->
+    
+    <div class="busuanzi-container">
+    
+     
+    <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+    
+    </div>
+    
+</footer>
+    </div>
+    <!-- toc -->
+    
+    <div class="toc-wrapper" style=
+    
+
+
+
+
+
+
+
+top:50vh;
+
+    >
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        
+    </div>
+    
+    <div class="back-top iconfont-archer">&#xe639;</div>
+    <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+          <div class="sidebar-panel-archives">
+    <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 39
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+    
+    
+    
+    <div class="archive-year"> 2018 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/09</span><a class="archive-post-title" href= "/2018/08/09/Linux 防火墙各种规则实战应用/" >[Untitled Post]</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/09</span><a class="archive-post-title" href= "/2018/08/09/Nginx 详细介绍/" >[Untitled Post]</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2017 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/15</span><a class="archive-post-title" href= "/2017/10/15/memcache  缓存原理介绍/" >memcache  缓存原理介绍</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/08</span><a class="archive-post-title" href= "/2017/10/08/tomcat 各种架构实验演示/" >tomcat 各种架构实验演示</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/05</span><a class="archive-post-title" href= "/2017/10/05/浅谈 tomcat 原理/" >浅谈 tomcat 原理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/25</span><a class="archive-post-title" href= "/2017/09/25/Varnish 缓存服务器介绍/" >Varnish 缓存服务器介绍</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/14</span><a class="archive-post-title" href= "/2017/09/14/keepalived 各种高可用实战演练/" >keepalived 各种高可用实战演练</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/28</span><a class="archive-post-title" href= "/2017/08/28/HAproxy 原理介绍/" >HAproxy 原理介绍</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/19</span><a class="archive-post-title" href= "/2017/08/19/lvs 详细介绍/" >lvs 详细介绍</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/24</span><a class="archive-post-title" href= "/2017/06/24/各种网络共享服务实验演示/" >各种网络共享服务实验演示</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/20</span><a class="archive-post-title" href= "/2017/06/20/网络文件共享服务：FTP    NFS   SAMBA/" >网络文件共享服务：FTP    NFS   SAMBA</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/11</span><a class="archive-post-title" href= "/2017/06/11/LAMP 架构的各种演示/" >LAMP 架构的各种演示</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/01</span><a class="archive-post-title" href= "/2017/06/01/介绍 MYSQL的事务日志/" >介绍 MYSQL的事务日志</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/22</span><a class="archive-post-title" href= "/2017/05/22/MYSQL 数据库的日志介绍/" >MYSQL 数据库的日志介绍</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/15</span><a class="archive-post-title" href= "/2017/05/15/MYSQL MariaDB 的事务和事务隔离级别/" >MYSQL MariaDB 的事务和事务隔离级别</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/08</span><a class="archive-post-title" href= "/2017/05/08/MASQL MariaDB 用户权限管理/" >MASQL MariaDB 用户权限管理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/20</span><a class="archive-post-title" href= "/2017/04/20/ext 文件系统机制原理/" >ext 文件系统机制原理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/15</span><a class="archive-post-title" href= "/2017/04/15/Linux分区信息与管理文件系统/" >Linux分区信息与管理文件系统</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/10</span><a class="archive-post-title" href= "/2017/04/10/DHCP 服务/" >DHCP服务</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/01</span><a class="archive-post-title" href= "/2017/04/01/Linux系统中su 和 sudo 的用法/" >Linux系统中su 和 sudo 的用法</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/22</span><a class="archive-post-title" href= "/2017/03/22/实现DNS服务主从复制/" >实现DNS服务主从复制</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/20</span><a class="archive-post-title" href= "/2017/03/20/搭建DNS互联网架构服务器(一）/" >搭建DNS互联网架构服务器</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/15</span><a class="archive-post-title" href= "/2017/03/15/搭建DNS 服务，实现主服务器，邮件服务器，泛域名解析，反向解析等/" >搭建DNS 服务，实现主服务器，邮件服务器，泛域名解析，反向解析等</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/12</span><a class="archive-post-title" href= "/2017/03/12/Linux 文件权限管理/" >Linux 文件权限管理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/08</span><a class="archive-post-title" href= "/2017/03/08/LINUX系统中用户、组管理/" >安装管理包：LINUX系统中用户、组管理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/28</span><a class="archive-post-title" href= "/2017/02/28/搭建DNS服务器，实现主DNS服务器，负责解析一个域/" >搭建DNS服务器，实现主DNS服务器，负责解析一个域</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/15</span><a class="archive-post-title" href= "/2017/02/15/DNS 服务从基础到深入/" >DNS 服务从基础到深入</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/10</span><a class="archive-post-title" href= "/2017/02/10/SSH端口转发实验/" >SSH端口转发实验</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/08</span><a class="archive-post-title" href= "/2017/02/08/实现PXE自动安装/" >实现PXE自动安装</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/01</span><a class="archive-post-title" href= "/2017/02/01/rpm管理包 和 yum管理包(1)/" >安装管理包：rpm包和yum包</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/20</span><a class="archive-post-title" href= "/2017/01/20/搭建CA/" >如何搭建CA（向CA申请证书）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/08</span><a class="archive-post-title" href= "/2017/01/08/自制一个mini 的Linux系统/" >自制一个mini 的Linux系统</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2016 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/20</span><a class="archive-post-title" href= "/2016/12/20/进程管理和计划任务的知识点()/" >进程管理与计划任务的知识点</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/15</span><a class="archive-post-title" href= "/2016/12/15/文本处理工具：sed/" >文本处理工具：sed</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/08</span><a class="archive-post-title" href= "/2016/12/08/TCP、IP协议三次握手与四次握手流程解析（）/" >TCP、IP协议三次握手与四次握手流程解析</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> Invalid date </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">Invalid date</span><a class="archive-post-title" href= "/2018/08/09/Nginx 各种实验演示/" >[Untitled Post]</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2016 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/29</span><a class="archive-post-title" href= "/2016/11/29/Linux 的一些基础练习题/" >Linux 的一些基础练习题</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/23</span><a class="archive-post-title" href= "/2016/11/23/对正则表达式，VIM编辑器命令的基本操作（三）/" >对正则表达式，VIM编辑器命令的基本操作</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> Invalid date </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">Invalid date</span><a class="archive-post-title" href= "/2018/08/09/日志管理介绍/" >[Untitled Post]</a>
+        </li>
+    
+    </div>
+  </div>
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+    
+        <span class="sidebar-tag-name" data-tags="Linux"><span class="iconfont-archer">&#xe606;</span>Linux</span>
+    
+        <span class="sidebar-tag-name" data-tags="DHCP"><span class="iconfont-archer">&#xe606;</span>DHCP</span>
+    
+        <span class="sidebar-tag-name" data-tags="haproxy"><span class="iconfont-archer">&#xe606;</span>haproxy</span>
+    
+        <span class="sidebar-tag-name" data-tags="LAMP"><span class="iconfont-archer">&#xe606;</span>LAMP</span>
+    
+        <span class="sidebar-tag-name" data-tags="DNS"><span class="iconfont-archer">&#xe606;</span>DNS</span>
+    
+        <span class="sidebar-tag-name" data-tags="权限管理"><span class="iconfont-archer">&#xe606;</span>权限管理</span>
+    
+        <span class="sidebar-tag-name" data-tags="用户组"><span class="iconfont-archer">&#xe606;</span>用户组</span>
+    
+        <span class="sidebar-tag-name" data-tags="练习题"><span class="iconfont-archer">&#xe606;</span>练习题</span>
+    
+        <span class="sidebar-tag-name" data-tags="文件系统"><span class="iconfont-archer">&#xe606;</span>文件系统</span>
+    
+        <span class="sidebar-tag-name" data-tags="MYSQL"><span class="iconfont-archer">&#xe606;</span>MYSQL</span>
+    
+        <span class="sidebar-tag-name" data-tags="su和sudo"><span class="iconfont-archer">&#xe606;</span>su和sudo</span>
+    
+        <span class="sidebar-tag-name" data-tags="SSH"><span class="iconfont-archer">&#xe606;</span>SSH</span>
+    
+        <span class="sidebar-tag-name" data-tags="varnish"><span class="iconfont-archer">&#xe606;</span>varnish</span>
+    
+        <span class="sidebar-tag-name" data-tags="TCP/IP"><span class="iconfont-archer">&#xe606;</span>TCP/IP</span>
+    
+        <span class="sidebar-tag-name" data-tags="keepalied"><span class="iconfont-archer">&#xe606;</span>keepalied</span>
+    
+        <span class="sidebar-tag-name" data-tags="lvs"><span class="iconfont-archer">&#xe606;</span>lvs</span>
+    
+        <span class="sidebar-tag-name" data-tags="memcache"><span class="iconfont-archer">&#xe606;</span>memcache</span>
+    
+        <span class="sidebar-tag-name" data-tags="tomcat"><span class="iconfont-archer">&#xe606;</span>tomcat</span>
+    
+        <span class="sidebar-tag-name" data-tags="rpm"><span class="iconfont-archer">&#xe606;</span>rpm</span>
+    
+        <span class="sidebar-tag-name" data-tags="共享服务"><span class="iconfont-archer">&#xe606;</span>共享服务</span>
+    
+        <span class="sidebar-tag-name" data-tags="自动化安装"><span class="iconfont-archer">&#xe606;</span>自动化安装</span>
+    
+        <span class="sidebar-tag-name" data-tags="基本命令"><span class="iconfont-archer">&#xe606;</span>基本命令</span>
+    
+        <span class="sidebar-tag-name" data-tags="CA"><span class="iconfont-archer">&#xe606;</span>CA</span>
+    
+        <span class="sidebar-tag-name" data-tags="sed"><span class="iconfont-archer">&#xe606;</span>sed</span>
+    
+        <span class="sidebar-tag-name" data-tags="dns"><span class="iconfont-archer">&#xe606;</span>dns</span>
+    
+        <span class="sidebar-tag-name" data-tags="mini系统"><span class="iconfont-archer">&#xe606;</span>mini系统</span>
+    
+        <span class="sidebar-tag-name" data-tags="进程管理、计划任务"><span class="iconfont-archer">&#xe606;</span>进程管理、计划任务</span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+    缺失模块。<br/>
+    1、请确保node版本大于6.2<br/>
+    2、在博客根目录（注意不是archer根目录）执行以下命令：<br/>
+    <span style="color: #f75357; font-size: 1rem; line-height: 2rem;">npm i hexo-generator-json-content --save</span><br/>
+    3、在根目录_config.yml里添加配置：
+    <pre style="color: #787878; font-size: 0.6rem;">
+jsonContent:
+  meta: false
+  pages: false
+  posts:
+    title: true
+    date: true
+    path: true
+    text: false
+    raw: false
+    content: false
+    slug: false
+    updated: false
+    comments: false
+    link: false
+    permalink: false
+    excerpt: false
+    categories: true
+    tags: true</pre>
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+    </div>
+</div> 
+    <script>
+    var siteMeta = {
+        root: "/",
+        author: "John Doe"
+    }
+</script>
+    <!-- CDN failover -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ === 'undefined')
+        {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js">\x3C/script>')
+        }
+    </script>
+    <script src="/scripts/main.js"></script>
+    <!-- algolia -->
+    
+    <!-- busuanzi  -->
+    
+    <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+    <!-- CNZZ  -->
+    
+    </div>
+    <!-- async load share.js -->
+    
+        <script src="/scripts/share.js" async></script>    
+     
+    </body>
+</html>
+
+
