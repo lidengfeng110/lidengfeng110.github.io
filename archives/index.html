@@ -339,6 +339,79 @@
     
     
     <article class="index-post">
+        <a class="abstract-title" href = "/2018/08/09/Nginx 各种实验演示/" >
+            
+                <span>[Untitled Post]</span>
+        </a>
+        <div class="abstract-content">
+            <hr>
+<p>layout: post<br>title: Nginx 各种实验演示<br>date: 2017-8-02<br>tags:</p>
+<ul>
+<li>Linux</li>
+<li>nginx</li>
+</ul>
+<hr>
+<h2 id="实验：Nginx-实现-SSL-加密"><a href="#实验：Nginx-实现-SSL-加密" class="headerlink" title="实验：Nginx 实现 SSL 加密"></a>实验：Nginx 实现 SSL 加密</h2><p>要实现 SSL 加密首先在服务器上生成证书，如：<br>创建 CA 第一种方法：<br>    cd /etc/pki/CA<br>(umask 077;openssl genrsa -out private/cakey.pem 2048)<br>openssl req -new -x509 -key private/cakey.pem -out cacert.pem -days 3650<br>            然后输入一些地区单位信息等，如：<br>                            CN<br>                             beijing<br>                             beijing<br>                             magedu<br>                             opt<br>                             <a href="http://www.a.com" target="_blank" rel="noopener">www.a.com</a><br> 这样 CA 的自签名证书就创建好了，还要创建两个文件  </p>
+<p> touch serial index.txt<br>echo 01 &gt; serial  </p>
+<p>接下来为 nginx 向 CA 申请证书<br> cd /etc/nginx/<br>mkdir ssl<br>cd ssl<br>(umask 077;openssl genrsa -out nginx.key 1024)<br>openssl req -new -key nginx.key -out nginx.csr<br>             然后输入一些地区单位信息等，如：<br>                            CN<br>                             beijing<br>                             beijing<br>                             magedu<br>                             opt<br>                             <a href="http://www.a.com" target="_blank" rel="noopener">www.a.com</a><br>
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/08/09</span>
+            </div>
+            <!-- tags  -->
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2018/08/09/Nginx 详细介绍/" >
+            
+                <span>[Untitled Post]</span>
+        </a>
+        <div class="abstract-content">
+            <hr>
+<p>layout: post<br>title: Nginx 详细介绍<br>date: 2017-7-28<br>tags:</p>
+<ul>
+<li>Linux</li>
+<li>nginx</li>
+</ul>
+<hr>
+<p>http 协议：80/tcp     全称：超文本传输协议<br>html : 超文本标记语言  </p>
+<p>nginx是一个高性能的web服务和反向代理服务器    </p>
+<p> 高连接并发的情况下可替代apache;选择epoll作为开发模型即事务处理模型;它包括io事务即io处理模型,内存状态事务模型等等    </p>
+<p> nginx可做为负载均衡服务器：可以在内部直接支持和php程序对外进行服务，也支持http代理服务对外进行服务；  </p>
+<p> 采用C进行编写，系统资源开销和cpu使用效率比perlbal要好很多  </p>
+<p> 内存消耗少：3万并发连接下开启10个进程才消耗150M内存  </p>
+<p> 内置健康检查功能：后端服务器当机不会影响前端访问  </p>
+<p>  节省带宽：支持Gzip压缩，  </p>
+<p> 稳定性高：用于反向代理，当机的概率微乎其微;master主进程跟workers进程是分开的不会因为worker进程故障而影响主进程  </p>
+<p> 模块化设计：模块可以动态编译，较好的外围拓展，二次开发等  </p>
+<p> 支持热部署：可以不停机重载文件  </p>
+<p> 支持事件驱动、内存映射mmap、sendfile（可直接在内核空间加载头部）  </p>
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/08/09</span>
+            </div>
+            <!-- tags  -->
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
         <a class="abstract-title" href = "/2018/08/09/Linux 防火墙各种规则实战应用/" >
             
                 <span>[Untitled Post]</span>
@@ -360,6 +433,37 @@
                 <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/08/09</span>
             </div>
             <!-- tags  -->
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2017/10/15/memcache  缓存原理介绍/" >
+            
+                <span>memcache  缓存原理介绍</span>
+        </a>
+        <div class="abstract-content">
+            <h2 id="memcached-是什么？"><a href="#memcached-是什么？" class="headerlink" title="memcached 是什么？"></a>memcached 是什么？</h2><p> memcached 是以 LiveJournal 旗下 Danga Interactive 公司的 Brad Fitzpatric 为首开发的一款软件。现在<br>已成为 mixi、hatena、Facebook、Vox、LiveJournal 等众多服务中提高 Web 应用扩展性的重要因素。许多 Web 应用都将数据保存到 RDBMS 中，应用服务器从中读取数据并在浏览器中显示。但随着数<br>据量的增大、访问的集中，就会出现 RDBMS 的负担加重、数据库响应恶恶化、网站显示延迟等重大<br>影响。<br>这时就该 memcached 大显身手了。memcached 是高性能的分布式内存缓存服务器。一般的使用目的<br>是，通过缓存数据库查询结果，减少数据库访问次数，以提高动态 Web 应用的速度、提高可扩展<br>性。  </p>
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/10/15</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "Linux">Linux</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "memcache">memcache</a>
+    
+</div>
             
         </div>
     </article>
@@ -517,18 +621,22 @@ timedatectl set-timezone Asia/Shanghai
     
     
     <article class="index-post">
-        <a class="abstract-title" href = "/2017/05/08/MASQL MariaDB 用户权限管理/" >
+        <a class="abstract-title" href = "/2017/05/22/MYSQL 数据库的日志介绍/" >
             
-                <span>MASQL MariaDB 用户权限管理</span>
+                <span>MYSQL 数据库的日志介绍</span>
         </a>
         <div class="abstract-content">
-            <h6 id="MariaDB-MySQL中的user由用户名和主机名构成，如”root-localhost”，同用户名但不同主机名对MySQL-MariaDB来讲是不同的，也就是说”root-localhost”和”root-127-0-0-1“是不同的用户，尽管它们都是本机的root。"><a href="#MariaDB-MySQL中的user由用户名和主机名构成，如”root-localhost”，同用户名但不同主机名对MySQL-MariaDB来讲是不同的，也就是说”root-localhost”和”root-127-0-0-1“是不同的用户，尽管它们都是本机的root。" class="headerlink" title="MariaDB/MySQL中的user由用户名和主机名构成，如”root@localhost”，同用户名但不同主机名对MySQL/MariaDB来讲是不同的，也就是说”root@localhost”和”root@127.0.0.1“是不同的用户，尽管它们都是本机的root。"></a>MariaDB/MySQL中的user由用户名和主机名构成，如”root@localhost”，同用户名但不同主机名对MySQL/MariaDB来讲是不同的，也就是说”root@localhost”和”<a href="mailto:root@127.0.0.1" target="_blank" rel="noopener">root@127.0.0.1</a>“是不同的用户，尽管它们都是本机的root。</h6><h3 id="权限验证"><a href="#权限验证" class="headerlink" title="权限验证"></a>权限验证</h3><blockquote>
-<p>在MariaDB/MySQL服务器启动后会载入权限表到内存中，当用户要连接服务器，会读取权限表来验证和分配权限，即在内存中进行权限的读取和写入。<br>
+            <p>不管是哪个数据库产品，一定会有日志文件。在MariaDB/MySQL中，主要有5种日志文件：  </p>
+<p>1.错误日志(error log)：记录mysql服务的启停时正确和错误的信息，还记录启动、停止、运行过程中的错误信息。  </p>
+<p>2.查询日志(general log)：记录建立的客户端连接和执行的语句。  </p>
+<p>3.二进制日志(bin log)：记录所有更改数据的语句，可用于数据复制。  </p>
+<p>4.慢查询日志(slow log)：记录所有执行时间超过long_query_time的所有查询或不使用索引的查询。  </p>
+<p>5.中继日志(relay log)：主从复制时使用的日志。  </p>
         </div>
         <div class="abstract-post-meta">
             <!-- date  -->
             <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/05/08</span>
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/05/22</span>
             </div>
             <!-- tags  -->
             
@@ -549,19 +657,17 @@ timedatectl set-timezone Asia/Shanghai
     
     
     <article class="index-post">
-        <a class="abstract-title" href = "/2017/04/20/ext 文件系统机制原理/" >
+        <a class="abstract-title" href = "/2017/05/15/MYSQL MariaDB 的事务和事务隔离级别/" >
             
-                <span>ext 文件系统机制原理</span>
+                <span>MYSQL MariaDB 的事务和事务隔离级别</span>
         </a>
         <div class="abstract-content">
-            <p>将磁盘进行分区，分区是将磁盘按柱面进行物理上的划分。划分好分区后还要进行格式化，然后再挂载才能使用(不考虑其他方法)。格式化分区的过程其实就是创建文件系统。  </p>
-<p>文件系统的类型有很多种，如CentOS 5和CentOS 6上默认使用的ext2/ext3/ext4，CentOS 7上默认使用的xfs，windows上的NTFS，光盘类的文件系统ISO9660，MAC上的混合文件系统HFS，网络文件系统NFS，Oracle研发的btrfs，还有老式的FAT/FAT32等。  </p>
-<p>本文将非常全面且详细地对ext家族的文件系统进行介绍。有ext2/ext3/ext4，ext3是有日志的ext2改进版，ext4对相比ext3做了非常多的改进。虽然xfs/btrfs等文件系统有所不同，但它们只是在实现方式上不太同，再加上属于自己的特性而已。<br>
+            <h3 id="事务特性"><a href="#事务特性" class="headerlink" title="事务特性"></a>事务特性</h3><h6 id="事务具有ACID特性：原子性-A-atomicity-、一致性-C-consistency-、隔离性-I-isolation-、持久性-D-durabulity-。"><a href="#事务具有ACID特性：原子性-A-atomicity-、一致性-C-consistency-、隔离性-I-isolation-、持久性-D-durabulity-。" class="headerlink" title="事务具有ACID特性：原子性(A,atomicity)、一致性(C,consistency)、隔离性(I,isolation)、持久性(D,durabulity)。"></a>事务具有ACID特性：原子性(A,atomicity)、一致性(C,consistency)、隔离性(I,isolation)、持久性(D,durabulity)。</h6><h6 id="原子性：事务内的所有操作要么都执行，要么都不执行。"><a href="#原子性：事务内的所有操作要么都执行，要么都不执行。" class="headerlink" title="原子性：事务内的所有操作要么都执行，要么都不执行。"></a>原子性：事务内的所有操作要么都执行，要么都不执行。</h6><h6 id="一致性：事务开始和结束前后，数据都满足数据一致性约束，而不是经过事务控制之后数据变得不满足条件或业务规则。"><a href="#一致性：事务开始和结束前后，数据都满足数据一致性约束，而不是经过事务控制之后数据变得不满足条件或业务规则。" class="headerlink" title="一致性：事务开始和结束前后，数据都满足数据一致性约束，而不是经过事务控制之后数据变得不满足条件或业务规则。"></a>一致性：事务开始和结束前后，数据都满足数据一致性约束，而不是经过事务控制之后数据变得不满足条件或业务规则。</h6><h6 id="隔离性：事务之间不能互影响，它们必须完全的各行其道，互不可见。"><a href="#隔离性：事务之间不能互影响，它们必须完全的各行其道，互不可见。" class="headerlink" title="隔离性：事务之间不能互影响，它们必须完全的各行其道，互不可见。"></a>隔离性：事务之间不能互影响，它们必须完全的各行其道，互不可见。</h6>
         </div>
         <div class="abstract-post-meta">
             <!-- date  -->
             <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/04/20</span>
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/05/15</span>
             </div>
             <!-- tags  -->
             
@@ -569,106 +675,7 @@ timedatectl set-timezone Asia/Shanghai
     
         <a class="post-tag" href="javascript:void(0);" data-tags = "Linux">Linux</a>
     
-        <a class="post-tag" href="javascript:void(0);" data-tags = "文件系统">文件系统</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2017/04/15/Linux分区信息与管理文件系统/" >
-            
-                <span>Linux分区信息与管理文件系统</span>
-        </a>
-        <div class="abstract-content">
-            <h3 id="分区"><a href="#分区" class="headerlink" title="分区"></a>分区</h3><p>分区是为了在逻辑上将某些柱面隔开形成边界。它是以柱面为单位来划分的，首先划分外圈柱面，然后不断向内划分。  </p>
-<p>由于读写越外圈磁道中的数据比越内圈更快，所以第一个分区在读写性能上比后面的分区更好。在Windows操作系统上，C盘的速度是最快的，越后面的区越慢就是这个原因。  </p>
-<p>在磁盘数据量非常大的情况下，划分分区的好处是扫描块位图等更快速：不用再扫描整块磁盘的块位图，只需扫描对应分区的块位图。<br>
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/04/15</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "Linux">Linux</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "文件系统">文件系统</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2017/04/10/DHCP 服务/" >
-            
-                <span>DHCP服务</span>
-        </a>
-        <div class="abstract-content">
-            <h6 id="DHCP前身是BOOTP，在Linux的网卡配置中也能看到显示的是BOOTP，DHCP引进一个bootp没有的概念：租约。bootp分配的地址是永久的，而dhcp分配的地址是可以有期限的-。"><a href="#DHCP前身是BOOTP，在Linux的网卡配置中也能看到显示的是BOOTP，DHCP引进一个bootp没有的概念：租约。bootp分配的地址是永久的，而dhcp分配的地址是可以有期限的-。" class="headerlink" title="DHCP前身是BOOTP，在Linux的网卡配置中也能看到显示的是BOOTP，DHCP引进一个bootp没有的概念：租约。bootp分配的地址是永久的，而dhcp分配的地址是可以有期限的 。"></a>DHCP前身是BOOTP，在Linux的网卡配置中也能看到显示的是BOOTP，DHCP引进一个bootp没有的概念：租约。bootp分配的地址是永久的，而dhcp分配的地址是可以有期限的 。</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@xuexi vsftpd]# grep -i bootproto /etc/sysconfig/network-scripts/ifcfg-eth0</span><br><span class="line">BOOTPROTO=dhcp</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>DHCP可以自动分配IP、子网掩码、网关、DNS。<br>DHCP客户端使用的端口68，服务端使用端口67，使用的UDP应用层的协议。<br>
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/04/10</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "Linux">Linux</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "DHCP">DHCP</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2017/04/01/Linux系统中su 和 sudo 的用法/" >
-            
-                <span>Linux系统中su 和 sudo 的用法</span>
-        </a>
-        <div class="abstract-content">
-            <h2 id="su"><a href="#su" class="headerlink" title="su"></a>su</h2><p>切换用户或以指定用户运行命令。  </p>
-<p>使用su可以指定运行命令的身份(user/group/uid/gid)。  </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">为了向后兼容，su默认不会改变当前目录，且仅设置HOME和SHELL这两个环境变量(若目标用户非root，则还设置USER和LOGNAME环境变量)。推荐使用--login选项(即&quot;-&quot;选项)避免环境变量混乱。  </span><br><span class="line"></span><br><span class="line">su [options...] [-] [user [args...]]</span><br><span class="line">选项说明：</span><br><span class="line">-c command：使用-c选项传递要指定的命令到shell上执行。使用-c执行命令会为每个su都分配新的会话环境</span><br><span class="line">-, -l, --login：启动shell作为登录的shell，模拟真正的登录环境。它会做下面几件事：</span><br><span class="line">                1.清除除了TERM外的所有环境变量</span><br><span class="line">                2.初始化HOME,SHELL,USER,LOGNAME,PATH环境变量</span><br><span class="line">                3.进入目标用户的家目录</span><br><span class="line">                4.设置argv[0]为&quot;-&quot;以便设置shell作为登录的shell</span><br><span class="line">                  使用--login的su是交互式登录。不使用--login的su是非交互式登录(除不带任何参数的su外</span><br><span class="line">-m, -p, --preserve-environment：保留整个环境变量(不会重新设置HOME,SHELL,USER和LOGNAME)，</span><br><span class="line">                                保留环境的方法是新用户shell上执行原用户的各配置文件，如~/.bashrc。</span><br><span class="line">                                当设置了--login时，将忽略该选项</span><br><span class="line">-s SHELL：运行指定的shell而非默认shell，选择shell的顺序优先级如下：</span><br><span class="line">                1.--shell指定的shell</span><br><span class="line">                2.如果使用了--preserve-environment，选择SHELL环境变量的shell</span><br><span class="line">                3.选项目标用户在passwd文件中指定的shell</span><br><span class="line">                4./bin/sh</span><br></pre></td></tr></table></figure>
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/04/01</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "Linux">Linux</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "su和sudo">su和sudo</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags = "MYSQL">MYSQL</a>
     
 </div>
             
@@ -912,9 +919,101 @@ timedatectl set-timezone Asia/Shanghai
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 14
+        Total : 20
         </div>
         <!-- search  -->
         
@@ -934,6 +1033,11 @@ timedatectl set-timezone Asia/Shanghai
         </li>
     
     
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/09</span><a class="archive-post-title" href= "/2018/08/09/Nginx 详细介绍/" >[Untitled Post]</a>
+        </li>
+    
+    
     
     
     
@@ -941,6 +1045,11 @@ timedatectl set-timezone Asia/Shanghai
     
     <div class="archive-year"> 2017 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/15</span><a class="archive-post-title" href= "/2017/10/15/memcache  缓存原理介绍/" >memcache  缓存原理介绍</a>
+        </li>
     
     
         <li class="archive-post-item">
@@ -960,6 +1069,16 @@ timedatectl set-timezone Asia/Shanghai
     
         <li class="archive-post-item">
             <span class="archive-post-date">06/11</span><a class="archive-post-title" href= "/2017/06/11/LAMP 架构的各种演示/" >LAMP 架构的各种演示</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/22</span><a class="archive-post-title" href= "/2017/05/22/MYSQL 数据库的日志介绍/" >MYSQL 数据库的日志介绍</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/15</span><a class="archive-post-title" href= "/2017/05/15/MYSQL MariaDB 的事务和事务隔离级别/" >MYSQL MariaDB 的事务和事务隔离级别</a>
         </li>
     
     
@@ -1003,6 +1122,11 @@ timedatectl set-timezone Asia/Shanghai
         </li>
     
     
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/01</span><a class="archive-post-title" href= "/2017/02/01/rpm管理包 和 yum管理包(1)/" >安装管理包：rpm包和yum包</a>
+        </li>
+    
+    
     
     
     
@@ -1016,6 +1140,20 @@ timedatectl set-timezone Asia/Shanghai
             <span class="archive-post-date">11/29</span><a class="archive-post-title" href= "/2016/11/29/Linux 的一些基础练习题/" >Linux 的一些基础练习题</a>
         </li>
     
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> Invalid date </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">Invalid date</span><a class="archive-post-title" href= "/2018/08/09/Nginx 各种实验演示/" >[Untitled Post]</a>
+        </li>
+    
     </div>
   </div>
         <div class="sidebar-panel-tags">
@@ -1025,25 +1163,29 @@ timedatectl set-timezone Asia/Shanghai
     
         <span class="sidebar-tag-name" data-tags="DHCP"><span class="iconfont-archer">&#xe606;</span>DHCP</span>
     
-        <span class="sidebar-tag-name" data-tags="haproxy"><span class="iconfont-archer">&#xe606;</span>haproxy</span>
-    
         <span class="sidebar-tag-name" data-tags="LAMP"><span class="iconfont-archer">&#xe606;</span>LAMP</span>
     
         <span class="sidebar-tag-name" data-tags="用户组"><span class="iconfont-archer">&#xe606;</span>用户组</span>
     
-        <span class="sidebar-tag-name" data-tags="练习题"><span class="iconfont-archer">&#xe606;</span>练习题</span>
+        <span class="sidebar-tag-name" data-tags="haproxy"><span class="iconfont-archer">&#xe606;</span>haproxy</span>
     
         <span class="sidebar-tag-name" data-tags="权限管理"><span class="iconfont-archer">&#xe606;</span>权限管理</span>
     
+        <span class="sidebar-tag-name" data-tags="练习题"><span class="iconfont-archer">&#xe606;</span>练习题</span>
+    
         <span class="sidebar-tag-name" data-tags="su和sudo"><span class="iconfont-archer">&#xe606;</span>su和sudo</span>
     
-        <span class="sidebar-tag-name" data-tags="文件系统"><span class="iconfont-archer">&#xe606;</span>文件系统</span>
-    
         <span class="sidebar-tag-name" data-tags="MYSQL"><span class="iconfont-archer">&#xe606;</span>MYSQL</span>
+    
+        <span class="sidebar-tag-name" data-tags="文件系统"><span class="iconfont-archer">&#xe606;</span>文件系统</span>
     
         <span class="sidebar-tag-name" data-tags="keepalied"><span class="iconfont-archer">&#xe606;</span>keepalied</span>
     
         <span class="sidebar-tag-name" data-tags="lvs"><span class="iconfont-archer">&#xe606;</span>lvs</span>
+    
+        <span class="sidebar-tag-name" data-tags="memcache"><span class="iconfont-archer">&#xe606;</span>memcache</span>
+    
+        <span class="sidebar-tag-name" data-tags="rpm"><span class="iconfont-archer">&#xe606;</span>rpm</span>
     
         <span class="sidebar-tag-name" data-tags="DNS"><span class="iconfont-archer">&#xe606;</span>DNS</span>
     
