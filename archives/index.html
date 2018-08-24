@@ -692,17 +692,18 @@ timedatectl set-timezone Asia/Shanghai
     
     
     <article class="index-post">
-        <a class="abstract-title" href = "/2017/06/11/LAMP 架构的各种演示/" >
+        <a class="abstract-title" href = "/2017/06/24/各种网络共享服务实验演示/" >
             
-                <span>LAMP 架构的各种演示</span>
+                <span>各种网络共享服务实验演示</span>
         </a>
         <div class="abstract-content">
-            <h2 id="实验：-LAMP-实现phpMyadmin"><a href="#实验：-LAMP-实现phpMyadmin" class="headerlink" title="实验：    LAMP  实现phpMyadmin"></a>实验：    LAMP  实现phpMyadmin</h2><p>先装包<br>yum -y install httpd mariadb-server php php-mysql<br>systemctl start httpd<br>systemctl start mariadb<br>然后从官网上下载对应版本的phpMyadmin<br>下载：<a href="https://www.phpmyadmin.net/downloads/" target="_blank" rel="noopener">https://www.phpmyadmin.net/downloads/</a><br>然后进行解包，注意解包时一定要解在 /var/www/html 目录下<br>cd /var/www/html<br>  unzip phpMyAdmin-4.0.10.20-all-languages.zip<br>解完包后给改个名<br>mv  phpMyAdmin-4.0.10.20-all-languages  pma<br>找到类似于配置文件的一个文件给他改名<br>cp config.sample.inc.php config.inc.php<br>还需要安装一个工具包<br>yum -y install php-mbstring<br>安装完重启服务<br>systemctl reload httpd<br>这样就可以打开浏览器进行访问了，但是显示的界面让输入账号密码。<br>注意这儿的账号密码是相对于 mysql 的账号密码<br>所以还要在数据库中设置账号密码，我们可以跑一下安全脚本来生成账号密码。<br>mysql_secure_installation<br>然后就可以在浏览器上输入账号密码就入了，这样就可以在图形界面来管理数据库了。  </p>
+            <h2 id="实验：-实现基于文件验证的-vsftpd-虚拟用户"><a href="#实验：-实现基于文件验证的-vsftpd-虚拟用户" class="headerlink" title="实验： 实现基于文件验证的 vsftpd 虚拟用户"></a>实验： 实现基于文件验证的 vsftpd 虚拟用户</h2><h5 id="先创建一个存放虚拟用户的账号密码的文件-vim-etc-vsftpd-vsftpusers"><a href="#先创建一个存放虚拟用户的账号密码的文件-vim-etc-vsftpd-vsftpusers" class="headerlink" title="先创建一个存放虚拟用户的账号密码的文件      vim /etc/vsftpd/vsftpusers"></a>先创建一个存放虚拟用户的账号密码的文件      vim /etc/vsftpd/vsftpusers</h5><p> 在里面添加               ftpuser1<br>                                  centos<br>                                  ftpuser2<br>                                  magedu<br>                                   ftpuser3<br>                                   rhel  </p>
+<h5 id="这个文件中奇数行是虚拟账户，偶数行是密码。"><a href="#这个文件中奇数行是虚拟账户，偶数行是密码。" class="headerlink" title="这个文件中奇数行是虚拟账户，偶数行是密码。"></a>这个文件中奇数行是虚拟账户，偶数行是密码。</h5>
         </div>
         <div class="abstract-post-meta">
             <!-- date  -->
             <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/06/11</span>
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/06/24</span>
             </div>
             <!-- tags  -->
             
@@ -710,7 +711,7 @@ timedatectl set-timezone Asia/Shanghai
     
         <a class="post-tag" href="javascript:void(0);" data-tags = "Linux">Linux</a>
     
-        <a class="post-tag" href="javascript:void(0);" data-tags = "LAMP">LAMP</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags = "共享服务">共享服务</a>
     
 </div>
             
@@ -720,7 +721,7 @@ timedatectl set-timezone Asia/Shanghai
     <!-- paginator  -->
     
     <nav class="page-nav">
-        <span class="page-number current">1</span><a class="page-number" href="/archives/page/2/">2</a><a class="page-number" href="/archives/page/3/">3</a><a class="extend next" rel="next" href="/archives/page/2/">NEXT &#62;</a>
+        <span class="page-number current">1</span><a class="page-number" href="/archives/page/2/">2</a><a class="page-number" href="/archives/page/3/">3</a><a class="page-number" href="/archives/page/4/">4</a><a class="extend next" rel="next" href="/archives/page/2/">NEXT &#62;</a>
     </nav>
     
 </main>
@@ -1144,9 +1145,137 @@ timedatectl set-timezone Asia/Shanghai
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 26
+        Total : 32
         </div>
         <!-- search  -->
         
@@ -1211,7 +1340,17 @@ timedatectl set-timezone Asia/Shanghai
     
     
         <li class="archive-post-item">
+            <span class="archive-post-date">06/24</span><a class="archive-post-title" href= "/2017/06/24/各种网络共享服务实验演示/" >各种网络共享服务实验演示</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
             <span class="archive-post-date">06/11</span><a class="archive-post-title" href= "/2017/06/11/LAMP 架构的各种演示/" >LAMP 架构的各种演示</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/01</span><a class="archive-post-title" href= "/2017/06/01/介绍 MYSQL的事务日志/" >介绍 MYSQL的事务日志</a>
         </li>
     
     
@@ -1251,6 +1390,11 @@ timedatectl set-timezone Asia/Shanghai
     
     
         <li class="archive-post-item">
+            <span class="archive-post-date">03/20</span><a class="archive-post-title" href= "/2017/03/20/搭建DNS互联网架构服务器(一）/" >搭建DNS互联网架构服务器</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
             <span class="archive-post-date">03/15</span><a class="archive-post-title" href= "/2017/03/15/搭建DNS 服务，实现主服务器，邮件服务器，泛域名解析，反向解析等/" >搭建DNS 服务，实现主服务器，邮件服务器，泛域名解析，反向解析等</a>
         </li>
     
@@ -1266,22 +1410,12 @@ timedatectl set-timezone Asia/Shanghai
     
     
         <li class="archive-post-item">
+            <span class="archive-post-date">02/28</span><a class="archive-post-title" href= "/2017/02/28/搭建DNS服务器，实现主DNS服务器，负责解析一个域/" >搭建DNS服务器，实现主DNS服务器，负责解析一个域</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
             <span class="archive-post-date">02/15</span><a class="archive-post-title" href= "/2017/02/15/DNS 服务从基础到深入/" >DNS 服务从基础到深入</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
-            <span class="archive-post-date">02/10</span><a class="archive-post-title" href= "/2017/02/10/SSH端口转发实验/" >SSH端口转发实验</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
-            <span class="archive-post-date">02/01</span><a class="archive-post-title" href= "/2017/02/01/rpm管理包 和 yum管理包(1)/" >安装管理包：rpm包和yum包</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
-            <span class="archive-post-date">01/20</span><a class="archive-post-title" href= "/2017/01/20/搭建CA/" >如何搭建CA（向CA申请证书）</a>
         </li>
     
     
@@ -1304,8 +1438,37 @@ timedatectl set-timezone Asia/Shanghai
     
         </ul>
     
+    <div class="archive-year"> 2017 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/10</span><a class="archive-post-title" href= "/2017/02/10/SSH端口转发实验/" >SSH端口转发实验</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/01</span><a class="archive-post-title" href= "/2017/02/01/rpm管理包 和 yum管理包(1)/" >安装管理包：rpm包和yum包</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/20</span><a class="archive-post-title" href= "/2017/01/20/搭建CA/" >如何搭建CA（向CA申请证书）</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
     <div class="archive-year"> 2016 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/20</span><a class="archive-post-title" href= "/2016/12/20/进程管理和计划任务的知识点()/" >进程管理与计划任务的知识点</a>
+        </li>
     
     
         <li class="archive-post-item">
@@ -1317,6 +1480,11 @@ timedatectl set-timezone Asia/Shanghai
             <span class="archive-post-date">11/29</span><a class="archive-post-title" href= "/2016/11/29/Linux 的一些基础练习题/" >Linux 的一些基础练习题</a>
         </li>
     
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/23</span><a class="archive-post-title" href= "/2016/11/23/对正则表达式，VIM编辑器命令的基本操作（三）/" >对正则表达式，VIM编辑器命令的基本操作</a>
+        </li>
+    
     </div>
   </div>
         <div class="sidebar-panel-tags">
@@ -1324,43 +1492,51 @@ timedatectl set-timezone Asia/Shanghai
     
         <span class="sidebar-tag-name" data-tags="Linux"><span class="iconfont-archer">&#xe606;</span>Linux</span>
     
+        <span class="sidebar-tag-name" data-tags="用户组"><span class="iconfont-archer">&#xe606;</span>用户组</span>
+    
         <span class="sidebar-tag-name" data-tags="DHCP"><span class="iconfont-archer">&#xe606;</span>DHCP</span>
-    
-        <span class="sidebar-tag-name" data-tags="haproxy"><span class="iconfont-archer">&#xe606;</span>haproxy</span>
-    
-        <span class="sidebar-tag-name" data-tags="DNS"><span class="iconfont-archer">&#xe606;</span>DNS</span>
     
         <span class="sidebar-tag-name" data-tags="LAMP"><span class="iconfont-archer">&#xe606;</span>LAMP</span>
     
-        <span class="sidebar-tag-name" data-tags="权限管理"><span class="iconfont-archer">&#xe606;</span>权限管理</span>
-    
-        <span class="sidebar-tag-name" data-tags="用户组"><span class="iconfont-archer">&#xe606;</span>用户组</span>
+        <span class="sidebar-tag-name" data-tags="haproxy"><span class="iconfont-archer">&#xe606;</span>haproxy</span>
     
         <span class="sidebar-tag-name" data-tags="练习题"><span class="iconfont-archer">&#xe606;</span>练习题</span>
     
-        <span class="sidebar-tag-name" data-tags="su和sudo"><span class="iconfont-archer">&#xe606;</span>su和sudo</span>
+        <span class="sidebar-tag-name" data-tags="权限管理"><span class="iconfont-archer">&#xe606;</span>权限管理</span>
     
-        <span class="sidebar-tag-name" data-tags="MYSQL"><span class="iconfont-archer">&#xe606;</span>MYSQL</span>
+        <span class="sidebar-tag-name" data-tags="su和sudo"><span class="iconfont-archer">&#xe606;</span>su和sudo</span>
     
         <span class="sidebar-tag-name" data-tags="文件系统"><span class="iconfont-archer">&#xe606;</span>文件系统</span>
     
-        <span class="sidebar-tag-name" data-tags="SSH"><span class="iconfont-archer">&#xe606;</span>SSH</span>
+        <span class="sidebar-tag-name" data-tags="MYSQL"><span class="iconfont-archer">&#xe606;</span>MYSQL</span>
     
         <span class="sidebar-tag-name" data-tags="TCP/IP"><span class="iconfont-archer">&#xe606;</span>TCP/IP</span>
     
-        <span class="sidebar-tag-name" data-tags="varnish"><span class="iconfont-archer">&#xe606;</span>varnish</span>
+        <span class="sidebar-tag-name" data-tags="SSH"><span class="iconfont-archer">&#xe606;</span>SSH</span>
     
-        <span class="sidebar-tag-name" data-tags="keepalied"><span class="iconfont-archer">&#xe606;</span>keepalied</span>
+        <span class="sidebar-tag-name" data-tags="varnish"><span class="iconfont-archer">&#xe606;</span>varnish</span>
     
         <span class="sidebar-tag-name" data-tags="lvs"><span class="iconfont-archer">&#xe606;</span>lvs</span>
     
         <span class="sidebar-tag-name" data-tags="memcache"><span class="iconfont-archer">&#xe606;</span>memcache</span>
     
-        <span class="sidebar-tag-name" data-tags="rpm"><span class="iconfont-archer">&#xe606;</span>rpm</span>
-    
         <span class="sidebar-tag-name" data-tags="tomcat"><span class="iconfont-archer">&#xe606;</span>tomcat</span>
     
+        <span class="sidebar-tag-name" data-tags="基本命令"><span class="iconfont-archer">&#xe606;</span>基本命令</span>
+    
+        <span class="sidebar-tag-name" data-tags="keepalied"><span class="iconfont-archer">&#xe606;</span>keepalied</span>
+    
+        <span class="sidebar-tag-name" data-tags="rpm"><span class="iconfont-archer">&#xe606;</span>rpm</span>
+    
         <span class="sidebar-tag-name" data-tags="CA"><span class="iconfont-archer">&#xe606;</span>CA</span>
+    
+        <span class="sidebar-tag-name" data-tags="dns"><span class="iconfont-archer">&#xe606;</span>dns</span>
+    
+        <span class="sidebar-tag-name" data-tags="DNS"><span class="iconfont-archer">&#xe606;</span>DNS</span>
+    
+        <span class="sidebar-tag-name" data-tags="进程管理、计划任务"><span class="iconfont-archer">&#xe606;</span>进程管理、计划任务</span>
+    
+        <span class="sidebar-tag-name" data-tags="共享服务"><span class="iconfont-archer">&#xe606;</span>共享服务</span>
     
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>

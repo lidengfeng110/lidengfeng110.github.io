@@ -1,0 +1,1414 @@
+<!DOCTYPE html>
+<html>
+    <!-- title -->
+
+
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" >
+    <meta name="author" content="John Doe">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="John Doe">
+    <meta name="keywords" content="Hexo | John Doe">
+    <meta name="description" content="">
+    <meta name="Cache-Control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <title>对正则表达式，VIM编辑器命令的基本操作 · 李登峰</title>
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s 1;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+
+</style>
+
+    <link rel="preload" href= /css/style.css?v=20180630 as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    <link rel="stylesheet" href= /css/mobile.css?v=20180630 media="(max-width: 980px)">
+    
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+(function( w ){
+	"use strict";
+	// rel=preload support test
+	if( !w.loadCSS ){
+		w.loadCSS = function(){};
+	}
+	// define on the loadCSS obj
+	var rp = loadCSS.relpreload = {};
+	// rel=preload feature support test
+	// runs once and returns a function for compat purposes
+	rp.support = (function(){
+		var ret;
+		try {
+			ret = w.document.createElement( "link" ).relList.supports( "preload" );
+		} catch (e) {
+			ret = false;
+		}
+		return function(){
+			return ret;
+		};
+	})();
+
+	// if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+	// then change that media back to its intended value on load
+	rp.bindMediaToggle = function( link ){
+		// remember existing media attr for ultimate state, or default to 'all'
+		var finalMedia = link.media || "all";
+
+		function enableStylesheet(){
+			link.media = finalMedia;
+		}
+
+		// bind load handlers to enable media
+		if( link.addEventListener ){
+			link.addEventListener( "load", enableStylesheet );
+		} else if( link.attachEvent ){
+			link.attachEvent( "onload", enableStylesheet );
+		}
+
+		// Set rel and non-applicable media type to start an async request
+		// note: timeout allows this to happen async to let rendering continue in IE
+		setTimeout(function(){
+			link.rel = "stylesheet";
+			link.media = "only x";
+		});
+		// also enable media after 3 seconds,
+		// which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+		setTimeout( enableStylesheet, 3000 );
+	};
+
+	// loop through link elements in DOM
+	rp.poly = function(){
+		// double check this to prevent external calls from running
+		if( rp.support() ){
+			return;
+		}
+		var links = w.document.getElementsByTagName( "link" );
+		for( var i = 0; i < links.length; i++ ){
+			var link = links[ i ];
+			// qualify links to those with rel=preload and as=style attrs
+			if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+				// prevent rerunning on link
+				link.setAttribute( "data-loadcss", true );
+				// bind listeners to toggle media back
+				rp.bindMediaToggle( link );
+			}
+		}
+	};
+
+	// if unsupported, run the polyfill
+	if( !rp.support() ){
+		// run once at least
+		rp.poly();
+
+		// rerun poly on an interval until onload
+		var run = w.setInterval( rp.poly, 500 );
+		if( w.addEventListener ){
+			w.addEventListener( "load", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		} else if( w.attachEvent ){
+			w.attachEvent( "onload", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		}
+	}
+
+
+	// commonjs
+	if( typeof exports !== "undefined" ){
+		exports.loadCSS = loadCSS;
+	}
+	else {
+		w.loadCSS = loadCSS;
+	}
+}( typeof global !== "undefined" ? global : this ) );
+</script>
+
+    <link rel="icon" href= "/assets/favicon.ico" />
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js" as="script" />
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" as="script" />
+    <link rel="preload" href="/scripts/main.js" as="script" />
+    <link rel="preload" as="font" href="/font/Oswald-Regular.ttf" crossorigin>
+    <link rel="preload" as="font" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" crossorigin>
+    
+    <!-- fancybox -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script>
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  -->
+    
+</head>
+
+    
+        <body class="post-body">
+    
+    
+<header class="header">
+
+    <div class="read-progress"></div>
+    <div class="header-sidebar-menu">&#xe775;</div>
+    <!-- post页的toggle banner  -->
+    
+    <div class="banner">
+            <div class="blog-title">
+                <a href="/" >博客</a>
+            </div>
+            <div class="post-title">
+                <a href="#" class="post-name">对正则表达式，VIM编辑器命令的基本操作</a>
+            </div>
+    </div>
+    
+    <a class="home-link" href=/>博客</a>
+</header>
+    <div class="wrapper">
+        <div class="site-intro" style=
+
+
+
+
+
+
+
+
+height:50vh;
+
+>
+    
+    <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
+            
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+            对正则表达式，VIM编辑器命令的基本操作
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+            
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class= post-intro-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "Linux">Linux</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "基本命令">基本命令</a>
+    
+</div>
+                
+                
+                    <div class="post-intro-read">
+                        <span>Word count: <span class="post-count">1,666</span> / Reading time: <span class="post-count">6 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                    <span class="post-intro-time">2016/11/23</span>
+                    
+                    <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                        <span class="iconfont-archer">&#xe602;</span>
+                        <span id="busuanzi_value_page_pv"></span>
+                    </span>
+                    
+                    <span class="shareWrapper">
+                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
+                        <span class="shareText">Share</span>
+                        <ul class="shareList">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        
+    </div>
+</div> 
+        <script>
+ 
+  // get user agent
+  var browser = {
+    versions: function () {
+      var u = window.navigator.userAgent;
+      return {
+        userAgent: u,
+        trident: u.indexOf('Trident') > -1, //IE内核
+        presto: u.indexOf('Presto') > -1, //opera内核
+        webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+        gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+        mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+        ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+        android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+        iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+        iPad: u.indexOf('iPad') > -1, //是否为iPad
+        webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+        weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+        uc: u.indexOf('UCBrowser') > -1 //是否为android下的UC浏览器
+      };
+    }()
+  }
+  console.log("userAgent:" + browser.versions.userAgent);
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded');
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document.getElementsByClassName('intro-title')[0].classList.add('intro-fade-in');
+      document.getElementsByClassName('intro-subtitle')[0].classList.add('intro-fade-in');
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in');
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb(){
+    if (browser.versions.uc) {
+      console.log("UCBrowser");
+      fontLoaded();
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular']
+        },
+        loading: function () {  //所有字体开始加载
+          // console.log('loading');
+        },
+        active: function () {  //所有字体已渲染
+          fontLoaded();
+        },
+        inactive: function () { //字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout');
+          fontLoaded();
+        },
+        timeout: 5000 // Set the timeout to two seconds
+      });
+    }
+  }
+
+  function asyncErr(){
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (cb) { o.addEventListener('load', function (e) { cb(null, e); }, false); }
+    if (err) { o.addEventListener('error', function (e) { err(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+
+  var asyncLoadWithFallBack = function(arr, success, reject) {
+      var currReject = function(){
+        reject()
+        arr.shift()
+        if(arr.length)
+          async(arr[0], success, currReject)
+        }
+
+      async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack([
+    "https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js", 
+    "https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js",
+    "/lib/webfontloader.min.js"
+  ], asyncCb, asyncErr)
+</script>        
+        <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+        <div class="container container-unloaded">
+            <main class="main post-page">
+    <article class="article-entry">
+        <h3 id="正则表达式"><a href="#正则表达式" class="headerlink" title="正则表达式"></a>正则表达式</h3><blockquote>
+<h6 id="正则表达式（REGEXP）是由一类特殊字符和文本字符所编写的模式，其中有些字符（元字符）不表示字符字面的意义，而表示控制或通配的功能。"><a href="#正则表达式（REGEXP）是由一类特殊字符和文本字符所编写的模式，其中有些字符（元字符）不表示字符字面的意义，而表示控制或通配的功能。" class="headerlink" title="正则表达式（REGEXP）是由一类特殊字符和文本字符所编写的模式，其中有些字符（元字符）不表示字符字面的意义，而表示控制或通配的功能。"></a>正则表达式（REGEXP）是由一类特殊字符和文本字符所编写的模式，其中有些字符（元字符）不表示字符字面的意义，而表示控制或通配的功能。</h6><p>分为两类： 基本正则表达式：BRE 扩展正则表达式： ERE<br>元字符分类：字符匹配，匹配次数，位置锚定，分组。 </p>
+</blockquote>
+<p>###### </p>
+<h6 id="字符匹配：-·-表示匹配的单个字符"><a href="#字符匹配：-·-表示匹配的单个字符" class="headerlink" title="# 字符匹配： · 表示匹配的单个字符"></a># 字符匹配： · 表示匹配的单个字符</h6><blockquote>
+<p>. 转义，表示（·）的字符本意<br>【】 表示匹配指定范围内的任意单个字符，【】里的·表示本意，不用转义<br>【托字符】 表示匹配指定范围外的任意单个字符<br>【:alnum：】 字母和数字 【:alpha：】 代表任何英文大小写字符<br>【:lower:】 小写字母 【:upper：】 大写字母<br>【:blank：】 空白字符 【:space：】 水平和垂直的空白字符（比blank范围大）<br>【:punct：】 标点符号 </p>
+</blockquote>
+<a id="more"></a>
+<h6 id="匹配次数：-用于在要指定次数的字符后面，是表示前面字符出现的次数。"><a href="#匹配次数：-用于在要指定次数的字符后面，是表示前面字符出现的次数。" class="headerlink" title="匹配次数： 用于在要指定次数的字符后面，是表示前面字符出现的次数。"></a>匹配次数： 用于在要指定次数的字符后面，是表示前面字符出现的次数。</h6><blockquote>
+<p>* 表示匹配前面的字符重复的次数，包括0次<br>·* 任意长度的任意字符<br>\? 匹配前面的字符0次或1次<br>+ 匹配前面的字符至少1次<br>{n} 匹配前面的字n次，是指定m次<br>{n,m} 匹配前面的字符最少n次，最多m次<br>{,n} 匹配前面的字符最多n次<br>{n,} 匹配前面的字符最多n次  </p>
+</blockquote>
+<h6 id="位置锚定：-定位出现的位置。"><a href="#位置锚定：-定位出现的位置。" class="headerlink" title="位置锚定： 定位出现的位置。"></a>位置锚定： 定位出现的位置。</h6><blockquote>
+<p>^ 行首锚定，用于模式的最左侧<br>$ 行尾锚定，用于模式的最右侧<br>> 词尾锚定，用于单词模式的最右侧<br>\&lt; 词首锚定，用于单词模式的最左侧<br>\b 单词的边界  </p>
+</blockquote>
+<blockquote>
+<p>分组：  将一个或多个字符捆绑在一起，当做一个整体进行处理。</p>
+</blockquote>
+<h3 id="二-VIM的基本命令操作"><a href="#二-VIM的基本命令操作" class="headerlink" title="二 VIM的基本命令操作"></a>二 VIM的基本命令操作</h3><h6 id="VIM-的文本编辑器"><a href="#VIM-的文本编辑器" class="headerlink" title="VIM 的文本编辑器"></a>VIM 的文本编辑器</h6><blockquote>
+<p>+# 打开文件后，让光标处于第#的行首<br>-d 可以比较多个文件<br>-m 只读的方式打开文件，避免误操作<br>-e 进入ex模式（编辑模式）<br>三种主要模式<br>命令模式：默认模式<br>插入模式：编辑模式<br>扩展命令模式：ex模式  </p>
+</blockquote>
+<h6 id="可以让命令模式进入插入模式的，按ESC退出的一些操作："><a href="#可以让命令模式进入插入模式的，按ESC退出的一些操作：" class="headerlink" title="可以让命令模式进入插入模式的，按ESC退出的一些操作："></a>可以让命令模式进入插入模式的，按ESC退出的一些操作：</h6><blockquote>
+<p>按 i 光标不懂<br>按 I 光标移动到行首<br>按 a 光标往后移动一个字符<br>按 A 光标移动到本行的行尾<br>按 o 在光标下行切换新行<br>按 O 在光标上行切换新行<br>在命令模式下按： 就进入ex模式了  </p>
+</blockquote>
+<h6 id="在ex模式下："><a href="#在ex模式下：" class="headerlink" title="在ex模式下："></a>在ex模式下：</h6><blockquote>
+<p>Wq 存盘退出 q 退出<br>Q! 强行退出，修改的不算<br>W 空格 跟文件 就可以把VIM的内容传送到文件<br>R 空格 跟文件 就可以把文件的内容读入VIM  </p>
+</blockquote>
+<h6 id="在命令模式下的一些常用的用法："><a href="#在命令模式下的一些常用的用法：" class="headerlink" title="在命令模式下的一些常用的用法："></a>在命令模式下的一些常用的用法：</h6><blockquote>
+<p>字符间的跳动： h 左 l 右 j 下 k 上<br> 前面加上数字# ，配合其他按键进行跳动<br>单词间的跳动： w 跳动到下一个单词的词首<br>e 跳动到下一个单词的词尾<br>b 跳动到前一个单词的词首<br>也可以配合#进行跳动<br>当前页面跳动： H 跳动到当前页面的页首<br>M 跳动到当前页面的中间<br>L 跳动到当前页面的页底  </p>
+</blockquote>
+<h6 id="行首行尾的跳动："><a href="#行首行尾的跳动：" class="headerlink" title="行首行尾的跳动："></a>行首行尾的跳动：</h6><blockquote>
+<p>^ 跳转至行首的第一个非空白字符<br>0 跳转至行首<br>$ 跳转至行尾  </p>
+</blockquote>
+<h6 id="行间移动："><a href="#行间移动：" class="headerlink" title="行间移动："></a>行间移动：</h6><blockquote>
+<p>G 直接跳动到整个文件的最后一行<br>gg 直接跳动到整个文件的第一行<br>一些快捷键： ctrl +f 向文件尾部翻一页<br>Ctrl+b 向文件首部翻一页<br>Ctrl+d 向文件尾部翻半页<br>Ctrl+u 向文件首部翻半页<br>命令模式的字符编辑： x 删除（剪切）光标处的字符  </p>
+<p>#x 前面加上数字，表示删除几个字符<br>Xp 交换光标处字符跟后面字符的位置<br>J 删除当前行后的换行符<br>~ 转换大小写  </p>
+</blockquote>
+<h6 id="替换命令："><a href="#替换命令：" class="headerlink" title="替换命令："></a>替换命令：</h6><blockquote>
+<p>r 替换光标所在处的字符<br>R 切换成REPLACE 模式，批量替换字符<br>删除命令： d 删除字符，可以结合光标跳转字符实现范围删除<br>d$ 删除到行尾<br>d^ 删除到非空白字符行首<br>d0 删除到行首，不包括光标处<br>dd 删除光标所在行 （配合数字批量删除）<br>D 从当前光标处一直删除到行尾  </p>
+</blockquote>
+<h6 id="复制命令："><a href="#复制命令：" class="headerlink" title="复制命令："></a>复制命令：</h6><blockquote>
+<p>（复制完可以按P粘贴）<br>y 复制<br>y$ 复制到行尾<br>y0 复制到行首<br>y^ 复制到非空白字符行首<br>yy 复制光标所在行  </p>
+<p>#yy 配合数字实行多行复制<br>Y 复制整行<br>改变命令： c 修改后切换成插入模式，配合d进行相应操作  </p>
+<p>100i wang [esc] 粘贴wang 100次 复制wang 100次  </p>
+</blockquote>
+<h6 id="扩展命令模式：-（ex）模式"><a href="#扩展命令模式：-（ex）模式" class="headerlink" title="扩展命令模式： （ex）模式"></a>扩展命令模式： （ex）模式</h6><h6 id="地址定界："><a href="#地址定界：" class="headerlink" title="地址定界："></a>地址定界：</h6><blockquote>
+<p>：# 输入数字几，跳到第几行  </p>
+<p>#，#：从第几行到第几行，后配合相应命令<br>· 表示当前行<br>$ 表示最后一行<br>% 表示全文件内容<br>S 在扩展模式下完成查找替换操作<br>格式: s/要查找的内容/替换为的内容/修改符<br>修改符： i 忽略大小写<br>g 修改的全局替换（默认情况只替换每行第一次改的）<br>gc 全局替换时每次前询问  </p>
+</blockquote>
+<h6 id="命令模式下："><a href="#命令模式下：" class="headerlink" title="命令模式下："></a>命令模式下：</h6><blockquote>
+<p>（小写）u 撤销 #u 撤销之前多次修改<br>（大写）U 撤销光标落在此行后所有的更改<br>按ctrl -r 重做最后撤销的更改（倒回去）  </p>
+<p>· 重做前一个操作<br>n. 重做前一个操作N次  </p>
+</blockquote>
+<h6 id="VIM的寄存器"><a href="#VIM的寄存器" class="headerlink" title="VIM的寄存器"></a>VIM的寄存器</h6><blockquote>
+<p>有26个命名的寄存器 （可以在不同窗口进行）<br>名称以a b c ….z 来表示<br>格式： 寄存器放在数字和命令之间<br>如： “ ayy 表示把当前光标所在行复制到a寄存器<br>“ap 表示把a寄存器的内容粘贴  </p>
+</blockquote>
+<h6 id="VIM-“F1-F2”一次处理多个文件"><a href="#VIM-“F1-F2”一次处理多个文件" class="headerlink" title="VIM “F1 F2”一次处理多个文件"></a>VIM “F1 F2”一次处理多个文件</h6><blockquote>
+<p>刚进去默认在第一个文件<br>：next 下一个<br>: prev 前一个<br>: qall 退出所有<br>: wqall 保存退出所有  </p>
+</blockquote>
+<h6 id="VIM-使用多个窗口"><a href="#VIM-使用多个窗口" class="headerlink" title="VIM 使用多个窗口"></a>VIM 使用多个窗口</h6><blockquote>
+<p>VIM -o 上下分屏<br>VIM-O 左右分屏<br>在窗口间来回切换 ctrl+w<br>完成后 wqall  </p>
+</blockquote>
+<h6 id="在VIM里加行号"><a href="#在VIM里加行号" class="headerlink" title="在VIM里加行号"></a>在VIM里加行号</h6><blockquote>
+<p>显示 set nu<br>取消 set nonu<br>要想行号永久有效，必须保存配置文件：（用VIM改）<br>全局：/etc/vimrc 个人：~/.vimrc  </p>
+</blockquote>
+<h6 id="在VIM里设置文本宽"><a href="#在VIM里设置文本宽" class="headerlink" title="在VIM里设置文本宽"></a>在VIM里设置文本宽</h6><blockquote>
+<p>启用 set textwidth =65<br>禁用 set wrapmargin =15  </p>
+</blockquote>
+<h6 id="在VIM里设置光标所在的标识线"><a href="#在VIM里设置光标所在的标识线" class="headerlink" title="在VIM里设置光标所在的标识线"></a>在VIM里设置光标所在的标识线</h6><blockquote>
+<p>启用 set cursorline (cul)<br>禁用 set no cul  </p>
+</blockquote>
+<h5 id="更详细用法请查：VIM-help"><a href="#更详细用法请查：VIM-help" class="headerlink" title="更详细用法请查：VIM help"></a>更详细用法请查：VIM help</h5>
+    </article>
+    <!-- license  -->
+    
+        <div class="license-wrapper">
+            <p>原文作者: <a href="http://yoursite.com">John Doe</a>
+            <p>原文链接: <a href="http://yoursite.com/2016/11/23/对正则表达式，VIM编辑器命令的基本操作（三）/">http://yoursite.com/2016/11/23/对正则表达式，VIM编辑器命令的基本操作（三）/</a>
+            <p>发表日期: <a href="http://yoursite.com/2016/11/23/对正则表达式，VIM编辑器命令的基本操作（三）/">November 23rd 2016, 12:00:00 am</a>
+            <p>版权声明: 本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+        </div>
+    
+    <!-- paginator  -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+                <div class="nextSlogan">Next Post</div>
+                <a href= "/2016/11/29/Linux 的一些基础练习题/" title= Linux 的一些基础练习题 >
+                    <div class="nextTitle">Linux 的一些基础练习题</div>
+                </a>
+            
+        </li>
+        <li class="previous">
+            
+        </li>
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+<!-- City版安装代码已完成 -->
+    
+    
+    <!--PC和WAP自适应版-->
+
+    <!--PC版-->
+
+
+    
+    
+
+    <!-- 评论 -->
+</main>
+            <!-- profile -->
+            
+        </div>
+        <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+    <div class="social">
+        
+    
+        
+            
+                <a href="mailto:1020846215@qq.com" class="iconfont-archer email" title=email ></a>
+            
+        
+    
+        
+            
+                <a href="//github.com/fi3ework" class="iconfont-archer github" target="_blank" title=github></a>
+            
+        
+    
+        
+            
+                <span class="iconfont-archer wechat" title=wechat>
+                  
+                  <img class="profile-qr" src="/assets/example_qr.png" />
+                </span>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+    </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- 不蒜子  -->
+    
+    <div class="busuanzi-container">
+    
+     
+    <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+    
+    </div>
+    
+</footer>
+    </div>
+    <!-- toc -->
+    
+    <div class="toc-wrapper" style=
+    
+
+
+
+
+
+
+
+top:50vh;
+
+    >
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#正则表达式"><span class="toc-number">1.</span> <span class="toc-text">正则表达式</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#正则表达式（REGEXP）是由一类特殊字符和文本字符所编写的模式，其中有些字符（元字符）不表示字符字面的意义，而表示控制或通配的功能。"><span class="toc-number">1.0.0.1.</span> <span class="toc-text">正则表达式（REGEXP）是由一类特殊字符和文本字符所编写的模式，其中有些字符（元字符）不表示字符字面的意义，而表示控制或通配的功能。</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#字符匹配：-·-表示匹配的单个字符"><span class="toc-number">1.0.0.2.</span> <span class="toc-text"># 字符匹配： · 表示匹配的单个字符</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#匹配次数：-用于在要指定次数的字符后面，是表示前面字符出现的次数。"><span class="toc-number">1.0.0.3.</span> <span class="toc-text">匹配次数： 用于在要指定次数的字符后面，是表示前面字符出现的次数。</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#位置锚定：-定位出现的位置。"><span class="toc-number">1.0.0.4.</span> <span class="toc-text">位置锚定： 定位出现的位置。</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#二-VIM的基本命令操作"><span class="toc-number">2.</span> <span class="toc-text">二 VIM的基本命令操作</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#VIM-的文本编辑器"><span class="toc-number">2.0.0.1.</span> <span class="toc-text">VIM 的文本编辑器</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#可以让命令模式进入插入模式的，按ESC退出的一些操作："><span class="toc-number">2.0.0.2.</span> <span class="toc-text">可以让命令模式进入插入模式的，按ESC退出的一些操作：</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#在ex模式下："><span class="toc-number">2.0.0.3.</span> <span class="toc-text">在ex模式下：</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#在命令模式下的一些常用的用法："><span class="toc-number">2.0.0.4.</span> <span class="toc-text">在命令模式下的一些常用的用法：</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#行首行尾的跳动："><span class="toc-number">2.0.0.5.</span> <span class="toc-text">行首行尾的跳动：</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#行间移动："><span class="toc-number">2.0.0.6.</span> <span class="toc-text">行间移动：</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#替换命令："><span class="toc-number">2.0.0.7.</span> <span class="toc-text">替换命令：</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#复制命令："><span class="toc-number">2.0.0.8.</span> <span class="toc-text">复制命令：</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#扩展命令模式：-（ex）模式"><span class="toc-number">2.0.0.9.</span> <span class="toc-text">扩展命令模式： （ex）模式</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#地址定界："><span class="toc-number">2.0.0.10.</span> <span class="toc-text">地址定界：</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#命令模式下："><span class="toc-number">2.0.0.11.</span> <span class="toc-text">命令模式下：</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#VIM的寄存器"><span class="toc-number">2.0.0.12.</span> <span class="toc-text">VIM的寄存器</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#VIM-“F1-F2”一次处理多个文件"><span class="toc-number">2.0.0.13.</span> <span class="toc-text">VIM “F1 F2”一次处理多个文件</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#VIM-使用多个窗口"><span class="toc-number">2.0.0.14.</span> <span class="toc-text">VIM 使用多个窗口</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#在VIM里加行号"><span class="toc-number">2.0.0.15.</span> <span class="toc-text">在VIM里加行号</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#在VIM里设置文本宽"><span class="toc-number">2.0.0.16.</span> <span class="toc-text">在VIM里设置文本宽</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#在VIM里设置光标所在的标识线"><span class="toc-number">2.0.0.17.</span> <span class="toc-text">在VIM里设置光标所在的标识线</span></a></li></ol></li><li class="toc-item toc-level-5"><a class="toc-link" href="#更详细用法请查：VIM-help"><span class="toc-number">2.0.1.</span> <span class="toc-text">更详细用法请查：VIM help</span></a></li></ol></li></ol></li></ol>
+    </div>
+    
+    <div class="back-top iconfont-archer">&#xe639;</div>
+    <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+          <div class="sidebar-panel-archives">
+    <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 32
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+    
+    
+    
+    <div class="archive-year"> 2018 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/09</span><a class="archive-post-title" href= "/2018/08/09/Linux 防火墙各种规则实战应用/" >[Untitled Post]</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/09</span><a class="archive-post-title" href= "/2018/08/09/Nginx 详细介绍/" >[Untitled Post]</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2017 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/15</span><a class="archive-post-title" href= "/2017/10/15/memcache  缓存原理介绍/" >memcache  缓存原理介绍</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/08</span><a class="archive-post-title" href= "/2017/10/08/tomcat 各种架构实验演示/" >tomcat 各种架构实验演示</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/25</span><a class="archive-post-title" href= "/2017/09/25/Varnish 缓存服务器介绍/" >Varnish 缓存服务器介绍</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/14</span><a class="archive-post-title" href= "/2017/09/14/keepalived 各种高可用实战演练/" >keepalived 各种高可用实战演练</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/28</span><a class="archive-post-title" href= "/2017/08/28/HAproxy 原理介绍/" >HAproxy 原理介绍</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/19</span><a class="archive-post-title" href= "/2017/08/19/lvs 详细介绍/" >lvs 详细介绍</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/24</span><a class="archive-post-title" href= "/2017/06/24/各种网络共享服务实验演示/" >各种网络共享服务实验演示</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/11</span><a class="archive-post-title" href= "/2017/06/11/LAMP 架构的各种演示/" >LAMP 架构的各种演示</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/01</span><a class="archive-post-title" href= "/2017/06/01/介绍 MYSQL的事务日志/" >介绍 MYSQL的事务日志</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/22</span><a class="archive-post-title" href= "/2017/05/22/MYSQL 数据库的日志介绍/" >MYSQL 数据库的日志介绍</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/15</span><a class="archive-post-title" href= "/2017/05/15/MYSQL MariaDB 的事务和事务隔离级别/" >MYSQL MariaDB 的事务和事务隔离级别</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/08</span><a class="archive-post-title" href= "/2017/05/08/MASQL MariaDB 用户权限管理/" >MASQL MariaDB 用户权限管理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/20</span><a class="archive-post-title" href= "/2017/04/20/ext 文件系统机制原理/" >ext 文件系统机制原理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/15</span><a class="archive-post-title" href= "/2017/04/15/Linux分区信息与管理文件系统/" >Linux分区信息与管理文件系统</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/10</span><a class="archive-post-title" href= "/2017/04/10/DHCP 服务/" >DHCP服务</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/01</span><a class="archive-post-title" href= "/2017/04/01/Linux系统中su 和 sudo 的用法/" >Linux系统中su 和 sudo 的用法</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/20</span><a class="archive-post-title" href= "/2017/03/20/搭建DNS互联网架构服务器(一）/" >搭建DNS互联网架构服务器</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/15</span><a class="archive-post-title" href= "/2017/03/15/搭建DNS 服务，实现主服务器，邮件服务器，泛域名解析，反向解析等/" >搭建DNS 服务，实现主服务器，邮件服务器，泛域名解析，反向解析等</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/12</span><a class="archive-post-title" href= "/2017/03/12/Linux 文件权限管理/" >Linux 文件权限管理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/08</span><a class="archive-post-title" href= "/2017/03/08/LINUX系统中用户、组管理/" >安装管理包：LINUX系统中用户、组管理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/28</span><a class="archive-post-title" href= "/2017/02/28/搭建DNS服务器，实现主DNS服务器，负责解析一个域/" >搭建DNS服务器，实现主DNS服务器，负责解析一个域</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/15</span><a class="archive-post-title" href= "/2017/02/15/DNS 服务从基础到深入/" >DNS 服务从基础到深入</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> Invalid date </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">Invalid date</span><a class="archive-post-title" href= "/2018/08/09/Nginx 各种实验演示/" >[Untitled Post]</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2017 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/10</span><a class="archive-post-title" href= "/2017/02/10/SSH端口转发实验/" >SSH端口转发实验</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/01</span><a class="archive-post-title" href= "/2017/02/01/rpm管理包 和 yum管理包(1)/" >安装管理包：rpm包和yum包</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/20</span><a class="archive-post-title" href= "/2017/01/20/搭建CA/" >如何搭建CA（向CA申请证书）</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2016 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/20</span><a class="archive-post-title" href= "/2016/12/20/进程管理和计划任务的知识点()/" >进程管理与计划任务的知识点</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/08</span><a class="archive-post-title" href= "/2016/12/08/TCP、IP协议三次握手与四次握手流程解析（）/" >TCP、IP协议三次握手与四次握手流程解析</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/29</span><a class="archive-post-title" href= "/2016/11/29/Linux 的一些基础练习题/" >Linux 的一些基础练习题</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/23</span><a class="archive-post-title" href= "/2016/11/23/对正则表达式，VIM编辑器命令的基本操作（三）/" >对正则表达式，VIM编辑器命令的基本操作</a>
+        </li>
+    
+    </div>
+  </div>
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+    
+        <span class="sidebar-tag-name" data-tags="Linux"><span class="iconfont-archer">&#xe606;</span>Linux</span>
+    
+        <span class="sidebar-tag-name" data-tags="用户组"><span class="iconfont-archer">&#xe606;</span>用户组</span>
+    
+        <span class="sidebar-tag-name" data-tags="DHCP"><span class="iconfont-archer">&#xe606;</span>DHCP</span>
+    
+        <span class="sidebar-tag-name" data-tags="LAMP"><span class="iconfont-archer">&#xe606;</span>LAMP</span>
+    
+        <span class="sidebar-tag-name" data-tags="haproxy"><span class="iconfont-archer">&#xe606;</span>haproxy</span>
+    
+        <span class="sidebar-tag-name" data-tags="练习题"><span class="iconfont-archer">&#xe606;</span>练习题</span>
+    
+        <span class="sidebar-tag-name" data-tags="权限管理"><span class="iconfont-archer">&#xe606;</span>权限管理</span>
+    
+        <span class="sidebar-tag-name" data-tags="su和sudo"><span class="iconfont-archer">&#xe606;</span>su和sudo</span>
+    
+        <span class="sidebar-tag-name" data-tags="文件系统"><span class="iconfont-archer">&#xe606;</span>文件系统</span>
+    
+        <span class="sidebar-tag-name" data-tags="MYSQL"><span class="iconfont-archer">&#xe606;</span>MYSQL</span>
+    
+        <span class="sidebar-tag-name" data-tags="TCP/IP"><span class="iconfont-archer">&#xe606;</span>TCP/IP</span>
+    
+        <span class="sidebar-tag-name" data-tags="SSH"><span class="iconfont-archer">&#xe606;</span>SSH</span>
+    
+        <span class="sidebar-tag-name" data-tags="varnish"><span class="iconfont-archer">&#xe606;</span>varnish</span>
+    
+        <span class="sidebar-tag-name" data-tags="lvs"><span class="iconfont-archer">&#xe606;</span>lvs</span>
+    
+        <span class="sidebar-tag-name" data-tags="memcache"><span class="iconfont-archer">&#xe606;</span>memcache</span>
+    
+        <span class="sidebar-tag-name" data-tags="tomcat"><span class="iconfont-archer">&#xe606;</span>tomcat</span>
+    
+        <span class="sidebar-tag-name" data-tags="基本命令"><span class="iconfont-archer">&#xe606;</span>基本命令</span>
+    
+        <span class="sidebar-tag-name" data-tags="keepalied"><span class="iconfont-archer">&#xe606;</span>keepalied</span>
+    
+        <span class="sidebar-tag-name" data-tags="rpm"><span class="iconfont-archer">&#xe606;</span>rpm</span>
+    
+        <span class="sidebar-tag-name" data-tags="CA"><span class="iconfont-archer">&#xe606;</span>CA</span>
+    
+        <span class="sidebar-tag-name" data-tags="dns"><span class="iconfont-archer">&#xe606;</span>dns</span>
+    
+        <span class="sidebar-tag-name" data-tags="DNS"><span class="iconfont-archer">&#xe606;</span>DNS</span>
+    
+        <span class="sidebar-tag-name" data-tags="进程管理、计划任务"><span class="iconfont-archer">&#xe606;</span>进程管理、计划任务</span>
+    
+        <span class="sidebar-tag-name" data-tags="共享服务"><span class="iconfont-archer">&#xe606;</span>共享服务</span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+    缺失模块。<br/>
+    1、请确保node版本大于6.2<br/>
+    2、在博客根目录（注意不是archer根目录）执行以下命令：<br/>
+    <span style="color: #f75357; font-size: 1rem; line-height: 2rem;">npm i hexo-generator-json-content --save</span><br/>
+    3、在根目录_config.yml里添加配置：
+    <pre style="color: #787878; font-size: 0.6rem;">
+jsonContent:
+  meta: false
+  pages: false
+  posts:
+    title: true
+    date: true
+    path: true
+    text: false
+    raw: false
+    content: false
+    slug: false
+    updated: false
+    comments: false
+    link: false
+    permalink: false
+    excerpt: false
+    categories: true
+    tags: true</pre>
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+    </div>
+</div> 
+    <script>
+    var siteMeta = {
+        root: "/",
+        author: "John Doe"
+    }
+</script>
+    <!-- CDN failover -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ === 'undefined')
+        {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js">\x3C/script>')
+        }
+    </script>
+    <script src="/scripts/main.js"></script>
+    <!-- algolia -->
+    
+    <!-- busuanzi  -->
+    
+    <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+    <!-- CNZZ  -->
+    
+    </div>
+    <!-- async load share.js -->
+    
+        <script src="/scripts/share.js" async></script>    
+     
+    </body>
+</html>
+
+
