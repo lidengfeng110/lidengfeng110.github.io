@@ -354,6 +354,78 @@ height:50vh;
     
     
     <article class="index-post">
+        <a class="abstract-title" href = "/2018/08/09/Linux 防火墙各种规则实战应用/" >
+            
+                <span>[Untitled Post]</span>
+        </a>
+        <div class="abstract-content">
+            <hr>
+<p>layout: post<br>title: Linux 防火墙各种规则实战应用<br>date: 2017-7-03<br>tags:</p>
+<ul>
+<li>Linux</li>
+<li>防火墙</li>
+</ul>
+<hr>
+<h4 id="防火墙的概念"><a href="#防火墙的概念" class="headerlink" title="防火墙的概念"></a>防火墙的概念</h4><p>iptables的基本认识<br>iptables的组成<br>iptables的基本语法<br>iptables之forward的概念<br>iptables之地址转换法则<br>SNAT源地址转换的具体实现<br>DNAT目标地址转换的具体实现<br>firewalld介绍<br>firewalld配置命令<br>rich规则  </p>
+<p>安全技术<br>入侵检测与管理系统（Intrusion Detection Systems）：特点是不阻断任何网络 访问，量化、定位来自内外网络的威胁情况，主要以提供报告和事后监督为主， 提供有针对性的指导措施和安全决策依据。一般采用旁路部署方式<br>入侵防御系统（Intrusion Prevention System）：以透明模式工作，分析数据包 的内容如：溢出攻击、拒绝服务攻击、木马、蠕虫、系统漏洞等进行准确的分析 判断，在判定为攻击行为后立即予以阻断，主动而有效的保护网络的安全，一般 采用在线部署方式<br>防火墙（ FireWall ）：隔离功能，工作在网络或主机边缘，对进出网络或主机的 数据包基于一定的规则检查，并在匹配某规则时由规则定义的行为进行处理的一 组功能的组件，基本上的实现都是默认情况下关闭所有的通过型访问，只开放允 许访问的策略</p>
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/08/09</span>
+            </div>
+            <!-- tags  -->
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2017/09/14/keepalived 各种高可用实战演练/" >
+            
+                <span>keepalived 各种高可用实战演练</span>
+        </a>
+        <div class="abstract-content">
+            <h3 id="实验：-实现单主模型和双主模型的高可用。"><a href="#实验：-实现单主模型和双主模型的高可用。" class="headerlink" title="实验： 实现单主模型和双主模型的高可用。"></a>实验： 实现单主模型和双主模型的高可用。</h3><pre><code>任何做实验前都要保证时间同步。  
+timedatectl set-timezone Asia/Shanghai
+ 还有防火墙、SElinux 等都设置完毕。  
+
+ 现在准备两个主机，R1 R2 ，分别在两台主机上安装 keepalived ，各自配置成急群众的两个节点。
+ 第一步，先把这两台主机配置成单主模型的集群，来验证地址是否能流动。
+ 第二步，用两个虚拟路由器工作在双主模型下。
+
+      单主模型：两台主机
+         在第一台主机上修改 keepalived 配置文件
+</code></pre>
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/09/14</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "Linux">Linux</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "keepalied">keepalied</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
         <a class="abstract-title" href = "/2017/08/28/HAproxy 原理介绍/" >
             
                 <span>HAproxy 原理介绍</span>
@@ -386,6 +458,37 @@ height:50vh;
         <a class="post-tag" href="javascript:void(0);" data-tags = "Linux">Linux</a>
     
         <a class="post-tag" href="javascript:void(0);" data-tags = "haproxy">haproxy</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2017/06/11/LAMP 架构的各种演示/" >
+            
+                <span>LAMP 架构的各种演示</span>
+        </a>
+        <div class="abstract-content">
+            <h2 id="实验：-LAMP-实现phpMyadmin"><a href="#实验：-LAMP-实现phpMyadmin" class="headerlink" title="实验：    LAMP  实现phpMyadmin"></a>实验：    LAMP  实现phpMyadmin</h2><p>先装包<br>yum -y install httpd mariadb-server php php-mysql<br>systemctl start httpd<br>systemctl start mariadb<br>然后从官网上下载对应版本的phpMyadmin<br>下载：<a href="https://www.phpmyadmin.net/downloads/" target="_blank" rel="noopener">https://www.phpmyadmin.net/downloads/</a><br>然后进行解包，注意解包时一定要解在 /var/www/html 目录下<br>cd /var/www/html<br>  unzip phpMyAdmin-4.0.10.20-all-languages.zip<br>解完包后给改个名<br>mv  phpMyAdmin-4.0.10.20-all-languages  pma<br>找到类似于配置文件的一个文件给他改名<br>cp config.sample.inc.php config.inc.php<br>还需要安装一个工具包<br>yum -y install php-mbstring<br>安装完重启服务<br>systemctl reload httpd<br>这样就可以打开浏览器进行访问了，但是显示的界面让输入账号密码。<br>注意这儿的账号密码是相对于 mysql 的账号密码<br>所以还要在数据库中设置账号密码，我们可以跑一下安全脚本来生成账号密码。<br>mysql_secure_installation<br>然后就可以在浏览器上输入账号密码就入了，这样就可以在图形界面来管理数据库了。  </p>
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/06/11</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "Linux">Linux</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "LAMP">LAMP</a>
     
 </div>
             
@@ -464,6 +567,38 @@ height:50vh;
     
     
     <article class="index-post">
+        <a class="abstract-title" href = "/2017/03/12/Linux 文件权限管理/" >
+            
+                <span>Linux 文件权限管理</span>
+        </a>
+        <div class="abstract-content">
+            <h4 id="文件-目录的权限"><a href="#文件-目录的权限" class="headerlink" title="文件/目录的权限"></a>文件/目录的权限</h4><h5 id="文件的权限"><a href="#文件的权限" class="headerlink" title="文件的权限"></a>文件的权限</h5><h6 id="每个文件都有其所有者-u-user-、所属组-g-group-和其他人-o-other-对它的操作权限，a-all则同时代表这3者。权限包括读-r-read-、写-w-write-、执行-x-execute-。在不同类型的文件上读、写、执行权限的体现有所不同，所以目录权限和普通文件权限要区分开来。"><a href="#每个文件都有其所有者-u-user-、所属组-g-group-和其他人-o-other-对它的操作权限，a-all则同时代表这3者。权限包括读-r-read-、写-w-write-、执行-x-execute-。在不同类型的文件上读、写、执行权限的体现有所不同，所以目录权限和普通文件权限要区分开来。" class="headerlink" title="每个文件都有其所有者(u:user)、所属组(g:group)和其他人(o:other)对它的操作权限，a:all则同时代表这3者。权限包括读(r:read)、写(w:write)、执行(x:execute)。在不同类型的文件上读、写、执行权限的体现有所不同，所以目录权限和普通文件权限要区分开来。"></a>每个文件都有其所有者(u:user)、所属组(g:group)和其他人(o:other)对它的操作权限，a:all则同时代表这3者。权限包括读(r:read)、写(w:write)、执行(x:execute)。在不同类型的文件上读、写、执行权限的体现有所不同，所以目录权限和普通文件权限要区分开来。</h6><h5 id="在普通文件上："><a href="#在普通文件上：" class="headerlink" title="在普通文件上："></a>在普通文件上：</h5><blockquote>
+<p>r：可读，可以使用类似cat等命令查看文件内容；读是文件的最基本权限，没有读权限，普通文件的一切操作行为都被限制。<br>
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/03/12</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "Linux">Linux</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "权限管理">权限管理</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
         <a class="abstract-title" href = "/2017/02/15/DNS 服务从基础到深入/" >
             
                 <span>DNS 服务从基础到深入</span>
@@ -486,6 +621,45 @@ height:50vh;
         <a class="post-tag" href="javascript:void(0);" data-tags = "Linux">Linux</a>
     
         <a class="post-tag" href="javascript:void(0);" data-tags = "DNS">DNS</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2016/11/29/Linux 的一些基础练习题/" >
+            
+                <span>Linux 的一些基础练习题</span>
+        </a>
+        <div class="abstract-content">
+            <h2 id="练习题："><a href="#练习题：" class="headerlink" title="练习题："></a>练习题：</h2><p>1，显示当前时间，格式为：2016-06-18 10:20:30</p>
+<blockquote>
+<p>答案：date “+%F,%T” 或者 date “+%F %H:%M:%S”</p>
+</blockquote>
+<p>2，显示前天是星期几？</p>
+<blockquote>
+<p>答案：date -d “-2 day” +%A</p>
+<p>知识点：一 ，date +%s 是把当前时间转化为秒数         二， date -d @”1523604170″ 把秒数转化回来</p>
+</blockquote>
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2016/11/29</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "Linux">Linux</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "练习题">练习题</a>
     
 </div>
             
@@ -708,9 +882,76 @@ height:50vh;
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 4
+        Total : 9
         </div>
         <!-- search  -->
         
@@ -721,12 +962,36 @@ height:50vh;
     
     
     
+    <div class="archive-year"> 2018 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/09</span><a class="archive-post-title" href= "/2018/08/09/Linux 防火墙各种规则实战应用/" >[Untitled Post]</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
     <div class="archive-year"> 2017 </div>
     <ul class="year-list">
     
     
         <li class="archive-post-item">
+            <span class="archive-post-date">09/14</span><a class="archive-post-title" href= "/2017/09/14/keepalived 各种高可用实战演练/" >keepalived 各种高可用实战演练</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
             <span class="archive-post-date">08/28</span><a class="archive-post-title" href= "/2017/08/28/HAproxy 原理介绍/" >HAproxy 原理介绍</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/11</span><a class="archive-post-title" href= "/2017/06/11/LAMP 架构的各种演示/" >LAMP 架构的各种演示</a>
         </li>
     
     
@@ -741,7 +1006,26 @@ height:50vh;
     
     
         <li class="archive-post-item">
+            <span class="archive-post-date">03/12</span><a class="archive-post-title" href= "/2017/03/12/Linux 文件权限管理/" >Linux 文件权限管理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
             <span class="archive-post-date">02/15</span><a class="archive-post-title" href= "/2017/02/15/DNS 服务从基础到深入/" >DNS 服务从基础到深入</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2016 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/29</span><a class="archive-post-title" href= "/2016/11/29/Linux 的一些基础练习题/" >Linux 的一些基础练习题</a>
         </li>
     
     </div>
@@ -757,7 +1041,15 @@ height:50vh;
     
         <span class="sidebar-tag-name" data-tags="haproxy"><span class="iconfont-archer">&#xe606;</span>haproxy</span>
     
+        <span class="sidebar-tag-name" data-tags="练习题"><span class="iconfont-archer">&#xe606;</span>练习题</span>
+    
         <span class="sidebar-tag-name" data-tags="文件系统"><span class="iconfont-archer">&#xe606;</span>文件系统</span>
+    
+        <span class="sidebar-tag-name" data-tags="keepalied"><span class="iconfont-archer">&#xe606;</span>keepalied</span>
+    
+        <span class="sidebar-tag-name" data-tags="权限管理"><span class="iconfont-archer">&#xe606;</span>权限管理</span>
+    
+        <span class="sidebar-tag-name" data-tags="LAMP"><span class="iconfont-archer">&#xe606;</span>LAMP</span>
     
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
