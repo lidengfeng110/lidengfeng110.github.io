@@ -339,6 +339,73 @@
     
     
     <article class="index-post">
+        <a class="abstract-title" href = "/2017/05/22/MYSQL 数据库的日志介绍/" >
+            
+                <span>MYSQL 数据库的日志介绍</span>
+        </a>
+        <div class="abstract-content">
+            <p>不管是哪个数据库产品，一定会有日志文件。在MariaDB/MySQL中，主要有5种日志文件：  </p>
+<p>1.错误日志(error log)：记录mysql服务的启停时正确和错误的信息，还记录启动、停止、运行过程中的错误信息。  </p>
+<p>2.查询日志(general log)：记录建立的客户端连接和执行的语句。  </p>
+<p>3.二进制日志(bin log)：记录所有更改数据的语句，可用于数据复制。  </p>
+<p>4.慢查询日志(slow log)：记录所有执行时间超过long_query_time的所有查询或不使用索引的查询。  </p>
+<p>5.中继日志(relay log)：主从复制时使用的日志。  </p>
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/05/22</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "Linux">Linux</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "MYSQL">MYSQL</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2017/05/15/MYSQL MariaDB 的事务和事务隔离级别/" >
+            
+                <span>MYSQL MariaDB 的事务和事务隔离级别</span>
+        </a>
+        <div class="abstract-content">
+            <h3 id="事务特性"><a href="#事务特性" class="headerlink" title="事务特性"></a>事务特性</h3><h6 id="事务具有ACID特性：原子性-A-atomicity-、一致性-C-consistency-、隔离性-I-isolation-、持久性-D-durabulity-。"><a href="#事务具有ACID特性：原子性-A-atomicity-、一致性-C-consistency-、隔离性-I-isolation-、持久性-D-durabulity-。" class="headerlink" title="事务具有ACID特性：原子性(A,atomicity)、一致性(C,consistency)、隔离性(I,isolation)、持久性(D,durabulity)。"></a>事务具有ACID特性：原子性(A,atomicity)、一致性(C,consistency)、隔离性(I,isolation)、持久性(D,durabulity)。</h6><h6 id="原子性：事务内的所有操作要么都执行，要么都不执行。"><a href="#原子性：事务内的所有操作要么都执行，要么都不执行。" class="headerlink" title="原子性：事务内的所有操作要么都执行，要么都不执行。"></a>原子性：事务内的所有操作要么都执行，要么都不执行。</h6><h6 id="一致性：事务开始和结束前后，数据都满足数据一致性约束，而不是经过事务控制之后数据变得不满足条件或业务规则。"><a href="#一致性：事务开始和结束前后，数据都满足数据一致性约束，而不是经过事务控制之后数据变得不满足条件或业务规则。" class="headerlink" title="一致性：事务开始和结束前后，数据都满足数据一致性约束，而不是经过事务控制之后数据变得不满足条件或业务规则。"></a>一致性：事务开始和结束前后，数据都满足数据一致性约束，而不是经过事务控制之后数据变得不满足条件或业务规则。</h6><h6 id="隔离性：事务之间不能互影响，它们必须完全的各行其道，互不可见。"><a href="#隔离性：事务之间不能互影响，它们必须完全的各行其道，互不可见。" class="headerlink" title="隔离性：事务之间不能互影响，它们必须完全的各行其道，互不可见。"></a>隔离性：事务之间不能互影响，它们必须完全的各行其道，互不可见。</h6>
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/05/15</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "Linux">Linux</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "MYSQL">MYSQL</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
         <a class="abstract-title" href = "/2017/05/08/MASQL MariaDB 用户权限管理/" >
             
                 <span>MASQL MariaDB 用户权限管理</span>
@@ -503,6 +570,40 @@
     
     
     <article class="index-post">
+        <a class="abstract-title" href = "/2017/03/15/搭建DNS 服务，实现主服务器，邮件服务器，泛域名解析，反向解析等/" >
+            
+                <span>搭建DNS 服务，实现主服务器，邮件服务器，泛域名解析，反向解析等</span>
+        </a>
+        <div class="abstract-content">
+            <h4 id="实验-：-搭建DNS-主服务器，现在拿-192-168-30-7-这台主机做主服务器"><a href="#实验-：-搭建DNS-主服务器，现在拿-192-168-30-7-这台主机做主服务器" class="headerlink" title="实验   ：   搭建DNS 主服务器，现在拿 192.168.30.7 这台主机做主服务器"></a>实验   ：   搭建DNS 主服务器，现在拿 192.168.30.7 这台主机做主服务器</h4><h6 id="先装包-yum-install-bind"><a href="#先装包-yum-install-bind" class="headerlink" title="先装包     yum install bind"></a>先装包     yum install bind</h6><h6 id="启动服务-systemctl-start-named"><a href="#启动服务-systemctl-start-named" class="headerlink" title="启动服务    systemctl start named"></a>启动服务    systemctl start named</h6><h6 id="然后修改主配置文件中的内容-vim-etc-named-conf"><a href="#然后修改主配置文件中的内容-vim-etc-named-conf" class="headerlink" title="然后修改主配置文件中的内容    vim /etc/named.conf"></a>然后修改主配置文件中的内容    vim /etc/named.conf</h6><blockquote>
+<p> 创建以 magedu.com 的区域数据，一般建议区域数据都存放在  /etc/named.rfc1912.zones 文件中  ，添加内容如下：</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">zone &quot;magedu.com&quot; IN &#123;  </span><br><span class="line">                    type master;  </span><br><span class="line">                    file &quot;magedu.com.zone&quot;;</span><br><span class="line">&#125;;  </span><br><span class="line">  ##这是主从类型中的主类型，存放名字和IP 的数据库文件</span><br></pre></td></tr></table></figure>
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/03/15</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "Linux">Linux</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "DNS">DNS</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
         <a class="abstract-title" href = "/2017/03/12/Linux 文件权限管理/" >
             
                 <span>Linux 文件权限管理</span>
@@ -567,115 +668,10 @@
         </div>
     </article>
     
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2017/02/15/DNS 服务从基础到深入/" >
-            
-                <span>DNS 服务从基础到深入</span>
-        </a>
-        <div class="abstract-content">
-            <h2 id="一-简介"><a href="#一-简介" class="headerlink" title="一 简介"></a>一 简介</h2><blockquote>
-<p>DNS是Domain name system的简称，有些地方也称为Domain name server，这东西是一个很大的话题。如果不是要配置DNS服务，只需要理解DNS的解析流程和DNS有关的基本知识即可。如果要配置DNS服务，则可以看完全文。<br>推荐阅读书籍：《DNS &amp; bind》，第四版有中文版，第五版目前只有英文版。  </p>
-</blockquote>
-<h5 id="DNS必懂基础"><a href="#DNS必懂基础" class="headerlink" title="DNS必懂基础"></a>DNS必懂基础</h5>
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/02/15</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "Linux">Linux</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "DNS">DNS</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2017/02/01/rpm管理包 和 yum管理包(1)/" >
-            
-                <span>安装管理包：rpm包和yum包</span>
-        </a>
-        <div class="abstract-content">
-            <h4 id="包基础知识"><a href="#包基础知识" class="headerlink" title="包基础知识"></a>包基础知识</h4><h5 id="包名称"><a href="#包名称" class="headerlink" title="包名称"></a>包名称</h5><blockquote>
-<p>在rhel/centos/fedora上，包的名称以rpm结尾，分为二进制包和源码包。源码包以”.src.rpm”结尾，它是未编译过的包，可以自行进行编译或者用其制作自己的二进制rpm包，非”.src.rpm”结尾的包都是二进制包，都是已经编译完成的，安装rpm包的过程实际上就是将包中的文件复制到Linux上，有可能还会在复制文件的前后执行一些命令，如创建一个必要的用户，删除非必要文件等。<br>
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/02/01</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "Linux">Linux</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "rpm">rpm</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2016/11/29/Linux 的一些基础练习题/" >
-            
-                <span>Linux 的一些基础练习题</span>
-        </a>
-        <div class="abstract-content">
-            <h2 id="练习题："><a href="#练习题：" class="headerlink" title="练习题："></a>练习题：</h2><p>1，显示当前时间，格式为：2016-06-18 10:20:30</p>
-<blockquote>
-<p>答案：date “+%F,%T” 或者 date “+%F %H:%M:%S”</p>
-</blockquote>
-<p>2，显示前天是星期几？</p>
-<blockquote>
-<p>答案：date -d “-2 day” +%A</p>
-<p>知识点：一 ，date +%s 是把当前时间转化为秒数         二， date -d @”1523604170″ 把秒数转化回来</p>
-</blockquote>
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2016/11/29</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "Linux">Linux</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "练习题">练习题</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
     <!-- paginator  -->
     
     <nav class="page-nav">
-        <a class="extend prev" rel="prev" href="/archives/">&#60; PREV</a><a class="page-number" href="/archives/">1</a><span class="page-number current">2</span>
+        <a class="extend prev" rel="prev" href="/archives/">&#60; PREV</a><a class="page-number" href="/archives/">1</a><span class="page-number current">2</span><a class="page-number" href="/archives/page/3/">3</a><a class="extend next" rel="next" href="/archives/page/3/">NEXT &#62;</a>
     </nav>
     
 </main>
@@ -1001,9 +997,107 @@
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 20
+        Total : 26
         </div>
         <!-- search  -->
         
@@ -1039,6 +1133,16 @@
     
         <li class="archive-post-item">
             <span class="archive-post-date">10/15</span><a class="archive-post-title" href= "/2017/10/15/memcache  缓存原理介绍/" >memcache  缓存原理介绍</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/08</span><a class="archive-post-title" href= "/2017/10/08/tomcat 各种架构实验演示/" >tomcat 各种架构实验演示</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/25</span><a class="archive-post-title" href= "/2017/09/25/Varnish 缓存服务器介绍/" >Varnish 缓存服务器介绍</a>
         </li>
     
     
@@ -1098,6 +1202,11 @@
     
     
         <li class="archive-post-item">
+            <span class="archive-post-date">03/15</span><a class="archive-post-title" href= "/2017/03/15/搭建DNS 服务，实现主服务器，邮件服务器，泛域名解析，反向解析等/" >搭建DNS 服务，实现主服务器，邮件服务器，泛域名解析，反向解析等</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
             <span class="archive-post-date">03/12</span><a class="archive-post-title" href= "/2017/03/12/Linux 文件权限管理/" >Linux 文件权限管理</a>
         </li>
     
@@ -1113,21 +1222,17 @@
     
     
         <li class="archive-post-item">
+            <span class="archive-post-date">02/10</span><a class="archive-post-title" href= "/2017/02/10/SSH端口转发实验/" >SSH端口转发实验</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
             <span class="archive-post-date">02/01</span><a class="archive-post-title" href= "/2017/02/01/rpm管理包 和 yum管理包(1)/" >安装管理包：rpm包和yum包</a>
         </li>
     
     
-    
-    
-    
-        </ul>
-    
-    <div class="archive-year"> 2016 </div>
-    <ul class="year-list">
-    
-    
         <li class="archive-post-item">
-            <span class="archive-post-date">11/29</span><a class="archive-post-title" href= "/2016/11/29/Linux 的一些基础练习题/" >Linux 的一些基础练习题</a>
+            <span class="archive-post-date">01/20</span><a class="archive-post-title" href= "/2017/01/20/搭建CA/" >如何搭建CA（向CA申请证书）</a>
         </li>
     
     
@@ -1144,6 +1249,25 @@
             <span class="archive-post-date">Invalid date</span><a class="archive-post-title" href= "/2018/08/09/Nginx 各种实验演示/" >[Untitled Post]</a>
         </li>
     
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2016 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/08</span><a class="archive-post-title" href= "/2016/12/08/TCP、IP协议三次握手与四次握手流程解析（）/" >TCP、IP协议三次握手与四次握手流程解析</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/29</span><a class="archive-post-title" href= "/2016/11/29/Linux 的一些基础练习题/" >Linux 的一些基础练习题</a>
+        </li>
+    
     </div>
   </div>
         <div class="sidebar-panel-tags">
@@ -1153,13 +1277,15 @@
     
         <span class="sidebar-tag-name" data-tags="DHCP"><span class="iconfont-archer">&#xe606;</span>DHCP</span>
     
-        <span class="sidebar-tag-name" data-tags="LAMP"><span class="iconfont-archer">&#xe606;</span>LAMP</span>
-    
-        <span class="sidebar-tag-name" data-tags="用户组"><span class="iconfont-archer">&#xe606;</span>用户组</span>
-    
         <span class="sidebar-tag-name" data-tags="haproxy"><span class="iconfont-archer">&#xe606;</span>haproxy</span>
     
+        <span class="sidebar-tag-name" data-tags="DNS"><span class="iconfont-archer">&#xe606;</span>DNS</span>
+    
+        <span class="sidebar-tag-name" data-tags="LAMP"><span class="iconfont-archer">&#xe606;</span>LAMP</span>
+    
         <span class="sidebar-tag-name" data-tags="权限管理"><span class="iconfont-archer">&#xe606;</span>权限管理</span>
+    
+        <span class="sidebar-tag-name" data-tags="用户组"><span class="iconfont-archer">&#xe606;</span>用户组</span>
     
         <span class="sidebar-tag-name" data-tags="练习题"><span class="iconfont-archer">&#xe606;</span>练习题</span>
     
@@ -1169,6 +1295,12 @@
     
         <span class="sidebar-tag-name" data-tags="文件系统"><span class="iconfont-archer">&#xe606;</span>文件系统</span>
     
+        <span class="sidebar-tag-name" data-tags="SSH"><span class="iconfont-archer">&#xe606;</span>SSH</span>
+    
+        <span class="sidebar-tag-name" data-tags="TCP/IP"><span class="iconfont-archer">&#xe606;</span>TCP/IP</span>
+    
+        <span class="sidebar-tag-name" data-tags="varnish"><span class="iconfont-archer">&#xe606;</span>varnish</span>
+    
         <span class="sidebar-tag-name" data-tags="keepalied"><span class="iconfont-archer">&#xe606;</span>keepalied</span>
     
         <span class="sidebar-tag-name" data-tags="lvs"><span class="iconfont-archer">&#xe606;</span>lvs</span>
@@ -1177,7 +1309,9 @@
     
         <span class="sidebar-tag-name" data-tags="rpm"><span class="iconfont-archer">&#xe606;</span>rpm</span>
     
-        <span class="sidebar-tag-name" data-tags="DNS"><span class="iconfont-archer">&#xe606;</span>DNS</span>
+        <span class="sidebar-tag-name" data-tags="tomcat"><span class="iconfont-archer">&#xe606;</span>tomcat</span>
+    
+        <span class="sidebar-tag-name" data-tags="CA"><span class="iconfont-archer">&#xe606;</span>CA</span>
     
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>

@@ -489,6 +489,108 @@ height:50vh;
     
     
     <article class="index-post">
+        <a class="abstract-title" href = "/2017/10/08/tomcat 各种架构实验演示/" >
+            
+                <span>tomcat 各种架构实验演示</span>
+        </a>
+        <div class="abstract-content">
+            <h2 id="实验：nginx-直接反代所有客户请求至后端-tomcat"><a href="#实验：nginx-直接反代所有客户请求至后端-tomcat" class="headerlink" title="实验：nginx 直接反代所有客户请求至后端 tomcat"></a>实验：nginx 直接反代所有客户请求至后端 tomcat</h2><pre><code>准备两台主机来模拟这个实验，第一台做前端反向代理的 nginx 服务器,IP 192.168.1.133 ,第二台做后端提供服务的 tomcat 服务器，IP 192.168.1.132。
+
+现在第一台主机上安装 nginx 服务
+yum install nginx -y
+
+设置配置文件
+vim /etc/nginx/conf.d/www.conf
+
+server {
+    listen 80;
+    server_name www.zuyu.com;
+    location / {
+        proxy_pass http://192.168.1.132:8080;   
+        # 因为后端的 tomcat 服务器上现在只有一台虚拟机，所以写 IP 就可以，访问时是本机默认的一个 localhost 。如果后端服务器上有多个虚拟机，那么要反代哪个虚拟机就写上哪个虚拟机的域名即可，并且还要本机能够解析这个域名。
+    }
+}
+
+最后启动服务
+systemctl start nginx 
+</code></pre>
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/10/08</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "Linux">Linux</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "tomcat">tomcat</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2017/09/25/Varnish 缓存服务器介绍/" >
+            
+                <span>Varnish 缓存服务器介绍</span>
+        </a>
+        <div class="abstract-content">
+            <p>Web Page Cache：</p>
+<pre><code>squid --&gt; varnish
+
+程序的运行具有局部性特征：
+    时间局部性：一个数据被访问过之后，可能很快会被再次访问到；
+    空间局部性：一个数据被访问时，其周边的数据也有可能被访问到
+
+在互联网站点当中存在着两种缓存,一种是用来缓存简单的数据流或者是流失数据，另一种是用来缓存页面数据，但页面缓存也属于流式数据的一种。
+    页面缓存：只是用来缓存外部服务器结构当中能够作为页面或者页面资源而存在的静态或者动态生成的不易发生变化，对不同客户端没有太大区别的。
+
+cache：命中 
+
+    热区：局部性；
+        时效性：
+            缓存空间耗尽：LRU，最近最少使用；
+            过期：缓存清理
+
+缓存命中率：hit/(hit+miss)
+    (0,1)
+    页面命中率：基于页面数量进行衡量
+    字节命中率：基于页面的体积进行衡量
+</code></pre>
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/09/25</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "Linux">Linux</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "varnish">varnish</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
         <a class="abstract-title" href = "/2017/09/14/keepalived 各种高可用实战演练/" >
             
                 <span>keepalived 各种高可用实战演练</span>
@@ -630,77 +732,10 @@ timedatectl set-timezone Asia/Shanghai
         </div>
     </article>
     
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2017/05/22/MYSQL 数据库的日志介绍/" >
-            
-                <span>MYSQL 数据库的日志介绍</span>
-        </a>
-        <div class="abstract-content">
-            <p>不管是哪个数据库产品，一定会有日志文件。在MariaDB/MySQL中，主要有5种日志文件：  </p>
-<p>1.错误日志(error log)：记录mysql服务的启停时正确和错误的信息，还记录启动、停止、运行过程中的错误信息。  </p>
-<p>2.查询日志(general log)：记录建立的客户端连接和执行的语句。  </p>
-<p>3.二进制日志(bin log)：记录所有更改数据的语句，可用于数据复制。  </p>
-<p>4.慢查询日志(slow log)：记录所有执行时间超过long_query_time的所有查询或不使用索引的查询。  </p>
-<p>5.中继日志(relay log)：主从复制时使用的日志。  </p>
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/05/22</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "Linux">Linux</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "MYSQL">MYSQL</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2017/05/15/MYSQL MariaDB 的事务和事务隔离级别/" >
-            
-                <span>MYSQL MariaDB 的事务和事务隔离级别</span>
-        </a>
-        <div class="abstract-content">
-            <h3 id="事务特性"><a href="#事务特性" class="headerlink" title="事务特性"></a>事务特性</h3><h6 id="事务具有ACID特性：原子性-A-atomicity-、一致性-C-consistency-、隔离性-I-isolation-、持久性-D-durabulity-。"><a href="#事务具有ACID特性：原子性-A-atomicity-、一致性-C-consistency-、隔离性-I-isolation-、持久性-D-durabulity-。" class="headerlink" title="事务具有ACID特性：原子性(A,atomicity)、一致性(C,consistency)、隔离性(I,isolation)、持久性(D,durabulity)。"></a>事务具有ACID特性：原子性(A,atomicity)、一致性(C,consistency)、隔离性(I,isolation)、持久性(D,durabulity)。</h6><h6 id="原子性：事务内的所有操作要么都执行，要么都不执行。"><a href="#原子性：事务内的所有操作要么都执行，要么都不执行。" class="headerlink" title="原子性：事务内的所有操作要么都执行，要么都不执行。"></a>原子性：事务内的所有操作要么都执行，要么都不执行。</h6><h6 id="一致性：事务开始和结束前后，数据都满足数据一致性约束，而不是经过事务控制之后数据变得不满足条件或业务规则。"><a href="#一致性：事务开始和结束前后，数据都满足数据一致性约束，而不是经过事务控制之后数据变得不满足条件或业务规则。" class="headerlink" title="一致性：事务开始和结束前后，数据都满足数据一致性约束，而不是经过事务控制之后数据变得不满足条件或业务规则。"></a>一致性：事务开始和结束前后，数据都满足数据一致性约束，而不是经过事务控制之后数据变得不满足条件或业务规则。</h6><h6 id="隔离性：事务之间不能互影响，它们必须完全的各行其道，互不可见。"><a href="#隔离性：事务之间不能互影响，它们必须完全的各行其道，互不可见。" class="headerlink" title="隔离性：事务之间不能互影响，它们必须完全的各行其道，互不可见。"></a>隔离性：事务之间不能互影响，它们必须完全的各行其道，互不可见。</h6>
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/05/15</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "Linux">Linux</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "MYSQL">MYSQL</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
     <!-- paginator  -->
     
     <nav class="page-nav">
-        <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">NEXT &#62;</a>
+        <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/">NEXT &#62;</a>
     </nav>
     
 </main>
@@ -1115,9 +1150,107 @@ timedatectl set-timezone Asia/Shanghai
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 20
+        Total : 26
         </div>
         <!-- search  -->
         
@@ -1153,6 +1286,16 @@ timedatectl set-timezone Asia/Shanghai
     
         <li class="archive-post-item">
             <span class="archive-post-date">10/15</span><a class="archive-post-title" href= "/2017/10/15/memcache  缓存原理介绍/" >memcache  缓存原理介绍</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/08</span><a class="archive-post-title" href= "/2017/10/08/tomcat 各种架构实验演示/" >tomcat 各种架构实验演示</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/25</span><a class="archive-post-title" href= "/2017/09/25/Varnish 缓存服务器介绍/" >Varnish 缓存服务器介绍</a>
         </li>
     
     
@@ -1212,6 +1355,11 @@ timedatectl set-timezone Asia/Shanghai
     
     
         <li class="archive-post-item">
+            <span class="archive-post-date">03/15</span><a class="archive-post-title" href= "/2017/03/15/搭建DNS 服务，实现主服务器，邮件服务器，泛域名解析，反向解析等/" >搭建DNS 服务，实现主服务器，邮件服务器，泛域名解析，反向解析等</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
             <span class="archive-post-date">03/12</span><a class="archive-post-title" href= "/2017/03/12/Linux 文件权限管理/" >Linux 文件权限管理</a>
         </li>
     
@@ -1227,21 +1375,17 @@ timedatectl set-timezone Asia/Shanghai
     
     
         <li class="archive-post-item">
+            <span class="archive-post-date">02/10</span><a class="archive-post-title" href= "/2017/02/10/SSH端口转发实验/" >SSH端口转发实验</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
             <span class="archive-post-date">02/01</span><a class="archive-post-title" href= "/2017/02/01/rpm管理包 和 yum管理包(1)/" >安装管理包：rpm包和yum包</a>
         </li>
     
     
-    
-    
-    
-        </ul>
-    
-    <div class="archive-year"> 2016 </div>
-    <ul class="year-list">
-    
-    
         <li class="archive-post-item">
-            <span class="archive-post-date">11/29</span><a class="archive-post-title" href= "/2016/11/29/Linux 的一些基础练习题/" >Linux 的一些基础练习题</a>
+            <span class="archive-post-date">01/20</span><a class="archive-post-title" href= "/2017/01/20/搭建CA/" >如何搭建CA（向CA申请证书）</a>
         </li>
     
     
@@ -1258,6 +1402,25 @@ timedatectl set-timezone Asia/Shanghai
             <span class="archive-post-date">Invalid date</span><a class="archive-post-title" href= "/2018/08/09/Nginx 各种实验演示/" >[Untitled Post]</a>
         </li>
     
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2016 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/08</span><a class="archive-post-title" href= "/2016/12/08/TCP、IP协议三次握手与四次握手流程解析（）/" >TCP、IP协议三次握手与四次握手流程解析</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/29</span><a class="archive-post-title" href= "/2016/11/29/Linux 的一些基础练习题/" >Linux 的一些基础练习题</a>
+        </li>
+    
     </div>
   </div>
         <div class="sidebar-panel-tags">
@@ -1267,13 +1430,15 @@ timedatectl set-timezone Asia/Shanghai
     
         <span class="sidebar-tag-name" data-tags="DHCP"><span class="iconfont-archer">&#xe606;</span>DHCP</span>
     
-        <span class="sidebar-tag-name" data-tags="LAMP"><span class="iconfont-archer">&#xe606;</span>LAMP</span>
-    
-        <span class="sidebar-tag-name" data-tags="用户组"><span class="iconfont-archer">&#xe606;</span>用户组</span>
-    
         <span class="sidebar-tag-name" data-tags="haproxy"><span class="iconfont-archer">&#xe606;</span>haproxy</span>
     
+        <span class="sidebar-tag-name" data-tags="DNS"><span class="iconfont-archer">&#xe606;</span>DNS</span>
+    
+        <span class="sidebar-tag-name" data-tags="LAMP"><span class="iconfont-archer">&#xe606;</span>LAMP</span>
+    
         <span class="sidebar-tag-name" data-tags="权限管理"><span class="iconfont-archer">&#xe606;</span>权限管理</span>
+    
+        <span class="sidebar-tag-name" data-tags="用户组"><span class="iconfont-archer">&#xe606;</span>用户组</span>
     
         <span class="sidebar-tag-name" data-tags="练习题"><span class="iconfont-archer">&#xe606;</span>练习题</span>
     
@@ -1283,6 +1448,12 @@ timedatectl set-timezone Asia/Shanghai
     
         <span class="sidebar-tag-name" data-tags="文件系统"><span class="iconfont-archer">&#xe606;</span>文件系统</span>
     
+        <span class="sidebar-tag-name" data-tags="SSH"><span class="iconfont-archer">&#xe606;</span>SSH</span>
+    
+        <span class="sidebar-tag-name" data-tags="TCP/IP"><span class="iconfont-archer">&#xe606;</span>TCP/IP</span>
+    
+        <span class="sidebar-tag-name" data-tags="varnish"><span class="iconfont-archer">&#xe606;</span>varnish</span>
+    
         <span class="sidebar-tag-name" data-tags="keepalied"><span class="iconfont-archer">&#xe606;</span>keepalied</span>
     
         <span class="sidebar-tag-name" data-tags="lvs"><span class="iconfont-archer">&#xe606;</span>lvs</span>
@@ -1291,7 +1462,9 @@ timedatectl set-timezone Asia/Shanghai
     
         <span class="sidebar-tag-name" data-tags="rpm"><span class="iconfont-archer">&#xe606;</span>rpm</span>
     
-        <span class="sidebar-tag-name" data-tags="DNS"><span class="iconfont-archer">&#xe606;</span>DNS</span>
+        <span class="sidebar-tag-name" data-tags="tomcat"><span class="iconfont-archer">&#xe606;</span>tomcat</span>
+    
+        <span class="sidebar-tag-name" data-tags="CA"><span class="iconfont-archer">&#xe606;</span>CA</span>
     
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
