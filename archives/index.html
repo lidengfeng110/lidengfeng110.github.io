@@ -412,6 +412,39 @@
     
     
     <article class="index-post">
+        <a class="abstract-title" href = "/2018/08/09/日志管理介绍/" >
+            
+                <span>[Untitled Post]</span>
+        </a>
+        <div class="abstract-content">
+            <hr>
+<p>layout: post<br>title: 日志管理介绍<br>date: 2017-7-15<br>tags:</p>
+<ul>
+<li>Linux</li>
+<li>日志</li>
+</ul>
+<hr>
+<h2 id="日志介绍"><a href="#日志介绍" class="headerlink" title="日志介绍"></a>日志介绍</h2><h4 id="日志："><a href="#日志：" class="headerlink" title="日志："></a>日志：</h4><pre><code>历史事件:时间，地点，人物，事件  
+ 日志级别：事件的关键性程度，Loglevel   
+</code></pre><h4 id="系统日志服务："><a href="#系统日志服务：" class="headerlink" title="系统日志服务："></a>系统日志服务：</h4><p>sysklogd :CentOS 5之前版本<br>     syslogd: system application 记录应用日志<br>      klogd: linux kernel 记录内核日志<br>     事件记录格式：<br>       日期时间 主机 进程[pid]: 事件内容<br>    C/S架构：通过TCP或UDP协议的服务完成日志记录传送，将分布在不同主 机的日志实现集中管理  </p>
+<h4 id="rsyslog"><a href="#rsyslog" class="headerlink" title="rsyslog"></a>rsyslog</h4><p>rsyslog特性：CentOS6和7<br>     多线程<br>     UDP, TCP, SSL, TLS, RELP<br>     MySQL, PGSQL, Oracle实现日志存储<br>     强大的过滤器，可实现过滤记录日志信息中任意部分<br>     自定义输出格式<br>ELK：elasticsearch, logstash, kibana<br>     非关系型分布式数据库<br>     基于apache软件基金会jakarta项目组的项目lucene<br>     Elasticsearch是个开源分布式搜索引擎<br>     Logstash对日志进行收集、分析，并将其存储供以后使用<br>     kibana 可以提供的日志分析友好的 Web 界面</p>
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/08/09</span>
+            </div>
+            <!-- tags  -->
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
         <a class="abstract-title" href = "/2018/08/09/Linux 防火墙各种规则实战应用/" >
             
                 <span>[Untitled Post]</span>
@@ -504,6 +537,50 @@ systemctl start nginx
             <!-- date  -->
             <div class="abstract-date">
                 <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/10/08</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "Linux">Linux</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "tomcat">tomcat</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2017/10/05/浅谈 tomcat 原理/" >
+            
+                <span>浅谈 tomcat 原理</span>
+        </a>
+        <div class="abstract-content">
+            <p>程序=指令+数据<br>    程序=算法+数据结构<br>    编程范式：<br>        一算法为中心，数据结构服务于算法：过程式编程<br>        以数据为中心，代码服务于数据：对象式编程<br>            对象：属性、方法<br>            类别：实例化–对象，对象互操作<br>    过程式编程： C，bash ，Python , golang…<br>    对象式编程：java , Kotlin , c++  , Ruby , Pthon…</p>
+<pre><code>golang:docker , etcd , kubernetes,...
+java:hadoop, hbase , zookeeper , kafka , ...
+
+
+write once,run anywhere : 一次编写，到处运行。
+
+java 的核心目标在于不同的系统环境上，不同的底层硬件平台上都能够使一个代码在不同的环境下运行
+库：代码 标注库， 3rd party（第三方库）
+java:编程语言，类库，JVM（java虚拟机），类文件格式（字节码文件）
+
+java 虚拟机是不能直接执行 java 的源代码的，需要先进行编译，编译是针对 java 虚拟机进行编译的 ，但 java 虚拟机所接受进来的也是字节码（bytecode）,
+cgi ：通用网关接口技术
+</code></pre>
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/10/05</span>
             </div>
             <!-- tags  -->
             
@@ -649,69 +726,6 @@ timedatectl set-timezone Asia/Shanghai
         <a class="post-tag" href="javascript:void(0);" data-tags = "Linux">Linux</a>
     
         <a class="post-tag" href="javascript:void(0);" data-tags = "haproxy">haproxy</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2017/08/19/lvs 详细介绍/" >
-            
-                <span>lvs 详细介绍</span>
-        </a>
-        <div class="abstract-content">
-            <h4 id="Cluster概念"><a href="#Cluster概念" class="headerlink" title="Cluster概念"></a>Cluster概念</h4><p> 系统扩展方式：<br>      Scale UP：向上扩展,增强<br>       Scale Out：向外扩展,增加设备，调度分配问题，Cluster<br> Cluster：集群,为解决某个特定问题将多台计算机组合起来形成的单个系统<br> Linux Cluster类型：<br>    LB：Load Balancing，负载均衡<br>    HA：High Availiablity，高可用，SPOF（single Point Of failure）<br>       MTBF:Mean Time Between Failure 平均无故障时间<br>       MTTR:Mean Time To Restoration（ repair）平均恢复前时间<br>        A=MTBF/（MTBF+MTTR） (0,1)：99%, 99.5%, 99.9%, 99.99%, 99.999%<br>     HPC：High-performance computing，高性能 <a href="http://www.top500.org" target="_blank" rel="noopener">www.top500.org</a><br> 分布式系统：<br>       分布式存储：云盘<br>       分布式计算：hadoop， park<br>
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/08/19</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "Linux">Linux</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "lvs">lvs</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2017/06/24/各种网络共享服务实验演示/" >
-            
-                <span>各种网络共享服务实验演示</span>
-        </a>
-        <div class="abstract-content">
-            <h2 id="实验：-实现基于文件验证的-vsftpd-虚拟用户"><a href="#实验：-实现基于文件验证的-vsftpd-虚拟用户" class="headerlink" title="实验： 实现基于文件验证的 vsftpd 虚拟用户"></a>实验： 实现基于文件验证的 vsftpd 虚拟用户</h2><h5 id="先创建一个存放虚拟用户的账号密码的文件-vim-etc-vsftpd-vsftpusers"><a href="#先创建一个存放虚拟用户的账号密码的文件-vim-etc-vsftpd-vsftpusers" class="headerlink" title="先创建一个存放虚拟用户的账号密码的文件      vim /etc/vsftpd/vsftpusers"></a>先创建一个存放虚拟用户的账号密码的文件      vim /etc/vsftpd/vsftpusers</h5><p> 在里面添加               ftpuser1<br>                                  centos<br>                                  ftpuser2<br>                                  magedu<br>                                   ftpuser3<br>                                   rhel  </p>
-<h5 id="这个文件中奇数行是虚拟账户，偶数行是密码。"><a href="#这个文件中奇数行是虚拟账户，偶数行是密码。" class="headerlink" title="这个文件中奇数行是虚拟账户，偶数行是密码。"></a>这个文件中奇数行是虚拟账户，偶数行是密码。</h5>
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/06/24</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "Linux">Linux</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "共享服务">共享服务</a>
     
 </div>
             
@@ -1273,9 +1287,64 @@ timedatectl set-timezone Asia/Shanghai
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 32
+        Total : 39
         </div>
         <!-- search  -->
         
@@ -1320,6 +1389,11 @@ timedatectl set-timezone Asia/Shanghai
     
     
         <li class="archive-post-item">
+            <span class="archive-post-date">10/05</span><a class="archive-post-title" href= "/2017/10/05/浅谈 tomcat 原理/" >浅谈 tomcat 原理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
             <span class="archive-post-date">09/25</span><a class="archive-post-title" href= "/2017/09/25/Varnish 缓存服务器介绍/" >Varnish 缓存服务器介绍</a>
         </li>
     
@@ -1341,6 +1415,11 @@ timedatectl set-timezone Asia/Shanghai
     
         <li class="archive-post-item">
             <span class="archive-post-date">06/24</span><a class="archive-post-title" href= "/2017/06/24/各种网络共享服务实验演示/" >各种网络共享服务实验演示</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/20</span><a class="archive-post-title" href= "/2017/06/20/网络文件共享服务：FTP    NFS   SAMBA/" >网络文件共享服务：FTP    NFS   SAMBA</a>
         </li>
     
     
@@ -1390,6 +1469,11 @@ timedatectl set-timezone Asia/Shanghai
     
     
         <li class="archive-post-item">
+            <span class="archive-post-date">03/22</span><a class="archive-post-title" href= "/2017/03/22/实现DNS服务主从复制/" >实现DNS服务主从复制</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
             <span class="archive-post-date">03/20</span><a class="archive-post-title" href= "/2017/03/20/搭建DNS互联网架构服务器(一）/" >搭建DNS互联网架构服务器</a>
         </li>
     
@@ -1419,6 +1503,59 @@ timedatectl set-timezone Asia/Shanghai
         </li>
     
     
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/10</span><a class="archive-post-title" href= "/2017/02/10/SSH端口转发实验/" >SSH端口转发实验</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/08</span><a class="archive-post-title" href= "/2017/02/08/实现PXE自动安装/" >实现PXE自动安装</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/01</span><a class="archive-post-title" href= "/2017/02/01/rpm管理包 和 yum管理包(1)/" >安装管理包：rpm包和yum包</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/20</span><a class="archive-post-title" href= "/2017/01/20/搭建CA/" >如何搭建CA（向CA申请证书）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/08</span><a class="archive-post-title" href= "/2017/01/08/自制一个mini 的Linux系统/" >自制一个mini 的Linux系统</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> Invalid date </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">Invalid date</span><a class="archive-post-title" href= "/2018/08/09/日志管理介绍/" >[Untitled Post]</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2016 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/20</span><a class="archive-post-title" href= "/2016/12/20/进程管理和计划任务的知识点()/" >进程管理与计划任务的知识点</a>
+        </li>
+    
+    
     
     
     
@@ -1438,36 +1575,12 @@ timedatectl set-timezone Asia/Shanghai
     
         </ul>
     
-    <div class="archive-year"> 2017 </div>
-    <ul class="year-list">
-    
-    
-        <li class="archive-post-item">
-            <span class="archive-post-date">02/10</span><a class="archive-post-title" href= "/2017/02/10/SSH端口转发实验/" >SSH端口转发实验</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
-            <span class="archive-post-date">02/01</span><a class="archive-post-title" href= "/2017/02/01/rpm管理包 和 yum管理包(1)/" >安装管理包：rpm包和yum包</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
-            <span class="archive-post-date">01/20</span><a class="archive-post-title" href= "/2017/01/20/搭建CA/" >如何搭建CA（向CA申请证书）</a>
-        </li>
-    
-    
-    
-    
-    
-        </ul>
-    
     <div class="archive-year"> 2016 </div>
     <ul class="year-list">
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">12/20</span><a class="archive-post-title" href= "/2016/12/20/进程管理和计划任务的知识点()/" >进程管理与计划任务的知识点</a>
+            <span class="archive-post-date">12/15</span><a class="archive-post-title" href= "/2016/12/15/文本处理工具：sed/" >文本处理工具：sed</a>
         </li>
     
     
@@ -1492,7 +1605,7 @@ timedatectl set-timezone Asia/Shanghai
     
         <span class="sidebar-tag-name" data-tags="Linux"><span class="iconfont-archer">&#xe606;</span>Linux</span>
     
-        <span class="sidebar-tag-name" data-tags="用户组"><span class="iconfont-archer">&#xe606;</span>用户组</span>
+        <span class="sidebar-tag-name" data-tags="DNS"><span class="iconfont-archer">&#xe606;</span>DNS</span>
     
         <span class="sidebar-tag-name" data-tags="DHCP"><span class="iconfont-archer">&#xe606;</span>DHCP</span>
     
@@ -1500,9 +1613,11 @@ timedatectl set-timezone Asia/Shanghai
     
         <span class="sidebar-tag-name" data-tags="haproxy"><span class="iconfont-archer">&#xe606;</span>haproxy</span>
     
+        <span class="sidebar-tag-name" data-tags="权限管理"><span class="iconfont-archer">&#xe606;</span>权限管理</span>
+    
         <span class="sidebar-tag-name" data-tags="练习题"><span class="iconfont-archer">&#xe606;</span>练习题</span>
     
-        <span class="sidebar-tag-name" data-tags="权限管理"><span class="iconfont-archer">&#xe606;</span>权限管理</span>
+        <span class="sidebar-tag-name" data-tags="用户组"><span class="iconfont-archer">&#xe606;</span>用户组</span>
     
         <span class="sidebar-tag-name" data-tags="su和sudo"><span class="iconfont-archer">&#xe606;</span>su和sudo</span>
     
@@ -1510,33 +1625,37 @@ timedatectl set-timezone Asia/Shanghai
     
         <span class="sidebar-tag-name" data-tags="MYSQL"><span class="iconfont-archer">&#xe606;</span>MYSQL</span>
     
+        <span class="sidebar-tag-name" data-tags="SSH"><span class="iconfont-archer">&#xe606;</span>SSH</span>
+    
         <span class="sidebar-tag-name" data-tags="TCP/IP"><span class="iconfont-archer">&#xe606;</span>TCP/IP</span>
     
-        <span class="sidebar-tag-name" data-tags="SSH"><span class="iconfont-archer">&#xe606;</span>SSH</span>
+        <span class="sidebar-tag-name" data-tags="keepalied"><span class="iconfont-archer">&#xe606;</span>keepalied</span>
     
         <span class="sidebar-tag-name" data-tags="varnish"><span class="iconfont-archer">&#xe606;</span>varnish</span>
     
         <span class="sidebar-tag-name" data-tags="lvs"><span class="iconfont-archer">&#xe606;</span>lvs</span>
     
+        <span class="sidebar-tag-name" data-tags="rpm"><span class="iconfont-archer">&#xe606;</span>rpm</span>
+    
         <span class="sidebar-tag-name" data-tags="memcache"><span class="iconfont-archer">&#xe606;</span>memcache</span>
     
         <span class="sidebar-tag-name" data-tags="tomcat"><span class="iconfont-archer">&#xe606;</span>tomcat</span>
     
+        <span class="sidebar-tag-name" data-tags="共享服务"><span class="iconfont-archer">&#xe606;</span>共享服务</span>
+    
         <span class="sidebar-tag-name" data-tags="基本命令"><span class="iconfont-archer">&#xe606;</span>基本命令</span>
-    
-        <span class="sidebar-tag-name" data-tags="keepalied"><span class="iconfont-archer">&#xe606;</span>keepalied</span>
-    
-        <span class="sidebar-tag-name" data-tags="rpm"><span class="iconfont-archer">&#xe606;</span>rpm</span>
     
         <span class="sidebar-tag-name" data-tags="CA"><span class="iconfont-archer">&#xe606;</span>CA</span>
     
         <span class="sidebar-tag-name" data-tags="dns"><span class="iconfont-archer">&#xe606;</span>dns</span>
     
-        <span class="sidebar-tag-name" data-tags="DNS"><span class="iconfont-archer">&#xe606;</span>DNS</span>
+        <span class="sidebar-tag-name" data-tags="sed"><span class="iconfont-archer">&#xe606;</span>sed</span>
+    
+        <span class="sidebar-tag-name" data-tags="自动化安装"><span class="iconfont-archer">&#xe606;</span>自动化安装</span>
+    
+        <span class="sidebar-tag-name" data-tags="mini系统"><span class="iconfont-archer">&#xe606;</span>mini系统</span>
     
         <span class="sidebar-tag-name" data-tags="进程管理、计划任务"><span class="iconfont-archer">&#xe606;</span>进程管理、计划任务</span>
-    
-        <span class="sidebar-tag-name" data-tags="共享服务"><span class="iconfont-archer">&#xe606;</span>共享服务</span>
     
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>

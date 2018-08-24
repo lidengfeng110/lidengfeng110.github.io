@@ -420,6 +420,50 @@ systemctl start nginx
     
     
     <article class="index-post">
+        <a class="abstract-title" href = "/2017/10/05/浅谈 tomcat 原理/" >
+            
+                <span>浅谈 tomcat 原理</span>
+        </a>
+        <div class="abstract-content">
+            <p>程序=指令+数据<br>    程序=算法+数据结构<br>    编程范式：<br>        一算法为中心，数据结构服务于算法：过程式编程<br>        以数据为中心，代码服务于数据：对象式编程<br>            对象：属性、方法<br>            类别：实例化–对象，对象互操作<br>    过程式编程： C，bash ，Python , golang…<br>    对象式编程：java , Kotlin , c++  , Ruby , Pthon…</p>
+<pre><code>golang:docker , etcd , kubernetes,...
+java:hadoop, hbase , zookeeper , kafka , ...
+
+
+write once,run anywhere : 一次编写，到处运行。
+
+java 的核心目标在于不同的系统环境上，不同的底层硬件平台上都能够使一个代码在不同的环境下运行
+库：代码 标注库， 3rd party（第三方库）
+java:编程语言，类库，JVM（java虚拟机），类文件格式（字节码文件）
+
+java 虚拟机是不能直接执行 java 的源代码的，需要先进行编译，编译是针对 java 虚拟机进行编译的 ，但 java 虚拟机所接受进来的也是字节码（bytecode）,
+cgi ：通用网关接口技术
+</code></pre>
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/10/05</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "Linux">Linux</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "tomcat">tomcat</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
         <a class="abstract-title" href = "/2017/09/25/Varnish 缓存服务器介绍/" >
             
                 <span>Varnish 缓存服务器介绍</span>
@@ -620,6 +664,40 @@ timedatectl set-timezone Asia/Shanghai
     
     
     <article class="index-post">
+        <a class="abstract-title" href = "/2017/06/20/网络文件共享服务：FTP    NFS   SAMBA/" >
+            
+                <span>网络文件共享服务：FTP    NFS   SAMBA</span>
+        </a>
+        <div class="abstract-content">
+            <p>FTP服务   </p>
+<p>NFS服务   </p>
+<p>SAMBA服务<br><img src="http://i2.bvimg.com/657107/f69a81c483abce89.png" alt="Markdown"></p>
+<h4 id="文件传输协议（FTP）"><a href="#文件传输协议（FTP）" class="headerlink" title="文件传输协议（FTP）"></a>文件传输协议（FTP）</h4><p>File Transfer Protocol 早期的三个应用级协议之一<br>三个协议分别是： ftp    http      smtp<br>基于C/S结构<br>双通道协议：数据和命令连接<br>数据传输格式：二进制（默认）和文本<br>两种模式：服务器角度<br> 主动(PORT style)：服务器主动连接<br>       命令（控制）：客户端：随机port —&gt;服务器：tcp21<br>        数据：客户端：随机port &lt;—服务器 ：tcp20<br> 被动(PASV style)：客户端主动连接<br>        命令（控制）：客户端：随机port —&gt;服务器：tcp21<br>        数据：客户端：随机port —&gt;服务器：随机port<br>
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/06/20</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "Linux">Linux</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "共享服务">共享服务</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
         <a class="abstract-title" href = "/2017/06/11/LAMP 架构的各种演示/" >
             
                 <span>LAMP 架构的各种演示</span>
@@ -645,81 +723,10 @@ timedatectl set-timezone Asia/Shanghai
         </div>
     </article>
     
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2017/06/01/介绍 MYSQL的事务日志/" >
-            
-                <span>介绍 MYSQL的事务日志</span>
-        </a>
-        <div class="abstract-content">
-            <h6 id="innodb事务日志包括redo-log和undo-log。redo-log是重做日志，提供前滚操作，undo-log是回滚日志，提供回滚操作"><a href="#innodb事务日志包括redo-log和undo-log。redo-log是重做日志，提供前滚操作，undo-log是回滚日志，提供回滚操作" class="headerlink" title="innodb事务日志包括redo log和undo log。redo log是重做日志，提供前滚操作，undo log是回滚日志，提供回滚操作"></a>innodb事务日志包括redo log和undo log。redo log是重做日志，提供前滚操作，undo log是回滚日志，提供回滚操作</h6><h6 id="undo-log不是redo-log的逆向过程，其实它们都算是用来恢复的日志："><a href="#undo-log不是redo-log的逆向过程，其实它们都算是用来恢复的日志：" class="headerlink" title="undo log不是redo log的逆向过程，其实它们都算是用来恢复的日志："></a>undo log不是redo log的逆向过程，其实它们都算是用来恢复的日志：</h6><blockquote>
-<p>1.redo log通常是物理日志，记录的是数据页的物理修改，而不是某一行或某几行修改成怎样怎样，它用来恢复提交后的物理数据页(恢复数据页，且只能恢复到最后一次提交的位置)。  </p>
-<p>2.undo用来回滚行记录到某个版本。undo log一般是逻辑日志，根据每行记录进行记录。  </p>
-</blockquote>
-<h4 id="redo-log"><a href="#redo-log" class="headerlink" title="redo log"></a>redo log</h4>
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/06/01</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "Linux">Linux</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "MYSQL">MYSQL</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2017/05/22/MYSQL 数据库的日志介绍/" >
-            
-                <span>MYSQL 数据库的日志介绍</span>
-        </a>
-        <div class="abstract-content">
-            <p>不管是哪个数据库产品，一定会有日志文件。在MariaDB/MySQL中，主要有5种日志文件：  </p>
-<p>1.错误日志(error log)：记录mysql服务的启停时正确和错误的信息，还记录启动、停止、运行过程中的错误信息。  </p>
-<p>2.查询日志(general log)：记录建立的客户端连接和执行的语句。  </p>
-<p>3.二进制日志(bin log)：记录所有更改数据的语句，可用于数据复制。  </p>
-<p>4.慢查询日志(slow log)：记录所有执行时间超过long_query_time的所有查询或不使用索引的查询。  </p>
-<p>5.中继日志(relay log)：主从复制时使用的日志。  </p>
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/05/22</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "Linux">Linux</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "MYSQL">MYSQL</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
     <!-- paginator  -->
     
     <nav class="page-nav">
-        <span class="page-number current">1</span><a class="page-number" href="/tags/Linux/page/2/">2</a><a class="page-number" href="/tags/Linux/page/3/">3</a><a class="extend next" rel="next" href="/tags/Linux/page/2/">NEXT &#62;</a>
+        <span class="page-number current">1</span><a class="page-number" href="/tags/Linux/page/2/">2</a><a class="page-number" href="/tags/Linux/page/3/">3</a><a class="page-number" href="/tags/Linux/page/4/">4</a><a class="extend next" rel="next" href="/tags/Linux/page/2/">NEXT &#62;</a>
     </nav>
     
 </main>
@@ -1271,9 +1278,64 @@ timedatectl set-timezone Asia/Shanghai
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 32
+        Total : 39
         </div>
         <!-- search  -->
         
@@ -1318,6 +1380,11 @@ timedatectl set-timezone Asia/Shanghai
     
     
         <li class="archive-post-item">
+            <span class="archive-post-date">10/05</span><a class="archive-post-title" href= "/2017/10/05/浅谈 tomcat 原理/" >浅谈 tomcat 原理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
             <span class="archive-post-date">09/25</span><a class="archive-post-title" href= "/2017/09/25/Varnish 缓存服务器介绍/" >Varnish 缓存服务器介绍</a>
         </li>
     
@@ -1339,6 +1406,11 @@ timedatectl set-timezone Asia/Shanghai
     
         <li class="archive-post-item">
             <span class="archive-post-date">06/24</span><a class="archive-post-title" href= "/2017/06/24/各种网络共享服务实验演示/" >各种网络共享服务实验演示</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/20</span><a class="archive-post-title" href= "/2017/06/20/网络文件共享服务：FTP    NFS   SAMBA/" >网络文件共享服务：FTP    NFS   SAMBA</a>
         </li>
     
     
@@ -1388,6 +1460,11 @@ timedatectl set-timezone Asia/Shanghai
     
     
         <li class="archive-post-item">
+            <span class="archive-post-date">03/22</span><a class="archive-post-title" href= "/2017/03/22/实现DNS服务主从复制/" >实现DNS服务主从复制</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
             <span class="archive-post-date">03/20</span><a class="archive-post-title" href= "/2017/03/20/搭建DNS互联网架构服务器(一）/" >搭建DNS互联网架构服务器</a>
         </li>
     
@@ -1417,6 +1494,59 @@ timedatectl set-timezone Asia/Shanghai
         </li>
     
     
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/10</span><a class="archive-post-title" href= "/2017/02/10/SSH端口转发实验/" >SSH端口转发实验</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/08</span><a class="archive-post-title" href= "/2017/02/08/实现PXE自动安装/" >实现PXE自动安装</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/01</span><a class="archive-post-title" href= "/2017/02/01/rpm管理包 和 yum管理包(1)/" >安装管理包：rpm包和yum包</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/20</span><a class="archive-post-title" href= "/2017/01/20/搭建CA/" >如何搭建CA（向CA申请证书）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/08</span><a class="archive-post-title" href= "/2017/01/08/自制一个mini 的Linux系统/" >自制一个mini 的Linux系统</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> Invalid date </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">Invalid date</span><a class="archive-post-title" href= "/2018/08/09/日志管理介绍/" >[Untitled Post]</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2016 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/20</span><a class="archive-post-title" href= "/2016/12/20/进程管理和计划任务的知识点()/" >进程管理与计划任务的知识点</a>
+        </li>
+    
+    
     
     
     
@@ -1436,36 +1566,12 @@ timedatectl set-timezone Asia/Shanghai
     
         </ul>
     
-    <div class="archive-year"> 2017 </div>
-    <ul class="year-list">
-    
-    
-        <li class="archive-post-item">
-            <span class="archive-post-date">02/10</span><a class="archive-post-title" href= "/2017/02/10/SSH端口转发实验/" >SSH端口转发实验</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
-            <span class="archive-post-date">02/01</span><a class="archive-post-title" href= "/2017/02/01/rpm管理包 和 yum管理包(1)/" >安装管理包：rpm包和yum包</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
-            <span class="archive-post-date">01/20</span><a class="archive-post-title" href= "/2017/01/20/搭建CA/" >如何搭建CA（向CA申请证书）</a>
-        </li>
-    
-    
-    
-    
-    
-        </ul>
-    
     <div class="archive-year"> 2016 </div>
     <ul class="year-list">
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">12/20</span><a class="archive-post-title" href= "/2016/12/20/进程管理和计划任务的知识点()/" >进程管理与计划任务的知识点</a>
+            <span class="archive-post-date">12/15</span><a class="archive-post-title" href= "/2016/12/15/文本处理工具：sed/" >文本处理工具：sed</a>
         </li>
     
     
@@ -1490,7 +1596,7 @@ timedatectl set-timezone Asia/Shanghai
     
         <span class="sidebar-tag-name" data-tags="Linux"><span class="iconfont-archer">&#xe606;</span>Linux</span>
     
-        <span class="sidebar-tag-name" data-tags="用户组"><span class="iconfont-archer">&#xe606;</span>用户组</span>
+        <span class="sidebar-tag-name" data-tags="DNS"><span class="iconfont-archer">&#xe606;</span>DNS</span>
     
         <span class="sidebar-tag-name" data-tags="DHCP"><span class="iconfont-archer">&#xe606;</span>DHCP</span>
     
@@ -1498,9 +1604,11 @@ timedatectl set-timezone Asia/Shanghai
     
         <span class="sidebar-tag-name" data-tags="haproxy"><span class="iconfont-archer">&#xe606;</span>haproxy</span>
     
+        <span class="sidebar-tag-name" data-tags="权限管理"><span class="iconfont-archer">&#xe606;</span>权限管理</span>
+    
         <span class="sidebar-tag-name" data-tags="练习题"><span class="iconfont-archer">&#xe606;</span>练习题</span>
     
-        <span class="sidebar-tag-name" data-tags="权限管理"><span class="iconfont-archer">&#xe606;</span>权限管理</span>
+        <span class="sidebar-tag-name" data-tags="用户组"><span class="iconfont-archer">&#xe606;</span>用户组</span>
     
         <span class="sidebar-tag-name" data-tags="su和sudo"><span class="iconfont-archer">&#xe606;</span>su和sudo</span>
     
@@ -1508,33 +1616,37 @@ timedatectl set-timezone Asia/Shanghai
     
         <span class="sidebar-tag-name" data-tags="MYSQL"><span class="iconfont-archer">&#xe606;</span>MYSQL</span>
     
+        <span class="sidebar-tag-name" data-tags="SSH"><span class="iconfont-archer">&#xe606;</span>SSH</span>
+    
         <span class="sidebar-tag-name" data-tags="TCP/IP"><span class="iconfont-archer">&#xe606;</span>TCP/IP</span>
     
-        <span class="sidebar-tag-name" data-tags="SSH"><span class="iconfont-archer">&#xe606;</span>SSH</span>
+        <span class="sidebar-tag-name" data-tags="keepalied"><span class="iconfont-archer">&#xe606;</span>keepalied</span>
     
         <span class="sidebar-tag-name" data-tags="varnish"><span class="iconfont-archer">&#xe606;</span>varnish</span>
     
         <span class="sidebar-tag-name" data-tags="lvs"><span class="iconfont-archer">&#xe606;</span>lvs</span>
     
+        <span class="sidebar-tag-name" data-tags="rpm"><span class="iconfont-archer">&#xe606;</span>rpm</span>
+    
         <span class="sidebar-tag-name" data-tags="memcache"><span class="iconfont-archer">&#xe606;</span>memcache</span>
     
         <span class="sidebar-tag-name" data-tags="tomcat"><span class="iconfont-archer">&#xe606;</span>tomcat</span>
     
+        <span class="sidebar-tag-name" data-tags="共享服务"><span class="iconfont-archer">&#xe606;</span>共享服务</span>
+    
         <span class="sidebar-tag-name" data-tags="基本命令"><span class="iconfont-archer">&#xe606;</span>基本命令</span>
-    
-        <span class="sidebar-tag-name" data-tags="keepalied"><span class="iconfont-archer">&#xe606;</span>keepalied</span>
-    
-        <span class="sidebar-tag-name" data-tags="rpm"><span class="iconfont-archer">&#xe606;</span>rpm</span>
     
         <span class="sidebar-tag-name" data-tags="CA"><span class="iconfont-archer">&#xe606;</span>CA</span>
     
         <span class="sidebar-tag-name" data-tags="dns"><span class="iconfont-archer">&#xe606;</span>dns</span>
     
-        <span class="sidebar-tag-name" data-tags="DNS"><span class="iconfont-archer">&#xe606;</span>DNS</span>
+        <span class="sidebar-tag-name" data-tags="sed"><span class="iconfont-archer">&#xe606;</span>sed</span>
+    
+        <span class="sidebar-tag-name" data-tags="自动化安装"><span class="iconfont-archer">&#xe606;</span>自动化安装</span>
+    
+        <span class="sidebar-tag-name" data-tags="mini系统"><span class="iconfont-archer">&#xe606;</span>mini系统</span>
     
         <span class="sidebar-tag-name" data-tags="进程管理、计划任务"><span class="iconfont-archer">&#xe606;</span>进程管理、计划任务</span>
-    
-        <span class="sidebar-tag-name" data-tags="共享服务"><span class="iconfont-archer">&#xe606;</span>共享服务</span>
     
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>

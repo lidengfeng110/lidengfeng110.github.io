@@ -1,0 +1,1507 @@
+<!DOCTYPE html>
+<html>
+    <!-- title -->
+
+
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" >
+    <meta name="author" content="John Doe">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="John Doe">
+    <meta name="keywords" content="Hexo | John Doe">
+    <meta name="description" content="">
+    <meta name="Cache-Control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <title>实现PXE自动安装 · 李登峰</title>
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s 1;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+
+</style>
+
+    <link rel="preload" href= /css/style.css?v=20180630 as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    <link rel="stylesheet" href= /css/mobile.css?v=20180630 media="(max-width: 980px)">
+    
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+(function( w ){
+	"use strict";
+	// rel=preload support test
+	if( !w.loadCSS ){
+		w.loadCSS = function(){};
+	}
+	// define on the loadCSS obj
+	var rp = loadCSS.relpreload = {};
+	// rel=preload feature support test
+	// runs once and returns a function for compat purposes
+	rp.support = (function(){
+		var ret;
+		try {
+			ret = w.document.createElement( "link" ).relList.supports( "preload" );
+		} catch (e) {
+			ret = false;
+		}
+		return function(){
+			return ret;
+		};
+	})();
+
+	// if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+	// then change that media back to its intended value on load
+	rp.bindMediaToggle = function( link ){
+		// remember existing media attr for ultimate state, or default to 'all'
+		var finalMedia = link.media || "all";
+
+		function enableStylesheet(){
+			link.media = finalMedia;
+		}
+
+		// bind load handlers to enable media
+		if( link.addEventListener ){
+			link.addEventListener( "load", enableStylesheet );
+		} else if( link.attachEvent ){
+			link.attachEvent( "onload", enableStylesheet );
+		}
+
+		// Set rel and non-applicable media type to start an async request
+		// note: timeout allows this to happen async to let rendering continue in IE
+		setTimeout(function(){
+			link.rel = "stylesheet";
+			link.media = "only x";
+		});
+		// also enable media after 3 seconds,
+		// which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+		setTimeout( enableStylesheet, 3000 );
+	};
+
+	// loop through link elements in DOM
+	rp.poly = function(){
+		// double check this to prevent external calls from running
+		if( rp.support() ){
+			return;
+		}
+		var links = w.document.getElementsByTagName( "link" );
+		for( var i = 0; i < links.length; i++ ){
+			var link = links[ i ];
+			// qualify links to those with rel=preload and as=style attrs
+			if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+				// prevent rerunning on link
+				link.setAttribute( "data-loadcss", true );
+				// bind listeners to toggle media back
+				rp.bindMediaToggle( link );
+			}
+		}
+	};
+
+	// if unsupported, run the polyfill
+	if( !rp.support() ){
+		// run once at least
+		rp.poly();
+
+		// rerun poly on an interval until onload
+		var run = w.setInterval( rp.poly, 500 );
+		if( w.addEventListener ){
+			w.addEventListener( "load", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		} else if( w.attachEvent ){
+			w.attachEvent( "onload", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		}
+	}
+
+
+	// commonjs
+	if( typeof exports !== "undefined" ){
+		exports.loadCSS = loadCSS;
+	}
+	else {
+		w.loadCSS = loadCSS;
+	}
+}( typeof global !== "undefined" ? global : this ) );
+</script>
+
+    <link rel="icon" href= "/assets/favicon.ico" />
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js" as="script" />
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" as="script" />
+    <link rel="preload" href="/scripts/main.js" as="script" />
+    <link rel="preload" as="font" href="/font/Oswald-Regular.ttf" crossorigin>
+    <link rel="preload" as="font" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" crossorigin>
+    
+    <!-- fancybox -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script>
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  -->
+    
+</head>
+
+    
+        <body class="post-body">
+    
+    
+<header class="header">
+
+    <div class="read-progress"></div>
+    <div class="header-sidebar-menu">&#xe775;</div>
+    <!-- post页的toggle banner  -->
+    
+    <div class="banner">
+            <div class="blog-title">
+                <a href="/" >博客</a>
+            </div>
+            <div class="post-title">
+                <a href="#" class="post-name">实现PXE自动安装</a>
+            </div>
+    </div>
+    
+    <a class="home-link" href=/>博客</a>
+</header>
+    <div class="wrapper">
+        <div class="site-intro" style=
+
+
+
+
+
+
+
+
+height:50vh;
+
+>
+    
+    <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
+            
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+            实现PXE自动安装
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+            
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class= post-intro-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "Linux">Linux</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "自动化安装">自动化安装</a>
+    
+</div>
+                
+                
+                    <div class="post-intro-read">
+                        <span>Word count: <span class="post-count">1,130</span> / Reading time: <span class="post-count">6 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                    <span class="post-intro-time">2017/02/08</span>
+                    
+                    <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                        <span class="iconfont-archer">&#xe602;</span>
+                        <span id="busuanzi_value_page_pv"></span>
+                    </span>
+                    
+                    <span class="shareWrapper">
+                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
+                        <span class="shareText">Share</span>
+                        <ul class="shareList">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        
+    </div>
+</div> 
+        <script>
+ 
+  // get user agent
+  var browser = {
+    versions: function () {
+      var u = window.navigator.userAgent;
+      return {
+        userAgent: u,
+        trident: u.indexOf('Trident') > -1, //IE内核
+        presto: u.indexOf('Presto') > -1, //opera内核
+        webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+        gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+        mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+        ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+        android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+        iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+        iPad: u.indexOf('iPad') > -1, //是否为iPad
+        webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+        weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+        uc: u.indexOf('UCBrowser') > -1 //是否为android下的UC浏览器
+      };
+    }()
+  }
+  console.log("userAgent:" + browser.versions.userAgent);
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded');
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document.getElementsByClassName('intro-title')[0].classList.add('intro-fade-in');
+      document.getElementsByClassName('intro-subtitle')[0].classList.add('intro-fade-in');
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in');
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb(){
+    if (browser.versions.uc) {
+      console.log("UCBrowser");
+      fontLoaded();
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular']
+        },
+        loading: function () {  //所有字体开始加载
+          // console.log('loading');
+        },
+        active: function () {  //所有字体已渲染
+          fontLoaded();
+        },
+        inactive: function () { //字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout');
+          fontLoaded();
+        },
+        timeout: 5000 // Set the timeout to two seconds
+      });
+    }
+  }
+
+  function asyncErr(){
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (cb) { o.addEventListener('load', function (e) { cb(null, e); }, false); }
+    if (err) { o.addEventListener('error', function (e) { err(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+
+  var asyncLoadWithFallBack = function(arr, success, reject) {
+      var currReject = function(){
+        reject()
+        arr.shift()
+        if(arr.length)
+          async(arr[0], success, currReject)
+        }
+
+      async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack([
+    "https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js", 
+    "https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js",
+    "/lib/webfontloader.min.js"
+  ], asyncCb, asyncErr)
+</script>        
+        <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+        <div class="container container-unloaded">
+            <main class="main post-page">
+    <article class="article-entry">
+        <h2 id="实现PXE自动安装"><a href="#实现PXE自动安装" class="headerlink" title="实现PXE自动安装"></a>实现PXE自动安装</h2><h3 id="1、基础网络建设与搭建DHCP服务"><a href="#1、基础网络建设与搭建DHCP服务" class="headerlink" title="1、基础网络建设与搭建DHCP服务"></a>1、基础网络建设与搭建DHCP服务</h3><h5 id="配置静态IP地址并重起网卡"><a href="#配置静态IP地址并重起网卡" class="headerlink" title="配置静态IP地址并重起网卡"></a>配置静态IP地址并重起网卡</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">cat /etc/sysconfig/network-scripts/ifcfg-eth0   </span><br><span class="line">DEVICE=eth0  </span><br><span class="line">TYPE=Ethernet  </span><br><span class="line">ONBOOT=yes  </span><br><span class="line">NM_CONTROLLED=yes  </span><br><span class="line">BOOTPROTO=static  </span><br><span class="line">IPADDR=10.0.0.4  </span><br><span class="line">NETMASK=255.255.255.0  </span><br><span class="line">GATEWAY=10.0.0.2</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>/etc/init.d/network restart<br>ifconfig eth0</p>
+</blockquote>
+<h5 id="2）安装配置DHCP服务"><a href="#2）安装配置DHCP服务" class="headerlink" title="2）安装配置DHCP服务"></a>2）安装配置DHCP服务</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">yum -y install dhcp  </span><br><span class="line">vim /etc/dhcp/dhcpd.conf  </span><br><span class="line">default-lease-time 600;  </span><br><span class="line">max-lease-time 7200;  </span><br><span class="line">ddns-update-style none;  </span><br><span class="line">option domain-name-servers 202.106.0.20;  </span><br><span class="line">#DNS地址可配置2个用逗号分隔  </span><br><span class="line">ignore client-updates;</span><br></pre></td></tr></table></figure>
+<a id="more"></a>
+<blockquote>
+<p>subnet 10.0.0.0 netmask 255.255.255.0 {<br>  range 10.0.0.100 10.0.0.150;    </p>
+<p>  #宣告获取地址段<br>  option subnet-mask 255.255.255.0;   </p>
+<p>  #子网<br>  option routers 10.0.0.2;                    </p>
+<p>  #获取网关地址<br>  next-server 10.0.0.4;                    </p>
+<p>  #重点配置PEX地址<br>  filename “pxelinux.0”;                   </p>
+<p>  #内核文件名  </p>
+</blockquote>
+<blockquote>
+<p>配置开机自启动<br>chkconfig –add dhcpd<br>chkconfig dhcpd on<br>chkconfig –list dhcpd<br>查看DHCP监听端口好UDP 67<br>netstat -lntup|grep 67  </p>
+</blockquote>
+<h4 id="2、搭建TFTP服务"><a href="#2、搭建TFTP服务" class="headerlink" title="2、搭建TFTP服务"></a>2、搭建TFTP服务</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum -y install tftp-server tftp</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"> </span><br><span class="line">vim /etc/xinetd.d/tftp  </span><br><span class="line">#配置TFTP配置文件：  </span><br><span class="line">service tftp  </span><br><span class="line">&#123;</span><br><span class="line">        socket_type             = dgram  </span><br><span class="line">        protocol                = udp  </span><br><span class="line">        wait                    = yes  </span><br><span class="line">        user                    = root  </span><br><span class="line">        server                  = /usr/sbin/in.tftpd  </span><br><span class="line">        server_args             = -s   /tftpboot            #修改TFTP服务目录  </span><br><span class="line">        disable                 = no                      #修改为no，启动TFTP  </span><br><span class="line">        per_source              = 11  </span><br><span class="line">        cps                     = 100 2  </span><br><span class="line">        flags                   = IPv4  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"> </span><br><span class="line">配置自启动  </span><br><span class="line">chkconfig tftp on  </span><br><span class="line">chkconfig --list tftp  </span><br><span class="line">chkconfig --list xinetd  </span><br><span class="line">重启动xinetd服务，TFTP是由xinetd服务运行的  </span><br><span class="line">/etc/init.d/xinetd restart   </span><br><span class="line">netstat -lntup|grep 69 ;netstat -a|grep tftp  </span><br><span class="line">udp 0 0 0.0.0.0:69 0.0.0.0:* 1877/xinetd   </span><br><span class="line">udp 0 0 *:tftp   </span><br><span class="line">TFTP端口号为UDP的69  </span><br><span class="line">测试下载  </span><br><span class="line">mkdir /tftpboot  </span><br><span class="line">cd /tftpboot/  </span><br><span class="line">touch test.txt  </span><br><span class="line">ls  </span><br><span class="line">test.txt  </span><br><span class="line">cd ..  </span><br><span class="line">tftp 10.0.0.4 -c get test.txt  </span><br><span class="line">ls #下载成功！  </span><br><span class="line">test.txt</span><br></pre></td></tr></table></figure>
+<h4 id="3、搭建HTTP服务"><a href="#3、搭建HTTP服务" class="headerlink" title="3、搭建HTTP服务"></a>3、搭建HTTP服务</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">yum -y install httpd  </span><br><span class="line">#配置自启动  </span><br><span class="line">chkconfig --add httpd  </span><br><span class="line">chkconfig httpd on  </span><br><span class="line">chkconfig --list httpd  </span><br><span class="line">#启动http服务  </span><br><span class="line">/etc/init.d/httpd start  </span><br><span class="line">netstat -lntup|grep 80  </span><br><span class="line"></span><br><span class="line">#使用浏览器测试  </span><br><span class="line">http://10.0.0.4</span><br></pre></td></tr></table></figure>
+<h4 id="4、组建PXE服务环境"><a href="#4、组建PXE服务环境" class="headerlink" title="4、组建PXE服务环境"></a>4、组建PXE服务环境</h4><blockquote>
+<p>1)安装syslinux包<br>yum -y install syslinux  </p>
+<p>#如不安装syslinux包就没有pxelinux.0文件</p>
+<p>find / -type f -name “pxelinux.0”<br>/usr/share/syslinux/pxelinux.0  </p>
+<p>#将pxelinux.0拷贝到tftp服务目录  </p>
+<p>cp /usr/share/syslinux/pxelinux.0   /tftpboot/  </p>
+<p>#在tftp服务目录下创建pxelinux.cfg目录<br>mkdir /tftpboot/pxelinux.cfg -p </p>
+</blockquote>
+<blockquote>
+<p>2)挂载linux系统盘，拷贝linux内核，初始化镜像文件<br>mkdir -p /media/cdrom<br>mount -t iso9660 -o loop /dev/sr0   /media/cdrom<br>cd /media/cdrom/images/pxeboot<br>cp vmlinuz initrd.img /tftpboot/<br>cd /tftpboot/<br>ls<br>initrd.img pxelinux.0 pxelinux.cfg   vmlinuz  </p>
+<p>#配置启动菜单文件，将系统自带的启动文件拷贝到TFTP目录下改名为  </p>
+<p>cp /media/cdrom/isolinux/isolinux.cfg   /tftpboot/pxelinux.cfg/default<br>修改启动菜单文件  </p>
+<p>cat default   </p>
+<p>default auto   #指定默认启动项<br>prompt 0         #为0时不选择自动按默认安装，为1时可选择选项安装  </p>
+<p>label auto     #配置选项auto<br>  kernel vmlinuz   #指定内核<br>  append initrd=initrd.img   ks=<a href="http://10.0.0.4/ks.cfg" target="_blank" rel="noopener">http://10.0.0.4/ks.cfg</a>   devfs=nomount ramdisk_size=8192     #指定自动安装文件ks.cfg<br>label linux text<br>  kernel vmlinuz<br>  append initrd=initrd.img devfs=nomount ramdisk_size=8192<br>label rescue<br>  kernel vmlinuz<br>  append initrd=initrd.img rescue  </p>
+<p>#重启动TFTP服务加载配置<br>/etc/init.d/xinetd restart  </p>
+</blockquote>
+<h5 id="5、创建kickstart文件"><a href="#5、创建kickstart文件" class="headerlink" title="5、创建kickstart文件"></a>5、创建kickstart文件</h5><blockquote>
+<p>1)安装system-config-kickstart<br>yum -y install system-config-kickstart  </p>
+<p>#注意安装桌面服务才能启动KICKSTART，创建启动文件<br>/usr/bin/system-config-kickstart  </p>
+</blockquote>
+<blockquote>
+<p>cat ks.cfg</p>
+<p>#platform=x86, AMD64, or Intel EM64T</p>
+<p>#version=DEVEL<br> Firewall configuration关闭防火墙<br>firewall –disabled<br> Install OS instead of upgrade 安装系统<br>install<br> Root password  配置ROOT密码<br>rootpw –iscrypted $1$jIsDXG2F$EGT.VAhEBlZ/ww9GNOTo7.<br>System authorization information 系统授权信息<br>auth  –useshadow  –passalgo=md5<br> Use graphical install 图形安装<br>graphical<br>System keyboard 配置键盘<br>keyboard us<br>System language 配置系统语言<br>lang en_US<br> SELinux configuration 关闭selinux<br>selinux –disabled<br> Do not configure the X Window System 不安装图形界面<br>skipx<br>Installation logging level 安装系统日志记录级别<br>logging –level=info<br> Reboot after installation 安装完重新引导<br>reboot<br>System timezone  #配置时区<br>timezone  Asia/Shanghai<br>Network information 配置网络为自动获取<br>network  –bootproto=dhcp –device=eth0 –onboot=on<br>System bootloader configuration 系统引导程序配置<br>bootloader –location=mbr<br>Clear the Master Boot Record 清除主引导记录<br>zerombr<br>Partition clearing information 分区信息<br>clearpart –all<br>Disk partitioning information  指定分区大小<br>part swap –fstype=”swap” –size=2048<br>part /boot –fstype=”ext4” –size=200<br>part / –fstype=”ext4” –grow –size=1</p>
+<p>%packages<br>@base<br>@compat-libraries<br>@debugging<br>@development</p>
+<p>%end</p>
+</blockquote>
+<h6 id="将应答脚本拷贝到http目录，并赋予权限"><a href="#将应答脚本拷贝到http目录，并赋予权限" class="headerlink" title="#将应答脚本拷贝到http目录，并赋予权限"></a>#将应答脚本拷贝到http目录，并赋予权限</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cp ks.cfg /var/www/html/  </span><br><span class="line">chown apache.apache /var/www/html/ks.cfg</span><br></pre></td></tr></table></figure>
+<h4 id="6、启动客户机安装"><a href="#6、启动客户机安装" class="headerlink" title="6、启动客户机安装"></a>6、启动客户机安装</h4><blockquote>
+<p>注意：客户机要和服务器在同一个局域网内<br>如果使用vmware做实验，需要关闭VMware自带的DHCP功能</p>
+</blockquote>
+
+    </article>
+    <!-- license  -->
+    
+        <div class="license-wrapper">
+            <p>原文作者: <a href="http://yoursite.com">John Doe</a>
+            <p>原文链接: <a href="http://yoursite.com/2017/02/08/实现PXE自动安装/">http://yoursite.com/2017/02/08/实现PXE自动安装/</a>
+            <p>发表日期: <a href="http://yoursite.com/2017/02/08/实现PXE自动安装/">February 8th 2017, 12:00:00 am</a>
+            <p>版权声明: 本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+        </div>
+    
+    <!-- paginator  -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+                <div class="nextSlogan">Next Post</div>
+                <a href= "/2017/02/10/SSH端口转发实验/" title= SSH端口转发实验 >
+                    <div class="nextTitle">SSH端口转发实验</div>
+                </a>
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href= "/2017/02/01/rpm管理包 和 yum管理包(1)/" title= 安装管理包：rpm包和yum包 >
+                    <div class="prevTitle">安装管理包：rpm包和yum包</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+<!-- City版安装代码已完成 -->
+    
+    
+    <!--PC和WAP自适应版-->
+
+    <!--PC版-->
+
+
+    
+    
+
+    <!-- 评论 -->
+</main>
+            <!-- profile -->
+            
+        </div>
+        <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+    <div class="social">
+        
+    
+        
+            
+                <a href="mailto:1020846215@qq.com" class="iconfont-archer email" title=email ></a>
+            
+        
+    
+        
+            
+                <a href="//github.com/fi3ework" class="iconfont-archer github" target="_blank" title=github></a>
+            
+        
+    
+        
+            
+                <span class="iconfont-archer wechat" title=wechat>
+                  
+                  <img class="profile-qr" src="/assets/example_qr.png" />
+                </span>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+    </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- 不蒜子  -->
+    
+    <div class="busuanzi-container">
+    
+     
+    <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+    
+    </div>
+    
+</footer>
+    </div>
+    <!-- toc -->
+    
+    <div class="toc-wrapper" style=
+    
+
+
+
+
+
+
+
+top:50vh;
+
+    >
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#实现PXE自动安装"><span class="toc-number">1.</span> <span class="toc-text">实现PXE自动安装</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1、基础网络建设与搭建DHCP服务"><span class="toc-number">1.1.</span> <span class="toc-text">1、基础网络建设与搭建DHCP服务</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#配置静态IP地址并重起网卡"><span class="toc-number">1.1.0.1.</span> <span class="toc-text">配置静态IP地址并重起网卡</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2）安装配置DHCP服务"><span class="toc-number">1.1.0.2.</span> <span class="toc-text">2）安装配置DHCP服务</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2、搭建TFTP服务"><span class="toc-number">1.1.1.</span> <span class="toc-text">2、搭建TFTP服务</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3、搭建HTTP服务"><span class="toc-number">1.1.2.</span> <span class="toc-text">3、搭建HTTP服务</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4、组建PXE服务环境"><span class="toc-number">1.1.3.</span> <span class="toc-text">4、组建PXE服务环境</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#5、创建kickstart文件"><span class="toc-number">1.1.3.1.</span> <span class="toc-text">5、创建kickstart文件</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#将应答脚本拷贝到http目录，并赋予权限"><span class="toc-number">1.1.3.1.1.</span> <span class="toc-text">#将应答脚本拷贝到http目录，并赋予权限</span></a></li></ol></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#6、启动客户机安装"><span class="toc-number">1.1.4.</span> <span class="toc-text">6、启动客户机安装</span></a></li></ol></li></ol></li></ol>
+    </div>
+    
+    <div class="back-top iconfont-archer">&#xe639;</div>
+    <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+          <div class="sidebar-panel-archives">
+    <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 39
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+    
+    
+    
+    <div class="archive-year"> 2018 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/09</span><a class="archive-post-title" href= "/2018/08/09/Linux 防火墙各种规则实战应用/" >[Untitled Post]</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/09</span><a class="archive-post-title" href= "/2018/08/09/Nginx 详细介绍/" >[Untitled Post]</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2017 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/15</span><a class="archive-post-title" href= "/2017/10/15/memcache  缓存原理介绍/" >memcache  缓存原理介绍</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/08</span><a class="archive-post-title" href= "/2017/10/08/tomcat 各种架构实验演示/" >tomcat 各种架构实验演示</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/05</span><a class="archive-post-title" href= "/2017/10/05/浅谈 tomcat 原理/" >浅谈 tomcat 原理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/25</span><a class="archive-post-title" href= "/2017/09/25/Varnish 缓存服务器介绍/" >Varnish 缓存服务器介绍</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/14</span><a class="archive-post-title" href= "/2017/09/14/keepalived 各种高可用实战演练/" >keepalived 各种高可用实战演练</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/28</span><a class="archive-post-title" href= "/2017/08/28/HAproxy 原理介绍/" >HAproxy 原理介绍</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/19</span><a class="archive-post-title" href= "/2017/08/19/lvs 详细介绍/" >lvs 详细介绍</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/24</span><a class="archive-post-title" href= "/2017/06/24/各种网络共享服务实验演示/" >各种网络共享服务实验演示</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/20</span><a class="archive-post-title" href= "/2017/06/20/网络文件共享服务：FTP    NFS   SAMBA/" >网络文件共享服务：FTP    NFS   SAMBA</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/11</span><a class="archive-post-title" href= "/2017/06/11/LAMP 架构的各种演示/" >LAMP 架构的各种演示</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/01</span><a class="archive-post-title" href= "/2017/06/01/介绍 MYSQL的事务日志/" >介绍 MYSQL的事务日志</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/22</span><a class="archive-post-title" href= "/2017/05/22/MYSQL 数据库的日志介绍/" >MYSQL 数据库的日志介绍</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/15</span><a class="archive-post-title" href= "/2017/05/15/MYSQL MariaDB 的事务和事务隔离级别/" >MYSQL MariaDB 的事务和事务隔离级别</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/08</span><a class="archive-post-title" href= "/2017/05/08/MASQL MariaDB 用户权限管理/" >MASQL MariaDB 用户权限管理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/20</span><a class="archive-post-title" href= "/2017/04/20/ext 文件系统机制原理/" >ext 文件系统机制原理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/15</span><a class="archive-post-title" href= "/2017/04/15/Linux分区信息与管理文件系统/" >Linux分区信息与管理文件系统</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/10</span><a class="archive-post-title" href= "/2017/04/10/DHCP 服务/" >DHCP服务</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/01</span><a class="archive-post-title" href= "/2017/04/01/Linux系统中su 和 sudo 的用法/" >Linux系统中su 和 sudo 的用法</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/22</span><a class="archive-post-title" href= "/2017/03/22/实现DNS服务主从复制/" >实现DNS服务主从复制</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/20</span><a class="archive-post-title" href= "/2017/03/20/搭建DNS互联网架构服务器(一）/" >搭建DNS互联网架构服务器</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/15</span><a class="archive-post-title" href= "/2017/03/15/搭建DNS 服务，实现主服务器，邮件服务器，泛域名解析，反向解析等/" >搭建DNS 服务，实现主服务器，邮件服务器，泛域名解析，反向解析等</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/12</span><a class="archive-post-title" href= "/2017/03/12/Linux 文件权限管理/" >Linux 文件权限管理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/08</span><a class="archive-post-title" href= "/2017/03/08/LINUX系统中用户、组管理/" >安装管理包：LINUX系统中用户、组管理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/28</span><a class="archive-post-title" href= "/2017/02/28/搭建DNS服务器，实现主DNS服务器，负责解析一个域/" >搭建DNS服务器，实现主DNS服务器，负责解析一个域</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/15</span><a class="archive-post-title" href= "/2017/02/15/DNS 服务从基础到深入/" >DNS 服务从基础到深入</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/10</span><a class="archive-post-title" href= "/2017/02/10/SSH端口转发实验/" >SSH端口转发实验</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/08</span><a class="archive-post-title" href= "/2017/02/08/实现PXE自动安装/" >实现PXE自动安装</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/01</span><a class="archive-post-title" href= "/2017/02/01/rpm管理包 和 yum管理包(1)/" >安装管理包：rpm包和yum包</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/20</span><a class="archive-post-title" href= "/2017/01/20/搭建CA/" >如何搭建CA（向CA申请证书）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/08</span><a class="archive-post-title" href= "/2017/01/08/自制一个mini 的Linux系统/" >自制一个mini 的Linux系统</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> Invalid date </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">Invalid date</span><a class="archive-post-title" href= "/2018/08/09/日志管理介绍/" >[Untitled Post]</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2016 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/20</span><a class="archive-post-title" href= "/2016/12/20/进程管理和计划任务的知识点()/" >进程管理与计划任务的知识点</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> Invalid date </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">Invalid date</span><a class="archive-post-title" href= "/2018/08/09/Nginx 各种实验演示/" >[Untitled Post]</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2016 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/15</span><a class="archive-post-title" href= "/2016/12/15/文本处理工具：sed/" >文本处理工具：sed</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/08</span><a class="archive-post-title" href= "/2016/12/08/TCP、IP协议三次握手与四次握手流程解析（）/" >TCP、IP协议三次握手与四次握手流程解析</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/29</span><a class="archive-post-title" href= "/2016/11/29/Linux 的一些基础练习题/" >Linux 的一些基础练习题</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/23</span><a class="archive-post-title" href= "/2016/11/23/对正则表达式，VIM编辑器命令的基本操作（三）/" >对正则表达式，VIM编辑器命令的基本操作</a>
+        </li>
+    
+    </div>
+  </div>
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+    
+        <span class="sidebar-tag-name" data-tags="Linux"><span class="iconfont-archer">&#xe606;</span>Linux</span>
+    
+        <span class="sidebar-tag-name" data-tags="DNS"><span class="iconfont-archer">&#xe606;</span>DNS</span>
+    
+        <span class="sidebar-tag-name" data-tags="DHCP"><span class="iconfont-archer">&#xe606;</span>DHCP</span>
+    
+        <span class="sidebar-tag-name" data-tags="LAMP"><span class="iconfont-archer">&#xe606;</span>LAMP</span>
+    
+        <span class="sidebar-tag-name" data-tags="haproxy"><span class="iconfont-archer">&#xe606;</span>haproxy</span>
+    
+        <span class="sidebar-tag-name" data-tags="权限管理"><span class="iconfont-archer">&#xe606;</span>权限管理</span>
+    
+        <span class="sidebar-tag-name" data-tags="练习题"><span class="iconfont-archer">&#xe606;</span>练习题</span>
+    
+        <span class="sidebar-tag-name" data-tags="用户组"><span class="iconfont-archer">&#xe606;</span>用户组</span>
+    
+        <span class="sidebar-tag-name" data-tags="su和sudo"><span class="iconfont-archer">&#xe606;</span>su和sudo</span>
+    
+        <span class="sidebar-tag-name" data-tags="文件系统"><span class="iconfont-archer">&#xe606;</span>文件系统</span>
+    
+        <span class="sidebar-tag-name" data-tags="MYSQL"><span class="iconfont-archer">&#xe606;</span>MYSQL</span>
+    
+        <span class="sidebar-tag-name" data-tags="SSH"><span class="iconfont-archer">&#xe606;</span>SSH</span>
+    
+        <span class="sidebar-tag-name" data-tags="TCP/IP"><span class="iconfont-archer">&#xe606;</span>TCP/IP</span>
+    
+        <span class="sidebar-tag-name" data-tags="keepalied"><span class="iconfont-archer">&#xe606;</span>keepalied</span>
+    
+        <span class="sidebar-tag-name" data-tags="varnish"><span class="iconfont-archer">&#xe606;</span>varnish</span>
+    
+        <span class="sidebar-tag-name" data-tags="lvs"><span class="iconfont-archer">&#xe606;</span>lvs</span>
+    
+        <span class="sidebar-tag-name" data-tags="rpm"><span class="iconfont-archer">&#xe606;</span>rpm</span>
+    
+        <span class="sidebar-tag-name" data-tags="memcache"><span class="iconfont-archer">&#xe606;</span>memcache</span>
+    
+        <span class="sidebar-tag-name" data-tags="tomcat"><span class="iconfont-archer">&#xe606;</span>tomcat</span>
+    
+        <span class="sidebar-tag-name" data-tags="共享服务"><span class="iconfont-archer">&#xe606;</span>共享服务</span>
+    
+        <span class="sidebar-tag-name" data-tags="基本命令"><span class="iconfont-archer">&#xe606;</span>基本命令</span>
+    
+        <span class="sidebar-tag-name" data-tags="CA"><span class="iconfont-archer">&#xe606;</span>CA</span>
+    
+        <span class="sidebar-tag-name" data-tags="dns"><span class="iconfont-archer">&#xe606;</span>dns</span>
+    
+        <span class="sidebar-tag-name" data-tags="sed"><span class="iconfont-archer">&#xe606;</span>sed</span>
+    
+        <span class="sidebar-tag-name" data-tags="自动化安装"><span class="iconfont-archer">&#xe606;</span>自动化安装</span>
+    
+        <span class="sidebar-tag-name" data-tags="mini系统"><span class="iconfont-archer">&#xe606;</span>mini系统</span>
+    
+        <span class="sidebar-tag-name" data-tags="进程管理、计划任务"><span class="iconfont-archer">&#xe606;</span>进程管理、计划任务</span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+    缺失模块。<br/>
+    1、请确保node版本大于6.2<br/>
+    2、在博客根目录（注意不是archer根目录）执行以下命令：<br/>
+    <span style="color: #f75357; font-size: 1rem; line-height: 2rem;">npm i hexo-generator-json-content --save</span><br/>
+    3、在根目录_config.yml里添加配置：
+    <pre style="color: #787878; font-size: 0.6rem;">
+jsonContent:
+  meta: false
+  pages: false
+  posts:
+    title: true
+    date: true
+    path: true
+    text: false
+    raw: false
+    content: false
+    slug: false
+    updated: false
+    comments: false
+    link: false
+    permalink: false
+    excerpt: false
+    categories: true
+    tags: true</pre>
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+    </div>
+</div> 
+    <script>
+    var siteMeta = {
+        root: "/",
+        author: "John Doe"
+    }
+</script>
+    <!-- CDN failover -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ === 'undefined')
+        {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js">\x3C/script>')
+        }
+    </script>
+    <script src="/scripts/main.js"></script>
+    <!-- algolia -->
+    
+    <!-- busuanzi  -->
+    
+    <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+    <!-- CNZZ  -->
+    
+    </div>
+    <!-- async load share.js -->
+    
+        <script src="/scripts/share.js" async></script>    
+     
+    </body>
+</html>
+
+

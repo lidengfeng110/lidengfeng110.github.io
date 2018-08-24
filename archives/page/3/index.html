@@ -339,6 +339,154 @@
     
     
     <article class="index-post">
+        <a class="abstract-title" href = "/2017/04/10/DHCP 服务/" >
+            
+                <span>DHCP服务</span>
+        </a>
+        <div class="abstract-content">
+            <h6 id="DHCP前身是BOOTP，在Linux的网卡配置中也能看到显示的是BOOTP，DHCP引进一个bootp没有的概念：租约。bootp分配的地址是永久的，而dhcp分配的地址是可以有期限的-。"><a href="#DHCP前身是BOOTP，在Linux的网卡配置中也能看到显示的是BOOTP，DHCP引进一个bootp没有的概念：租约。bootp分配的地址是永久的，而dhcp分配的地址是可以有期限的-。" class="headerlink" title="DHCP前身是BOOTP，在Linux的网卡配置中也能看到显示的是BOOTP，DHCP引进一个bootp没有的概念：租约。bootp分配的地址是永久的，而dhcp分配的地址是可以有期限的 。"></a>DHCP前身是BOOTP，在Linux的网卡配置中也能看到显示的是BOOTP，DHCP引进一个bootp没有的概念：租约。bootp分配的地址是永久的，而dhcp分配的地址是可以有期限的 。</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@xuexi vsftpd]# grep -i bootproto /etc/sysconfig/network-scripts/ifcfg-eth0</span><br><span class="line">BOOTPROTO=dhcp</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>DHCP可以自动分配IP、子网掩码、网关、DNS。<br>DHCP客户端使用的端口68，服务端使用端口67，使用的UDP应用层的协议。<br>
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/04/10</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "Linux">Linux</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "DHCP">DHCP</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2017/04/01/Linux系统中su 和 sudo 的用法/" >
+            
+                <span>Linux系统中su 和 sudo 的用法</span>
+        </a>
+        <div class="abstract-content">
+            <h2 id="su"><a href="#su" class="headerlink" title="su"></a>su</h2><p>切换用户或以指定用户运行命令。  </p>
+<p>使用su可以指定运行命令的身份(user/group/uid/gid)。  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">为了向后兼容，su默认不会改变当前目录，且仅设置HOME和SHELL这两个环境变量(若目标用户非root，则还设置USER和LOGNAME环境变量)。推荐使用--login选项(即&quot;-&quot;选项)避免环境变量混乱。  </span><br><span class="line"></span><br><span class="line">su [options...] [-] [user [args...]]</span><br><span class="line">选项说明：</span><br><span class="line">-c command：使用-c选项传递要指定的命令到shell上执行。使用-c执行命令会为每个su都分配新的会话环境</span><br><span class="line">-, -l, --login：启动shell作为登录的shell，模拟真正的登录环境。它会做下面几件事：</span><br><span class="line">                1.清除除了TERM外的所有环境变量</span><br><span class="line">                2.初始化HOME,SHELL,USER,LOGNAME,PATH环境变量</span><br><span class="line">                3.进入目标用户的家目录</span><br><span class="line">                4.设置argv[0]为&quot;-&quot;以便设置shell作为登录的shell</span><br><span class="line">                  使用--login的su是交互式登录。不使用--login的su是非交互式登录(除不带任何参数的su外</span><br><span class="line">-m, -p, --preserve-environment：保留整个环境变量(不会重新设置HOME,SHELL,USER和LOGNAME)，</span><br><span class="line">                                保留环境的方法是新用户shell上执行原用户的各配置文件，如~/.bashrc。</span><br><span class="line">                                当设置了--login时，将忽略该选项</span><br><span class="line">-s SHELL：运行指定的shell而非默认shell，选择shell的顺序优先级如下：</span><br><span class="line">                1.--shell指定的shell</span><br><span class="line">                2.如果使用了--preserve-environment，选择SHELL环境变量的shell</span><br><span class="line">                3.选项目标用户在passwd文件中指定的shell</span><br><span class="line">                4./bin/sh</span><br></pre></td></tr></table></figure>
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/04/01</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "Linux">Linux</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "su和sudo">su和sudo</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2017/03/22/实现DNS服务主从复制/" >
+            
+                <span>实现DNS服务主从复制</span>
+        </a>
+        <div class="abstract-content">
+            <blockquote>
+<p> 现在我们来实现主从复制，用两台主机做服务器，比如，用192.168.30.7 来做主服务器，用192.168.30.17 来做从服务器。现在我们把两个服务器都搭建起来。  </p>
+</blockquote>
+<blockquote>
+<p> 先搭建从服务器， 第一步，首先要装包     </p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install bind</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>  然后来修改主配置文件  </p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/named.conf</span><br><span class="line">   </span><br><span class="line"> 要把 options 中的的这两行都注释掉。  </span><br><span class="line"> #listen-on port 53 &#123; locklhost; &#125;;      </span><br><span class="line">#allow-query     &#123; localhost;any; &#125;;</span><br></pre></td></tr></table></figure>
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/03/22</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "Linux">Linux</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "DNS">DNS</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2017/03/20/搭建DNS互联网架构服务器(一）/" >
+            
+                <span>搭建DNS互联网架构服务器</span>
+        </a>
+        <div class="abstract-content">
+            <h2 id="互联网结如架构图如下："><a href="#互联网结如架构图如下：" class="headerlink" title="互联网结如架构图如下："></a>互联网结如架构图如下：</h2><p><img src="http://www.178linux.com/wp-content/uploads/2018/06/dns%E6%9E%B6%E6%9E%84.bmp" alt="image"></p>
+<blockquote>
+<p>拓扑结构清楚之后，现在开始从下往上，一步步构建并测试，直到最终完成！</p>
+</blockquote>
+<blockquote>
+<p>至于为什么要从下往上？那是因为这样才能搭建好一台就测试一台，稳扎稳打，容易查清楚错在哪里！</p>
+</blockquote>
+<blockquote>
+<p>首先，除了客户端以外的所有DNS服务器都要下载 bind 包，后面操作就不赘述了。</p>
+</blockquote>
+<h6 id="注意！！！所有机器都要关闭-selinux-和-清空防火墙-！！！"><a href="#注意！！！所有机器都要关闭-selinux-和-清空防火墙-！！！" class="headerlink" title="注意！！！所有机器都要关闭  selinux   和  清空防火墙 ！！！"></a>注意！！！所有机器都要关闭  selinux   和  清空防火墙 ！！！</h6>
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/03/20</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "Linux">Linux</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "dns">dns</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
         <a class="abstract-title" href = "/2017/03/15/搭建DNS 服务，实现主服务器，邮件服务器，泛域名解析，反向解析等/" >
             
                 <span>搭建DNS 服务，实现主服务器，邮件服务器，泛域名解析，反向解析等</span>
@@ -540,141 +688,6 @@
         <a class="post-tag" href="javascript:void(0);" data-tags = "Linux">Linux</a>
     
         <a class="post-tag" href="javascript:void(0);" data-tags = "SSH">SSH</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2017/02/01/rpm管理包 和 yum管理包(1)/" >
-            
-                <span>安装管理包：rpm包和yum包</span>
-        </a>
-        <div class="abstract-content">
-            <h4 id="包基础知识"><a href="#包基础知识" class="headerlink" title="包基础知识"></a>包基础知识</h4><h5 id="包名称"><a href="#包名称" class="headerlink" title="包名称"></a>包名称</h5><blockquote>
-<p>在rhel/centos/fedora上，包的名称以rpm结尾，分为二进制包和源码包。源码包以”.src.rpm”结尾，它是未编译过的包，可以自行进行编译或者用其制作自己的二进制rpm包，非”.src.rpm”结尾的包都是二进制包，都是已经编译完成的，安装rpm包的过程实际上就是将包中的文件复制到Linux上，有可能还会在复制文件的前后执行一些命令，如创建一个必要的用户，删除非必要文件等。<br>
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/02/01</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "Linux">Linux</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "rpm">rpm</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2017/01/20/搭建CA/" >
-            
-                <span>如何搭建CA（向CA申请证书）</span>
-        </a>
-        <div class="abstract-content">
-            <h2 id="系统中搭建CA"><a href="#系统中搭建CA" class="headerlink" title="系统中搭建CA"></a>系统中搭建CA</h2><h3 id="CA的配置文件"><a href="#CA的配置文件" class="headerlink" title="CA的配置文件"></a>CA的配置文件</h3><blockquote>
-<p>vim /etc/pki/tls/openssl.cnf</p>
-<p>默认 CA_default  （可建多个）</p>
-</blockquote>
-<blockquote>
-<p>[ CA_default ]</p>
-<p>dir             = /etc/pki/CA      # Where everything is kept  CA的工作目录<br>
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/01/20</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "Linux">Linux</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "CA">CA</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2016/12/20/进程管理和计划任务的知识点()/" >
-            
-                <span>进程管理与计划任务的知识点</span>
-        </a>
-        <div class="abstract-content">
-            <h2 id="进程概念："><a href="#进程概念：" class="headerlink" title="进程概念："></a>进程概念：</h2><h5 id="进程与程序的区别："><a href="#进程与程序的区别：" class="headerlink" title="进程与程序的区别："></a>进程与程序的区别：</h5><blockquote>
-<p>进程是一个动态的概念，具有生命期，而程序是静态的表现为一个文件，一个程序可对应多个进程</p>
-</blockquote>
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2016/12/20</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "Linux">Linux</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "进程管理、计划任务">进程管理、计划任务</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2016/12/08/TCP、IP协议三次握手与四次握手流程解析（）/" >
-            
-                <span>TCP、IP协议三次握手与四次握手流程解析</span>
-        </a>
-        <div class="abstract-content">
-            <h3 id="一、TCP报文格式"><a href="#一、TCP报文格式" class="headerlink" title="一、TCP报文格式"></a>一、TCP报文格式</h3><p>TCP/IP协议的详细信息参看《TCP/IP协议详解》三卷本。下面是TCP报文格式图：</p>
-<p> <img src="http://www.178linux.com/wp-content/uploads/2018/05/20131022025345890.png" alt="image"></p>
-<p>图1  </p>
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2016/12/08</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "Linux">Linux</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "TCP/IP">TCP/IP</a>
     
 </div>
             
@@ -1236,9 +1249,64 @@
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 32
+        Total : 39
         </div>
         <!-- search  -->
         
@@ -1283,6 +1351,11 @@
     
     
         <li class="archive-post-item">
+            <span class="archive-post-date">10/05</span><a class="archive-post-title" href= "/2017/10/05/浅谈 tomcat 原理/" >浅谈 tomcat 原理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
             <span class="archive-post-date">09/25</span><a class="archive-post-title" href= "/2017/09/25/Varnish 缓存服务器介绍/" >Varnish 缓存服务器介绍</a>
         </li>
     
@@ -1304,6 +1377,11 @@
     
         <li class="archive-post-item">
             <span class="archive-post-date">06/24</span><a class="archive-post-title" href= "/2017/06/24/各种网络共享服务实验演示/" >各种网络共享服务实验演示</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/20</span><a class="archive-post-title" href= "/2017/06/20/网络文件共享服务：FTP    NFS   SAMBA/" >网络文件共享服务：FTP    NFS   SAMBA</a>
         </li>
     
     
@@ -1353,6 +1431,11 @@
     
     
         <li class="archive-post-item">
+            <span class="archive-post-date">03/22</span><a class="archive-post-title" href= "/2017/03/22/实现DNS服务主从复制/" >实现DNS服务主从复制</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
             <span class="archive-post-date">03/20</span><a class="archive-post-title" href= "/2017/03/20/搭建DNS互联网架构服务器(一）/" >搭建DNS互联网架构服务器</a>
         </li>
     
@@ -1382,6 +1465,59 @@
         </li>
     
     
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/10</span><a class="archive-post-title" href= "/2017/02/10/SSH端口转发实验/" >SSH端口转发实验</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/08</span><a class="archive-post-title" href= "/2017/02/08/实现PXE自动安装/" >实现PXE自动安装</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/01</span><a class="archive-post-title" href= "/2017/02/01/rpm管理包 和 yum管理包(1)/" >安装管理包：rpm包和yum包</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/20</span><a class="archive-post-title" href= "/2017/01/20/搭建CA/" >如何搭建CA（向CA申请证书）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/08</span><a class="archive-post-title" href= "/2017/01/08/自制一个mini 的Linux系统/" >自制一个mini 的Linux系统</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> Invalid date </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">Invalid date</span><a class="archive-post-title" href= "/2018/08/09/日志管理介绍/" >[Untitled Post]</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2016 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/20</span><a class="archive-post-title" href= "/2016/12/20/进程管理和计划任务的知识点()/" >进程管理与计划任务的知识点</a>
+        </li>
+    
+    
     
     
     
@@ -1401,36 +1537,12 @@
     
         </ul>
     
-    <div class="archive-year"> 2017 </div>
-    <ul class="year-list">
-    
-    
-        <li class="archive-post-item">
-            <span class="archive-post-date">02/10</span><a class="archive-post-title" href= "/2017/02/10/SSH端口转发实验/" >SSH端口转发实验</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
-            <span class="archive-post-date">02/01</span><a class="archive-post-title" href= "/2017/02/01/rpm管理包 和 yum管理包(1)/" >安装管理包：rpm包和yum包</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
-            <span class="archive-post-date">01/20</span><a class="archive-post-title" href= "/2017/01/20/搭建CA/" >如何搭建CA（向CA申请证书）</a>
-        </li>
-    
-    
-    
-    
-    
-        </ul>
-    
     <div class="archive-year"> 2016 </div>
     <ul class="year-list">
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">12/20</span><a class="archive-post-title" href= "/2016/12/20/进程管理和计划任务的知识点()/" >进程管理与计划任务的知识点</a>
+            <span class="archive-post-date">12/15</span><a class="archive-post-title" href= "/2016/12/15/文本处理工具：sed/" >文本处理工具：sed</a>
         </li>
     
     
@@ -1455,7 +1567,7 @@
     
         <span class="sidebar-tag-name" data-tags="Linux"><span class="iconfont-archer">&#xe606;</span>Linux</span>
     
-        <span class="sidebar-tag-name" data-tags="用户组"><span class="iconfont-archer">&#xe606;</span>用户组</span>
+        <span class="sidebar-tag-name" data-tags="DNS"><span class="iconfont-archer">&#xe606;</span>DNS</span>
     
         <span class="sidebar-tag-name" data-tags="DHCP"><span class="iconfont-archer">&#xe606;</span>DHCP</span>
     
@@ -1463,9 +1575,11 @@
     
         <span class="sidebar-tag-name" data-tags="haproxy"><span class="iconfont-archer">&#xe606;</span>haproxy</span>
     
+        <span class="sidebar-tag-name" data-tags="权限管理"><span class="iconfont-archer">&#xe606;</span>权限管理</span>
+    
         <span class="sidebar-tag-name" data-tags="练习题"><span class="iconfont-archer">&#xe606;</span>练习题</span>
     
-        <span class="sidebar-tag-name" data-tags="权限管理"><span class="iconfont-archer">&#xe606;</span>权限管理</span>
+        <span class="sidebar-tag-name" data-tags="用户组"><span class="iconfont-archer">&#xe606;</span>用户组</span>
     
         <span class="sidebar-tag-name" data-tags="su和sudo"><span class="iconfont-archer">&#xe606;</span>su和sudo</span>
     
@@ -1473,33 +1587,37 @@
     
         <span class="sidebar-tag-name" data-tags="MYSQL"><span class="iconfont-archer">&#xe606;</span>MYSQL</span>
     
+        <span class="sidebar-tag-name" data-tags="SSH"><span class="iconfont-archer">&#xe606;</span>SSH</span>
+    
         <span class="sidebar-tag-name" data-tags="TCP/IP"><span class="iconfont-archer">&#xe606;</span>TCP/IP</span>
     
-        <span class="sidebar-tag-name" data-tags="SSH"><span class="iconfont-archer">&#xe606;</span>SSH</span>
+        <span class="sidebar-tag-name" data-tags="keepalied"><span class="iconfont-archer">&#xe606;</span>keepalied</span>
     
         <span class="sidebar-tag-name" data-tags="varnish"><span class="iconfont-archer">&#xe606;</span>varnish</span>
     
         <span class="sidebar-tag-name" data-tags="lvs"><span class="iconfont-archer">&#xe606;</span>lvs</span>
     
+        <span class="sidebar-tag-name" data-tags="rpm"><span class="iconfont-archer">&#xe606;</span>rpm</span>
+    
         <span class="sidebar-tag-name" data-tags="memcache"><span class="iconfont-archer">&#xe606;</span>memcache</span>
     
         <span class="sidebar-tag-name" data-tags="tomcat"><span class="iconfont-archer">&#xe606;</span>tomcat</span>
     
+        <span class="sidebar-tag-name" data-tags="共享服务"><span class="iconfont-archer">&#xe606;</span>共享服务</span>
+    
         <span class="sidebar-tag-name" data-tags="基本命令"><span class="iconfont-archer">&#xe606;</span>基本命令</span>
-    
-        <span class="sidebar-tag-name" data-tags="keepalied"><span class="iconfont-archer">&#xe606;</span>keepalied</span>
-    
-        <span class="sidebar-tag-name" data-tags="rpm"><span class="iconfont-archer">&#xe606;</span>rpm</span>
     
         <span class="sidebar-tag-name" data-tags="CA"><span class="iconfont-archer">&#xe606;</span>CA</span>
     
         <span class="sidebar-tag-name" data-tags="dns"><span class="iconfont-archer">&#xe606;</span>dns</span>
     
-        <span class="sidebar-tag-name" data-tags="DNS"><span class="iconfont-archer">&#xe606;</span>DNS</span>
+        <span class="sidebar-tag-name" data-tags="sed"><span class="iconfont-archer">&#xe606;</span>sed</span>
+    
+        <span class="sidebar-tag-name" data-tags="自动化安装"><span class="iconfont-archer">&#xe606;</span>自动化安装</span>
+    
+        <span class="sidebar-tag-name" data-tags="mini系统"><span class="iconfont-archer">&#xe606;</span>mini系统</span>
     
         <span class="sidebar-tag-name" data-tags="进程管理、计划任务"><span class="iconfont-archer">&#xe606;</span>进程管理、计划任务</span>
-    
-        <span class="sidebar-tag-name" data-tags="共享服务"><span class="iconfont-archer">&#xe606;</span>共享服务</span>
     
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>

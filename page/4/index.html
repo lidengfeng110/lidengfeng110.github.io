@@ -354,6 +354,248 @@ height:50vh;
     
     
     <article class="index-post">
+        <a class="abstract-title" href = "/2017/02/08/实现PXE自动安装/" >
+            
+                <span>实现PXE自动安装</span>
+        </a>
+        <div class="abstract-content">
+            <h2 id="实现PXE自动安装"><a href="#实现PXE自动安装" class="headerlink" title="实现PXE自动安装"></a>实现PXE自动安装</h2><h3 id="1、基础网络建设与搭建DHCP服务"><a href="#1、基础网络建设与搭建DHCP服务" class="headerlink" title="1、基础网络建设与搭建DHCP服务"></a>1、基础网络建设与搭建DHCP服务</h3><h5 id="配置静态IP地址并重起网卡"><a href="#配置静态IP地址并重起网卡" class="headerlink" title="配置静态IP地址并重起网卡"></a>配置静态IP地址并重起网卡</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">cat /etc/sysconfig/network-scripts/ifcfg-eth0   </span><br><span class="line">DEVICE=eth0  </span><br><span class="line">TYPE=Ethernet  </span><br><span class="line">ONBOOT=yes  </span><br><span class="line">NM_CONTROLLED=yes  </span><br><span class="line">BOOTPROTO=static  </span><br><span class="line">IPADDR=10.0.0.4  </span><br><span class="line">NETMASK=255.255.255.0  </span><br><span class="line">GATEWAY=10.0.0.2</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>/etc/init.d/network restart<br>ifconfig eth0</p>
+</blockquote>
+<h5 id="2）安装配置DHCP服务"><a href="#2）安装配置DHCP服务" class="headerlink" title="2）安装配置DHCP服务"></a>2）安装配置DHCP服务</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">yum -y install dhcp  </span><br><span class="line">vim /etc/dhcp/dhcpd.conf  </span><br><span class="line">default-lease-time 600;  </span><br><span class="line">max-lease-time 7200;  </span><br><span class="line">ddns-update-style none;  </span><br><span class="line">option domain-name-servers 202.106.0.20;  </span><br><span class="line">#DNS地址可配置2个用逗号分隔  </span><br><span class="line">ignore client-updates;</span><br></pre></td></tr></table></figure>
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/02/08</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "Linux">Linux</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "自动化安装">自动化安装</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2017/02/01/rpm管理包 和 yum管理包(1)/" >
+            
+                <span>安装管理包：rpm包和yum包</span>
+        </a>
+        <div class="abstract-content">
+            <h4 id="包基础知识"><a href="#包基础知识" class="headerlink" title="包基础知识"></a>包基础知识</h4><h5 id="包名称"><a href="#包名称" class="headerlink" title="包名称"></a>包名称</h5><blockquote>
+<p>在rhel/centos/fedora上，包的名称以rpm结尾，分为二进制包和源码包。源码包以”.src.rpm”结尾，它是未编译过的包，可以自行进行编译或者用其制作自己的二进制rpm包，非”.src.rpm”结尾的包都是二进制包，都是已经编译完成的，安装rpm包的过程实际上就是将包中的文件复制到Linux上，有可能还会在复制文件的前后执行一些命令，如创建一个必要的用户，删除非必要文件等。<br>
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/02/01</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "Linux">Linux</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "rpm">rpm</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2017/01/20/搭建CA/" >
+            
+                <span>如何搭建CA（向CA申请证书）</span>
+        </a>
+        <div class="abstract-content">
+            <h2 id="系统中搭建CA"><a href="#系统中搭建CA" class="headerlink" title="系统中搭建CA"></a>系统中搭建CA</h2><h3 id="CA的配置文件"><a href="#CA的配置文件" class="headerlink" title="CA的配置文件"></a>CA的配置文件</h3><blockquote>
+<p>vim /etc/pki/tls/openssl.cnf</p>
+<p>默认 CA_default  （可建多个）</p>
+</blockquote>
+<blockquote>
+<p>[ CA_default ]</p>
+<p>dir             = /etc/pki/CA      # Where everything is kept  CA的工作目录<br>
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/01/20</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "Linux">Linux</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "CA">CA</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2017/01/08/自制一个mini 的Linux系统/" >
+            
+                <span>自制一个mini 的Linux系统</span>
+        </a>
+        <div class="abstract-content">
+            <h3 id="步骤概略："><a href="#步骤概略：" class="headerlink" title="步骤概略："></a>步骤概略：</h3><blockquote>
+<p>　　　　　　（1）划分一块磁盘，用来装系统</p>
+<p>（2）给硬盘划分至少两个分区，一个为boot引导分区，一个为/根分区</p>
+<p>（3）为分区创建文件系统，并挂载到两个不同目录</p>
+<p>（4）在挂载boot的分区创建grub引导目录</p>
+<p>（5）复制内核vmlinux与initrd文件到boot目录下，然后根据文件编写grub下的引导配置文件</p>
+<p>（6）创建根文件系统</p>
+<p>（7）移植bash等命令到根目录下</p>
+<p>（8）启动测试</p>
+</blockquote>
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/01/08</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "Linux">Linux</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "mini系统">mini系统</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2016/12/20/进程管理和计划任务的知识点()/" >
+            
+                <span>进程管理与计划任务的知识点</span>
+        </a>
+        <div class="abstract-content">
+            <h2 id="进程概念："><a href="#进程概念：" class="headerlink" title="进程概念："></a>进程概念：</h2><h5 id="进程与程序的区别："><a href="#进程与程序的区别：" class="headerlink" title="进程与程序的区别："></a>进程与程序的区别：</h5><blockquote>
+<p>进程是一个动态的概念，具有生命期，而程序是静态的表现为一个文件，一个程序可对应多个进程</p>
+</blockquote>
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2016/12/20</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "Linux">Linux</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "进程管理、计划任务">进程管理、计划任务</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2016/12/15/文本处理工具：sed/" >
+            
+                <span>文本处理工具：sed</span>
+        </a>
+        <div class="abstract-content">
+            <h4 id="sed"><a href="#sed" class="headerlink" title="sed"></a>sed</h4><h4 id="Stream-EDitor-行编辑器"><a href="#Stream-EDitor-行编辑器" class="headerlink" title="Stream EDitor, 行编辑器"></a>Stream EDitor, 行编辑器</h4><p>sed是一种流编辑器，它一次处理一行内容。处理时，把当前处理的行存储在临时缓冲区中，称为“模式空间”（pattern space），接着用sed命令处理缓冲区中的内容，处理完成后，把缓冲区的内容送往屏幕。然后读入下行，执行下一个循环。如果没有使诸如‘D’的特殊命令，那会在两个循环之间清空模式空间，但不会清空保留空间。这样不断重复，直到文件末尾。文件内容并没有改变，除非你使用重定向存储输出。  </p>
+<p>功能：主要用来自动编辑一个或多个文件,简化对文件的反复操作,编写转换程序等<br>
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2016/12/15</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "Linux">Linux</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "sed">sed</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2016/12/08/TCP、IP协议三次握手与四次握手流程解析（）/" >
+            
+                <span>TCP、IP协议三次握手与四次握手流程解析</span>
+        </a>
+        <div class="abstract-content">
+            <h3 id="一、TCP报文格式"><a href="#一、TCP报文格式" class="headerlink" title="一、TCP报文格式"></a>一、TCP报文格式</h3><p>TCP/IP协议的详细信息参看《TCP/IP协议详解》三卷本。下面是TCP报文格式图：</p>
+<p> <img src="http://www.178linux.com/wp-content/uploads/2018/05/20131022025345890.png" alt="image"></p>
+<p>图1  </p>
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2016/12/08</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "Linux">Linux</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "TCP/IP">TCP/IP</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
         <a class="abstract-title" href = "/2016/11/29/Linux 的一些基础练习题/" >
             
                 <span>Linux 的一些基础练习题</span>
@@ -1068,9 +1310,64 @@ height:50vh;
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 32
+        Total : 39
         </div>
         <!-- search  -->
         
@@ -1115,6 +1412,11 @@ height:50vh;
     
     
         <li class="archive-post-item">
+            <span class="archive-post-date">10/05</span><a class="archive-post-title" href= "/2017/10/05/浅谈 tomcat 原理/" >浅谈 tomcat 原理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
             <span class="archive-post-date">09/25</span><a class="archive-post-title" href= "/2017/09/25/Varnish 缓存服务器介绍/" >Varnish 缓存服务器介绍</a>
         </li>
     
@@ -1136,6 +1438,11 @@ height:50vh;
     
         <li class="archive-post-item">
             <span class="archive-post-date">06/24</span><a class="archive-post-title" href= "/2017/06/24/各种网络共享服务实验演示/" >各种网络共享服务实验演示</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/20</span><a class="archive-post-title" href= "/2017/06/20/网络文件共享服务：FTP    NFS   SAMBA/" >网络文件共享服务：FTP    NFS   SAMBA</a>
         </li>
     
     
@@ -1185,6 +1492,11 @@ height:50vh;
     
     
         <li class="archive-post-item">
+            <span class="archive-post-date">03/22</span><a class="archive-post-title" href= "/2017/03/22/实现DNS服务主从复制/" >实现DNS服务主从复制</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
             <span class="archive-post-date">03/20</span><a class="archive-post-title" href= "/2017/03/20/搭建DNS互联网架构服务器(一）/" >搭建DNS互联网架构服务器</a>
         </li>
     
@@ -1214,6 +1526,59 @@ height:50vh;
         </li>
     
     
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/10</span><a class="archive-post-title" href= "/2017/02/10/SSH端口转发实验/" >SSH端口转发实验</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/08</span><a class="archive-post-title" href= "/2017/02/08/实现PXE自动安装/" >实现PXE自动安装</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/01</span><a class="archive-post-title" href= "/2017/02/01/rpm管理包 和 yum管理包(1)/" >安装管理包：rpm包和yum包</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/20</span><a class="archive-post-title" href= "/2017/01/20/搭建CA/" >如何搭建CA（向CA申请证书）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/08</span><a class="archive-post-title" href= "/2017/01/08/自制一个mini 的Linux系统/" >自制一个mini 的Linux系统</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> Invalid date </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">Invalid date</span><a class="archive-post-title" href= "/2018/08/09/日志管理介绍/" >[Untitled Post]</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2016 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/20</span><a class="archive-post-title" href= "/2016/12/20/进程管理和计划任务的知识点()/" >进程管理与计划任务的知识点</a>
+        </li>
+    
+    
     
     
     
@@ -1233,36 +1598,12 @@ height:50vh;
     
         </ul>
     
-    <div class="archive-year"> 2017 </div>
-    <ul class="year-list">
-    
-    
-        <li class="archive-post-item">
-            <span class="archive-post-date">02/10</span><a class="archive-post-title" href= "/2017/02/10/SSH端口转发实验/" >SSH端口转发实验</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
-            <span class="archive-post-date">02/01</span><a class="archive-post-title" href= "/2017/02/01/rpm管理包 和 yum管理包(1)/" >安装管理包：rpm包和yum包</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
-            <span class="archive-post-date">01/20</span><a class="archive-post-title" href= "/2017/01/20/搭建CA/" >如何搭建CA（向CA申请证书）</a>
-        </li>
-    
-    
-    
-    
-    
-        </ul>
-    
     <div class="archive-year"> 2016 </div>
     <ul class="year-list">
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">12/20</span><a class="archive-post-title" href= "/2016/12/20/进程管理和计划任务的知识点()/" >进程管理与计划任务的知识点</a>
+            <span class="archive-post-date">12/15</span><a class="archive-post-title" href= "/2016/12/15/文本处理工具：sed/" >文本处理工具：sed</a>
         </li>
     
     
@@ -1287,7 +1628,7 @@ height:50vh;
     
         <span class="sidebar-tag-name" data-tags="Linux"><span class="iconfont-archer">&#xe606;</span>Linux</span>
     
-        <span class="sidebar-tag-name" data-tags="用户组"><span class="iconfont-archer">&#xe606;</span>用户组</span>
+        <span class="sidebar-tag-name" data-tags="DNS"><span class="iconfont-archer">&#xe606;</span>DNS</span>
     
         <span class="sidebar-tag-name" data-tags="DHCP"><span class="iconfont-archer">&#xe606;</span>DHCP</span>
     
@@ -1295,9 +1636,11 @@ height:50vh;
     
         <span class="sidebar-tag-name" data-tags="haproxy"><span class="iconfont-archer">&#xe606;</span>haproxy</span>
     
+        <span class="sidebar-tag-name" data-tags="权限管理"><span class="iconfont-archer">&#xe606;</span>权限管理</span>
+    
         <span class="sidebar-tag-name" data-tags="练习题"><span class="iconfont-archer">&#xe606;</span>练习题</span>
     
-        <span class="sidebar-tag-name" data-tags="权限管理"><span class="iconfont-archer">&#xe606;</span>权限管理</span>
+        <span class="sidebar-tag-name" data-tags="用户组"><span class="iconfont-archer">&#xe606;</span>用户组</span>
     
         <span class="sidebar-tag-name" data-tags="su和sudo"><span class="iconfont-archer">&#xe606;</span>su和sudo</span>
     
@@ -1305,33 +1648,37 @@ height:50vh;
     
         <span class="sidebar-tag-name" data-tags="MYSQL"><span class="iconfont-archer">&#xe606;</span>MYSQL</span>
     
+        <span class="sidebar-tag-name" data-tags="SSH"><span class="iconfont-archer">&#xe606;</span>SSH</span>
+    
         <span class="sidebar-tag-name" data-tags="TCP/IP"><span class="iconfont-archer">&#xe606;</span>TCP/IP</span>
     
-        <span class="sidebar-tag-name" data-tags="SSH"><span class="iconfont-archer">&#xe606;</span>SSH</span>
+        <span class="sidebar-tag-name" data-tags="keepalied"><span class="iconfont-archer">&#xe606;</span>keepalied</span>
     
         <span class="sidebar-tag-name" data-tags="varnish"><span class="iconfont-archer">&#xe606;</span>varnish</span>
     
         <span class="sidebar-tag-name" data-tags="lvs"><span class="iconfont-archer">&#xe606;</span>lvs</span>
     
+        <span class="sidebar-tag-name" data-tags="rpm"><span class="iconfont-archer">&#xe606;</span>rpm</span>
+    
         <span class="sidebar-tag-name" data-tags="memcache"><span class="iconfont-archer">&#xe606;</span>memcache</span>
     
         <span class="sidebar-tag-name" data-tags="tomcat"><span class="iconfont-archer">&#xe606;</span>tomcat</span>
     
+        <span class="sidebar-tag-name" data-tags="共享服务"><span class="iconfont-archer">&#xe606;</span>共享服务</span>
+    
         <span class="sidebar-tag-name" data-tags="基本命令"><span class="iconfont-archer">&#xe606;</span>基本命令</span>
-    
-        <span class="sidebar-tag-name" data-tags="keepalied"><span class="iconfont-archer">&#xe606;</span>keepalied</span>
-    
-        <span class="sidebar-tag-name" data-tags="rpm"><span class="iconfont-archer">&#xe606;</span>rpm</span>
     
         <span class="sidebar-tag-name" data-tags="CA"><span class="iconfont-archer">&#xe606;</span>CA</span>
     
         <span class="sidebar-tag-name" data-tags="dns"><span class="iconfont-archer">&#xe606;</span>dns</span>
     
-        <span class="sidebar-tag-name" data-tags="DNS"><span class="iconfont-archer">&#xe606;</span>DNS</span>
+        <span class="sidebar-tag-name" data-tags="sed"><span class="iconfont-archer">&#xe606;</span>sed</span>
+    
+        <span class="sidebar-tag-name" data-tags="自动化安装"><span class="iconfont-archer">&#xe606;</span>自动化安装</span>
+    
+        <span class="sidebar-tag-name" data-tags="mini系统"><span class="iconfont-archer">&#xe606;</span>mini系统</span>
     
         <span class="sidebar-tag-name" data-tags="进程管理、计划任务"><span class="iconfont-archer">&#xe606;</span>进程管理、计划任务</span>
-    
-        <span class="sidebar-tag-name" data-tags="共享服务"><span class="iconfont-archer">&#xe606;</span>共享服务</span>
     
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
