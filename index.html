@@ -470,6 +470,37 @@ timedatectl set-timezone Asia/Shanghai
     
     
     <article class="index-post">
+        <a class="abstract-title" href = "/2017/08/19/lvs 详细介绍/" >
+            
+                <span>lvs 详细介绍</span>
+        </a>
+        <div class="abstract-content">
+            <h4 id="Cluster概念"><a href="#Cluster概念" class="headerlink" title="Cluster概念"></a>Cluster概念</h4><p> 系统扩展方式：<br>      Scale UP：向上扩展,增强<br>       Scale Out：向外扩展,增加设备，调度分配问题，Cluster<br> Cluster：集群,为解决某个特定问题将多台计算机组合起来形成的单个系统<br> Linux Cluster类型：<br>    LB：Load Balancing，负载均衡<br>    HA：High Availiablity，高可用，SPOF（single Point Of failure）<br>       MTBF:Mean Time Between Failure 平均无故障时间<br>       MTTR:Mean Time To Restoration（ repair）平均恢复前时间<br>        A=MTBF/（MTBF+MTTR） (0,1)：99%, 99.5%, 99.9%, 99.99%, 99.999%<br>     HPC：High-performance computing，高性能 <a href="http://www.top500.org" target="_blank" rel="noopener">www.top500.org</a><br> 分布式系统：<br>       分布式存储：云盘<br>       分布式计算：hadoop， park<br>
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/08/19</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "Linux">Linux</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "lvs">lvs</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
         <a class="abstract-title" href = "/2017/06/11/LAMP 架构的各种演示/" >
             
                 <span>LAMP 架构的各种演示</span>
@@ -501,6 +532,38 @@ timedatectl set-timezone Asia/Shanghai
     
     
     <article class="index-post">
+        <a class="abstract-title" href = "/2017/05/08/MASQL MariaDB 用户权限管理/" >
+            
+                <span>MASQL MariaDB 用户权限管理</span>
+        </a>
+        <div class="abstract-content">
+            <h6 id="MariaDB-MySQL中的user由用户名和主机名构成，如”root-localhost”，同用户名但不同主机名对MySQL-MariaDB来讲是不同的，也就是说”root-localhost”和”root-127-0-0-1“是不同的用户，尽管它们都是本机的root。"><a href="#MariaDB-MySQL中的user由用户名和主机名构成，如”root-localhost”，同用户名但不同主机名对MySQL-MariaDB来讲是不同的，也就是说”root-localhost”和”root-127-0-0-1“是不同的用户，尽管它们都是本机的root。" class="headerlink" title="MariaDB/MySQL中的user由用户名和主机名构成，如”root@localhost”，同用户名但不同主机名对MySQL/MariaDB来讲是不同的，也就是说”root@localhost”和”root@127.0.0.1“是不同的用户，尽管它们都是本机的root。"></a>MariaDB/MySQL中的user由用户名和主机名构成，如”root@localhost”，同用户名但不同主机名对MySQL/MariaDB来讲是不同的，也就是说”root@localhost”和”<a href="mailto:root@127.0.0.1" target="_blank" rel="noopener">root@127.0.0.1</a>“是不同的用户，尽管它们都是本机的root。</h6><h3 id="权限验证"><a href="#权限验证" class="headerlink" title="权限验证"></a>权限验证</h3><blockquote>
+<p>在MariaDB/MySQL服务器启动后会载入权限表到内存中，当用户要连接服务器，会读取权限表来验证和分配权限，即在内存中进行权限的读取和写入。<br>
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/05/08</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "Linux">Linux</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "MYSQL">MYSQL</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
         <a class="abstract-title" href = "/2017/04/20/ext 文件系统机制原理/" >
             
                 <span>ext 文件系统机制原理</span>
@@ -514,6 +577,39 @@ timedatectl set-timezone Asia/Shanghai
             <!-- date  -->
             <div class="abstract-date">
                 <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/04/20</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "Linux">Linux</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "文件系统">文件系统</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2017/04/15/Linux分区信息与管理文件系统/" >
+            
+                <span>Linux分区信息与管理文件系统</span>
+        </a>
+        <div class="abstract-content">
+            <h3 id="分区"><a href="#分区" class="headerlink" title="分区"></a>分区</h3><p>分区是为了在逻辑上将某些柱面隔开形成边界。它是以柱面为单位来划分的，首先划分外圈柱面，然后不断向内划分。  </p>
+<p>由于读写越外圈磁道中的数据比越内圈更快，所以第一个分区在读写性能上比后面的分区更好。在Windows操作系统上，C盘的速度是最快的，越后面的区越慢就是这个原因。  </p>
+<p>在磁盘数据量非常大的情况下，划分分区的好处是扫描块位图等更快速：不用再扫描整块磁盘的块位图，只需扫描对应分区的块位图。<br>
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/04/15</span>
             </div>
             <!-- tags  -->
             
@@ -567,18 +663,19 @@ timedatectl set-timezone Asia/Shanghai
     
     
     <article class="index-post">
-        <a class="abstract-title" href = "/2017/03/12/Linux 文件权限管理/" >
+        <a class="abstract-title" href = "/2017/04/01/Linux系统中su 和 sudo 的用法/" >
             
-                <span>Linux 文件权限管理</span>
+                <span>Linux系统中su 和 sudo 的用法</span>
         </a>
         <div class="abstract-content">
-            <h4 id="文件-目录的权限"><a href="#文件-目录的权限" class="headerlink" title="文件/目录的权限"></a>文件/目录的权限</h4><h5 id="文件的权限"><a href="#文件的权限" class="headerlink" title="文件的权限"></a>文件的权限</h5><h6 id="每个文件都有其所有者-u-user-、所属组-g-group-和其他人-o-other-对它的操作权限，a-all则同时代表这3者。权限包括读-r-read-、写-w-write-、执行-x-execute-。在不同类型的文件上读、写、执行权限的体现有所不同，所以目录权限和普通文件权限要区分开来。"><a href="#每个文件都有其所有者-u-user-、所属组-g-group-和其他人-o-other-对它的操作权限，a-all则同时代表这3者。权限包括读-r-read-、写-w-write-、执行-x-execute-。在不同类型的文件上读、写、执行权限的体现有所不同，所以目录权限和普通文件权限要区分开来。" class="headerlink" title="每个文件都有其所有者(u:user)、所属组(g:group)和其他人(o:other)对它的操作权限，a:all则同时代表这3者。权限包括读(r:read)、写(w:write)、执行(x:execute)。在不同类型的文件上读、写、执行权限的体现有所不同，所以目录权限和普通文件权限要区分开来。"></a>每个文件都有其所有者(u:user)、所属组(g:group)和其他人(o:other)对它的操作权限，a:all则同时代表这3者。权限包括读(r:read)、写(w:write)、执行(x:execute)。在不同类型的文件上读、写、执行权限的体现有所不同，所以目录权限和普通文件权限要区分开来。</h6><h5 id="在普通文件上："><a href="#在普通文件上：" class="headerlink" title="在普通文件上："></a>在普通文件上：</h5><blockquote>
-<p>r：可读，可以使用类似cat等命令查看文件内容；读是文件的最基本权限，没有读权限，普通文件的一切操作行为都被限制。<br>
+            <h2 id="su"><a href="#su" class="headerlink" title="su"></a>su</h2><p>切换用户或以指定用户运行命令。  </p>
+<p>使用su可以指定运行命令的身份(user/group/uid/gid)。  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">为了向后兼容，su默认不会改变当前目录，且仅设置HOME和SHELL这两个环境变量(若目标用户非root，则还设置USER和LOGNAME环境变量)。推荐使用--login选项(即&quot;-&quot;选项)避免环境变量混乱。  </span><br><span class="line"></span><br><span class="line">su [options...] [-] [user [args...]]</span><br><span class="line">选项说明：</span><br><span class="line">-c command：使用-c选项传递要指定的命令到shell上执行。使用-c执行命令会为每个su都分配新的会话环境</span><br><span class="line">-, -l, --login：启动shell作为登录的shell，模拟真正的登录环境。它会做下面几件事：</span><br><span class="line">                1.清除除了TERM外的所有环境变量</span><br><span class="line">                2.初始化HOME,SHELL,USER,LOGNAME,PATH环境变量</span><br><span class="line">                3.进入目标用户的家目录</span><br><span class="line">                4.设置argv[0]为&quot;-&quot;以便设置shell作为登录的shell</span><br><span class="line">                  使用--login的su是交互式登录。不使用--login的su是非交互式登录(除不带任何参数的su外</span><br><span class="line">-m, -p, --preserve-environment：保留整个环境变量(不会重新设置HOME,SHELL,USER和LOGNAME)，</span><br><span class="line">                                保留环境的方法是新用户shell上执行原用户的各配置文件，如~/.bashrc。</span><br><span class="line">                                当设置了--login时，将忽略该选项</span><br><span class="line">-s SHELL：运行指定的shell而非默认shell，选择shell的顺序优先级如下：</span><br><span class="line">                1.--shell指定的shell</span><br><span class="line">                2.如果使用了--preserve-environment，选择SHELL环境变量的shell</span><br><span class="line">                3.选项目标用户在passwd文件中指定的shell</span><br><span class="line">                4./bin/sh</span><br></pre></td></tr></table></figure>
         </div>
         <div class="abstract-post-meta">
             <!-- date  -->
             <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/03/12</span>
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/04/01</span>
             </div>
             <!-- tags  -->
             
@@ -586,80 +683,7 @@ timedatectl set-timezone Asia/Shanghai
     
         <a class="post-tag" href="javascript:void(0);" data-tags = "Linux">Linux</a>
     
-        <a class="post-tag" href="javascript:void(0);" data-tags = "权限管理">权限管理</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2017/02/15/DNS 服务从基础到深入/" >
-            
-                <span>DNS 服务从基础到深入</span>
-        </a>
-        <div class="abstract-content">
-            <h2 id="一-简介"><a href="#一-简介" class="headerlink" title="一 简介"></a>一 简介</h2><blockquote>
-<p>DNS是Domain name system的简称，有些地方也称为Domain name server，这东西是一个很大的话题。如果不是要配置DNS服务，只需要理解DNS的解析流程和DNS有关的基本知识即可。如果要配置DNS服务，则可以看完全文。<br>推荐阅读书籍：《DNS &amp; bind》，第四版有中文版，第五版目前只有英文版。  </p>
-</blockquote>
-<h5 id="DNS必懂基础"><a href="#DNS必懂基础" class="headerlink" title="DNS必懂基础"></a>DNS必懂基础</h5>
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/02/15</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "Linux">Linux</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "DNS">DNS</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2016/11/29/Linux 的一些基础练习题/" >
-            
-                <span>Linux 的一些基础练习题</span>
-        </a>
-        <div class="abstract-content">
-            <h2 id="练习题："><a href="#练习题：" class="headerlink" title="练习题："></a>练习题：</h2><p>1，显示当前时间，格式为：2016-06-18 10:20:30</p>
-<blockquote>
-<p>答案：date “+%F,%T” 或者 date “+%F %H:%M:%S”</p>
-</blockquote>
-<p>2，显示前天是星期几？</p>
-<blockquote>
-<p>答案：date -d “-2 day” +%A</p>
-<p>知识点：一 ，date +%s 是把当前时间转化为秒数         二， date -d @”1523604170″ 把秒数转化回来</p>
-</blockquote>
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2016/11/29</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "Linux">Linux</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "练习题">练习题</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags = "su和sudo">su和sudo</a>
     
 </div>
             
@@ -667,6 +691,10 @@ timedatectl set-timezone Asia/Shanghai
     </article>
     
     <!-- paginator  -->
+    
+    <nav class="page-nav">
+        <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">NEXT &#62;</a>
+    </nav>
     
 </main>
             <!-- profile -->
@@ -949,9 +977,48 @@ timedatectl set-timezone Asia/Shanghai
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 9
+        Total : 14
         </div>
         <!-- search  -->
         
@@ -991,7 +1058,17 @@ timedatectl set-timezone Asia/Shanghai
     
     
         <li class="archive-post-item">
+            <span class="archive-post-date">08/19</span><a class="archive-post-title" href= "/2017/08/19/lvs 详细介绍/" >lvs 详细介绍</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
             <span class="archive-post-date">06/11</span><a class="archive-post-title" href= "/2017/06/11/LAMP 架构的各种演示/" >LAMP 架构的各种演示</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/08</span><a class="archive-post-title" href= "/2017/05/08/MASQL MariaDB 用户权限管理/" >MASQL MariaDB 用户权限管理</a>
         </li>
     
     
@@ -1001,12 +1078,27 @@ timedatectl set-timezone Asia/Shanghai
     
     
         <li class="archive-post-item">
+            <span class="archive-post-date">04/15</span><a class="archive-post-title" href= "/2017/04/15/Linux分区信息与管理文件系统/" >Linux分区信息与管理文件系统</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
             <span class="archive-post-date">04/10</span><a class="archive-post-title" href= "/2017/04/10/DHCP 服务/" >DHCP服务</a>
         </li>
     
     
         <li class="archive-post-item">
+            <span class="archive-post-date">04/01</span><a class="archive-post-title" href= "/2017/04/01/Linux系统中su 和 sudo 的用法/" >Linux系统中su 和 sudo 的用法</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
             <span class="archive-post-date">03/12</span><a class="archive-post-title" href= "/2017/03/12/Linux 文件权限管理/" >Linux 文件权限管理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/08</span><a class="archive-post-title" href= "/2017/03/08/LINUX系统中用户、组管理/" >安装管理包：LINUX系统中用户、组管理</a>
         </li>
     
     
@@ -1037,19 +1129,27 @@ timedatectl set-timezone Asia/Shanghai
     
         <span class="sidebar-tag-name" data-tags="DHCP"><span class="iconfont-archer">&#xe606;</span>DHCP</span>
     
-        <span class="sidebar-tag-name" data-tags="DNS"><span class="iconfont-archer">&#xe606;</span>DNS</span>
-    
         <span class="sidebar-tag-name" data-tags="haproxy"><span class="iconfont-archer">&#xe606;</span>haproxy</span>
+    
+        <span class="sidebar-tag-name" data-tags="LAMP"><span class="iconfont-archer">&#xe606;</span>LAMP</span>
+    
+        <span class="sidebar-tag-name" data-tags="用户组"><span class="iconfont-archer">&#xe606;</span>用户组</span>
     
         <span class="sidebar-tag-name" data-tags="练习题"><span class="iconfont-archer">&#xe606;</span>练习题</span>
     
+        <span class="sidebar-tag-name" data-tags="权限管理"><span class="iconfont-archer">&#xe606;</span>权限管理</span>
+    
+        <span class="sidebar-tag-name" data-tags="su和sudo"><span class="iconfont-archer">&#xe606;</span>su和sudo</span>
+    
         <span class="sidebar-tag-name" data-tags="文件系统"><span class="iconfont-archer">&#xe606;</span>文件系统</span>
+    
+        <span class="sidebar-tag-name" data-tags="MYSQL"><span class="iconfont-archer">&#xe606;</span>MYSQL</span>
     
         <span class="sidebar-tag-name" data-tags="keepalied"><span class="iconfont-archer">&#xe606;</span>keepalied</span>
     
-        <span class="sidebar-tag-name" data-tags="权限管理"><span class="iconfont-archer">&#xe606;</span>权限管理</span>
+        <span class="sidebar-tag-name" data-tags="lvs"><span class="iconfont-archer">&#xe606;</span>lvs</span>
     
-        <span class="sidebar-tag-name" data-tags="LAMP"><span class="iconfont-archer">&#xe606;</span>LAMP</span>
+        <span class="sidebar-tag-name" data-tags="DNS"><span class="iconfont-archer">&#xe606;</span>DNS</span>
     
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
