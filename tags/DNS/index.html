@@ -339,27 +339,27 @@
     
     
     <article class="index-post">
-        <a class="abstract-title" href = "/2017/03/20/搭建DNS互联网架构服务器(一）/" >
+        <a class="abstract-title" href = "/2017/03/22/实现DNS服务主从复制/" >
             
-                <span>搭建DNS互联网架构服务器</span>
+                <span>实现DNS服务主从复制</span>
         </a>
         <div class="abstract-content">
-            <h2 id="互联网结如架构图如下："><a href="#互联网结如架构图如下：" class="headerlink" title="互联网结如架构图如下："></a>互联网结如架构图如下：</h2><p><img src="http://www.178linux.com/wp-content/uploads/2018/06/dns%E6%9E%B6%E6%9E%84.bmp" alt="image"></p>
-<blockquote>
-<p>拓扑结构清楚之后，现在开始从下往上，一步步构建并测试，直到最终完成！</p>
+            <blockquote>
+<p> 现在我们来实现主从复制，用两台主机做服务器，比如，用192.168.30.7 来做主服务器，用192.168.30.17 来做从服务器。现在我们把两个服务器都搭建起来。  </p>
 </blockquote>
 <blockquote>
-<p>至于为什么要从下往上？那是因为这样才能搭建好一台就测试一台，稳扎稳打，容易查清楚错在哪里！</p>
+<p> 先搭建从服务器， 第一步，首先要装包     </p>
 </blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install bind</span><br></pre></td></tr></table></figure>
 <blockquote>
-<p>首先，除了客户端以外的所有DNS服务器都要下载 bind 包，后面操作就不赘述了。</p>
+<p>  然后来修改主配置文件  </p>
 </blockquote>
-<h6 id="注意！！！所有机器都要关闭-selinux-和-清空防火墙-！！！"><a href="#注意！！！所有机器都要关闭-selinux-和-清空防火墙-！！！" class="headerlink" title="注意！！！所有机器都要关闭  selinux   和  清空防火墙 ！！！"></a>注意！！！所有机器都要关闭  selinux   和  清空防火墙 ！！！</h6>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/named.conf</span><br><span class="line">   </span><br><span class="line"> 要把 options 中的的这两行都注释掉。  </span><br><span class="line"> #listen-on port 53 &#123; locklhost; &#125;;      </span><br><span class="line">#allow-query     &#123; localhost;any; &#125;;</span><br></pre></td></tr></table></figure>
         </div>
         <div class="abstract-post-meta">
             <!-- date  -->
             <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/03/20</span>
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/03/22</span>
             </div>
             <!-- tags  -->
             
@@ -367,7 +367,114 @@
     
         <a class="post-tag" href="javascript:void(0);" data-tags = "Linux">Linux</a>
     
-        <a class="post-tag" href="javascript:void(0);" data-tags = "dns">dns</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags = "DNS">DNS</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2017/03/15/搭建DNS 服务，实现主服务器，邮件服务器，泛域名解析，反向解析等/" >
+            
+                <span>搭建DNS 服务，实现主服务器，邮件服务器，泛域名解析，反向解析等</span>
+        </a>
+        <div class="abstract-content">
+            <h4 id="实验-：-搭建DNS-主服务器，现在拿-192-168-30-7-这台主机做主服务器"><a href="#实验-：-搭建DNS-主服务器，现在拿-192-168-30-7-这台主机做主服务器" class="headerlink" title="实验   ：   搭建DNS 主服务器，现在拿 192.168.30.7 这台主机做主服务器"></a>实验   ：   搭建DNS 主服务器，现在拿 192.168.30.7 这台主机做主服务器</h4><h6 id="先装包-yum-install-bind"><a href="#先装包-yum-install-bind" class="headerlink" title="先装包     yum install bind"></a>先装包     yum install bind</h6><h6 id="启动服务-systemctl-start-named"><a href="#启动服务-systemctl-start-named" class="headerlink" title="启动服务    systemctl start named"></a>启动服务    systemctl start named</h6><h6 id="然后修改主配置文件中的内容-vim-etc-named-conf"><a href="#然后修改主配置文件中的内容-vim-etc-named-conf" class="headerlink" title="然后修改主配置文件中的内容    vim /etc/named.conf"></a>然后修改主配置文件中的内容    vim /etc/named.conf</h6><blockquote>
+<p> 创建以 magedu.com 的区域数据，一般建议区域数据都存放在  /etc/named.rfc1912.zones 文件中  ，添加内容如下：</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">zone &quot;magedu.com&quot; IN &#123;  </span><br><span class="line">                    type master;  </span><br><span class="line">                    file &quot;magedu.com.zone&quot;;</span><br><span class="line">&#125;;  </span><br><span class="line">  ##这是主从类型中的主类型，存放名字和IP 的数据库文件</span><br></pre></td></tr></table></figure>
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/03/15</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "Linux">Linux</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "DNS">DNS</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2017/02/28/搭建DNS服务器，实现主DNS服务器，负责解析一个域/" >
+            
+                <span>搭建DNS服务器，实现主DNS服务器，负责解析一个域</span>
+        </a>
+        <div class="abstract-content">
+            <h4 id="搭建DNS服务器，实现主DNS服务器，负责解析一个域"><a href="#搭建DNS服务器，实现主DNS服务器，负责解析一个域" class="headerlink" title="搭建DNS服务器，实现主DNS服务器，负责解析一个域"></a>搭建DNS服务器，实现主DNS服务器，负责解析一个域</h4><blockquote>
+<p>先装包     yum install bind   </p>
+<p>然后查看下包的组成结构     rpm -ql bind </p>
+<p>  /etc/named.conf      这是他的配置文件</p>
+<p>/var/named     这是存放名字跟IP的数据库</p>
+<p>/var/log/named.log     这是存放日志的</p>
+<p>/usr/sbin/named      主程序文件</p>
+<p>服务名    named.service</p>
+</blockquote>
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/02/28</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "Linux">Linux</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "DNS">DNS</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2017/02/15/DNS 服务从基础到深入/" >
+            
+                <span>DNS 服务从基础到深入</span>
+        </a>
+        <div class="abstract-content">
+            <h2 id="一-简介"><a href="#一-简介" class="headerlink" title="一 简介"></a>一 简介</h2><blockquote>
+<p>DNS是Domain name system的简称，有些地方也称为Domain name server，这东西是一个很大的话题。如果不是要配置DNS服务，只需要理解DNS的解析流程和DNS有关的基本知识即可。如果要配置DNS服务，则可以看完全文。<br>推荐阅读书籍：《DNS &amp; bind》，第四版有中文版，第五版目前只有英文版。  </p>
+</blockquote>
+<h5 id="DNS必懂基础"><a href="#DNS必懂基础" class="headerlink" title="DNS必懂基础"></a>DNS必懂基础</h5>
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/02/15</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "Linux">Linux</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "DNS">DNS</a>
     
 </div>
             
@@ -463,30 +570,6 @@
     <div class="sidebar-content sidebar-content-show-archive">
           <div class="sidebar-panel-archives">
     <!-- 在ejs中将archive按照时间排序 -->
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     
     
     
@@ -1394,6 +1477,11 @@
         </li>
     
     
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/15</span><a class="archive-post-title" href= "/2016/12/15/文本处理工具：sed/" >文本处理工具：sed</a>
+        </li>
+    
+    
     
     
     
@@ -1413,27 +1501,8 @@
     
         </ul>
     
-    <div class="archive-year"> Invalid date </div>
-    <ul class="year-list">
-    
-    
-        <li class="archive-post-item">
-            <span class="archive-post-date">Invalid date</span><a class="archive-post-title" href= "/2018/08/09/日志管理介绍/" >[Untitled Post]</a>
-        </li>
-    
-    
-    
-    
-    
-        </ul>
-    
     <div class="archive-year"> 2016 </div>
     <ul class="year-list">
-    
-    
-        <li class="archive-post-item">
-            <span class="archive-post-date">12/15</span><a class="archive-post-title" href= "/2016/12/15/文本处理工具：sed/" >文本处理工具：sed</a>
-        </li>
     
     
         <li class="archive-post-item">
@@ -1450,145 +1519,18 @@
             <span class="archive-post-date">11/23</span><a class="archive-post-title" href= "/2016/11/23/对正则表达式，VIM编辑器命令的基本操作（三）/" >对正则表达式，VIM编辑器命令的基本操作</a>
         </li>
     
-    </div>
-  </div>
-        <div class="sidebar-panel-tags">
-    <div class="sidebar-tags-name">
     
-        <span class="sidebar-tag-name" data-tags="Linux"><span class="iconfont-archer">&#xe606;</span>Linux</span>
     
-        <span class="sidebar-tag-name" data-tags="DHCP"><span class="iconfont-archer">&#xe606;</span>DHCP</span>
     
-        <span class="sidebar-tag-name" data-tags="LAMP"><span class="iconfont-archer">&#xe606;</span>LAMP</span>
     
-        <span class="sidebar-tag-name" data-tags="haproxy"><span class="iconfont-archer">&#xe606;</span>haproxy</span>
+        </ul>
     
-        <span class="sidebar-tag-name" data-tags="用户组"><span class="iconfont-archer">&#xe606;</span>用户组</span>
-    
-        <span class="sidebar-tag-name" data-tags="权限管理"><span class="iconfont-archer">&#xe606;</span>权限管理</span>
-    
-        <span class="sidebar-tag-name" data-tags="文件系统"><span class="iconfont-archer">&#xe606;</span>文件系统</span>
-    
-        <span class="sidebar-tag-name" data-tags="练习题"><span class="iconfont-archer">&#xe606;</span>练习题</span>
-    
-        <span class="sidebar-tag-name" data-tags="su和sudo"><span class="iconfont-archer">&#xe606;</span>su和sudo</span>
-    
-        <span class="sidebar-tag-name" data-tags="MYSQL"><span class="iconfont-archer">&#xe606;</span>MYSQL</span>
-    
-        <span class="sidebar-tag-name" data-tags="SSH"><span class="iconfont-archer">&#xe606;</span>SSH</span>
-    
-        <span class="sidebar-tag-name" data-tags="TCP/IP"><span class="iconfont-archer">&#xe606;</span>TCP/IP</span>
-    
-        <span class="sidebar-tag-name" data-tags="varnish"><span class="iconfont-archer">&#xe606;</span>varnish</span>
-    
-        <span class="sidebar-tag-name" data-tags="mysql"><span class="iconfont-archer">&#xe606;</span>mysql</span>
-    
-        <span class="sidebar-tag-name" data-tags="DNS"><span class="iconfont-archer">&#xe606;</span>DNS</span>
-    
-        <span class="sidebar-tag-name" data-tags="keepalied"><span class="iconfont-archer">&#xe606;</span>keepalied</span>
-    
-        <span class="sidebar-tag-name" data-tags="自动化"><span class="iconfont-archer">&#xe606;</span>自动化</span>
-    
-        <span class="sidebar-tag-name" data-tags="lvs"><span class="iconfont-archer">&#xe606;</span>lvs</span>
-    
-        <span class="sidebar-tag-name" data-tags="memcache"><span class="iconfont-archer">&#xe606;</span>memcache</span>
-    
-        <span class="sidebar-tag-name" data-tags="rpm"><span class="iconfont-archer">&#xe606;</span>rpm</span>
-    
-        <span class="sidebar-tag-name" data-tags="tomcat"><span class="iconfont-archer">&#xe606;</span>tomcat</span>
-    
-        <span class="sidebar-tag-name" data-tags="共享服务"><span class="iconfont-archer">&#xe606;</span>共享服务</span>
-    
-        <span class="sidebar-tag-name" data-tags="自动化安装"><span class="iconfont-archer">&#xe606;</span>自动化安装</span>
-    
-        <span class="sidebar-tag-name" data-tags="基本命令"><span class="iconfont-archer">&#xe606;</span>基本命令</span>
-    
-        <span class="sidebar-tag-name" data-tags="CA"><span class="iconfont-archer">&#xe606;</span>CA</span>
-    
-        <span class="sidebar-tag-name" data-tags="sed"><span class="iconfont-archer">&#xe606;</span>sed</span>
-    
-        <span class="sidebar-tag-name" data-tags="dns"><span class="iconfont-archer">&#xe606;</span>dns</span>
-    
-        <span class="sidebar-tag-name" data-tags="mini系统"><span class="iconfont-archer">&#xe606;</span>mini系统</span>
-    
-        <span class="sidebar-tag-name" data-tags="进程管理、计划任务"><span class="iconfont-archer">&#xe606;</span>进程管理、计划任务</span>
-    
-    </div>
-    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
-    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
-    缺失模块。<br/>
-    1、请确保node版本大于6.2<br/>
-    2、在博客根目录（注意不是archer根目录）执行以下命令：<br/>
-    <span style="color: #f75357; font-size: 1rem; line-height: 2rem;">npm i hexo-generator-json-content --save</span><br/>
-    3、在根目录_config.yml里添加配置：
-    <pre style="color: #787878; font-size: 0.6rem;">
-jsonContent:
-  meta: false
-  pages: false
-  posts:
-    title: true
-    date: true
-    path: true
-    text: false
-    raw: false
-    content: false
-    slug: false
-    updated: false
-    comments: false
-    link: false
-    permalink: false
-    excerpt: false
-    categories: true
-    tags: true</pre>
-    </div> 
-    <div class="sidebar-tags-list"></div>
-</div>
-        <div class="sidebar-panel-categories">
-    <div class="sidebar-categories-name">
-    
-    </div>
-    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
-    <div class="sidebar-categories-list"></div>
-</div>
-    </div>
-</div> 
-    <script>
-    var siteMeta = {
-        root: "/",
-        author: "John Doe"
-    }
-</script>
-    <!-- CDN failover -->
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
-    <script type="text/javascript">
-        if (typeof window.$ === 'undefined')
-        {
-            console.warn('jquery load from jsdelivr failed, will load local script')
-            document.write('<script src="/lib/jquery.min.js">\x3C/script>')
-        }
-    </script>
-    <script src="/scripts/main.js"></script>
-    <!-- algolia -->
-    
-    <!-- busuanzi  -->
-    
-    <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-    
-    <!-- CNZZ  -->
-    
-    </div>
-    <!-- async load share.js -->
-     
-    </body>
-</html>
-
-
-"archive-post-title" href= "/2016/11/29/Linux 的一些基础练习题/" >Linux 的一些基础练习题</a>
-        </li>
+    <div class="archive-year"> Invalid date </div>
+    <ul class="year-list">
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">11/23</span><a class="archive-post-title" href= "/2016/11/23/对正则表达式，VIM编辑器命令的基本操作（三）/" >对正则表达式，VIM编辑器命令的基本操作</a>
+            <span class="archive-post-date">Invalid date</span><a class="archive-post-title" href= "/2018/08/09/日志管理介绍/" >[Untitled Post]</a>
         </li>
     
     </div>
@@ -1598,9 +1540,9 @@ jsonContent:
     
         <span class="sidebar-tag-name" data-tags="Linux"><span class="iconfont-archer">&#xe606;</span>Linux</span>
     
-        <span class="sidebar-tag-name" data-tags="DHCP"><span class="iconfont-archer">&#xe606;</span>DHCP</span>
+        <span class="sidebar-tag-name" data-tags="DNS"><span class="iconfont-archer">&#xe606;</span>DNS</span>
     
-        <span class="sidebar-tag-name" data-tags="LAMP"><span class="iconfont-archer">&#xe606;</span>LAMP</span>
+        <span class="sidebar-tag-name" data-tags="DHCP"><span class="iconfont-archer">&#xe606;</span>DHCP</span>
     
         <span class="sidebar-tag-name" data-tags="haproxy"><span class="iconfont-archer">&#xe606;</span>haproxy</span>
     
@@ -1608,11 +1550,11 @@ jsonContent:
     
         <span class="sidebar-tag-name" data-tags="权限管理"><span class="iconfont-archer">&#xe606;</span>权限管理</span>
     
-        <span class="sidebar-tag-name" data-tags="文件系统"><span class="iconfont-archer">&#xe606;</span>文件系统</span>
-    
         <span class="sidebar-tag-name" data-tags="练习题"><span class="iconfont-archer">&#xe606;</span>练习题</span>
     
         <span class="sidebar-tag-name" data-tags="su和sudo"><span class="iconfont-archer">&#xe606;</span>su和sudo</span>
+    
+        <span class="sidebar-tag-name" data-tags="文件系统"><span class="iconfont-archer">&#xe606;</span>文件系统</span>
     
         <span class="sidebar-tag-name" data-tags="MYSQL"><span class="iconfont-archer">&#xe606;</span>MYSQL</span>
     
@@ -1624,15 +1566,13 @@ jsonContent:
     
         <span class="sidebar-tag-name" data-tags="mysql"><span class="iconfont-archer">&#xe606;</span>mysql</span>
     
-        <span class="sidebar-tag-name" data-tags="DNS"><span class="iconfont-archer">&#xe606;</span>DNS</span>
-    
         <span class="sidebar-tag-name" data-tags="keepalied"><span class="iconfont-archer">&#xe606;</span>keepalied</span>
     
         <span class="sidebar-tag-name" data-tags="自动化"><span class="iconfont-archer">&#xe606;</span>自动化</span>
     
-        <span class="sidebar-tag-name" data-tags="lvs"><span class="iconfont-archer">&#xe606;</span>lvs</span>
-    
         <span class="sidebar-tag-name" data-tags="memcache"><span class="iconfont-archer">&#xe606;</span>memcache</span>
+    
+        <span class="sidebar-tag-name" data-tags="lvs"><span class="iconfont-archer">&#xe606;</span>lvs</span>
     
         <span class="sidebar-tag-name" data-tags="rpm"><span class="iconfont-archer">&#xe606;</span>rpm</span>
     
@@ -1646,13 +1586,15 @@ jsonContent:
     
         <span class="sidebar-tag-name" data-tags="CA"><span class="iconfont-archer">&#xe606;</span>CA</span>
     
-        <span class="sidebar-tag-name" data-tags="sed"><span class="iconfont-archer">&#xe606;</span>sed</span>
-    
         <span class="sidebar-tag-name" data-tags="dns"><span class="iconfont-archer">&#xe606;</span>dns</span>
+    
+        <span class="sidebar-tag-name" data-tags="sed"><span class="iconfont-archer">&#xe606;</span>sed</span>
     
         <span class="sidebar-tag-name" data-tags="mini系统"><span class="iconfont-archer">&#xe606;</span>mini系统</span>
     
         <span class="sidebar-tag-name" data-tags="进程管理、计划任务"><span class="iconfont-archer">&#xe606;</span>进程管理、计划任务</span>
+    
+        <span class="sidebar-tag-name" data-tags="LAMP"><span class="iconfont-archer">&#xe606;</span>LAMP</span>
     
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
