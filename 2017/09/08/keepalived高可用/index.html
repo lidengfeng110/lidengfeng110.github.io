@@ -1,0 +1,615 @@
+<!DOCTYPE html><html lang="null"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description"><title>keepalived  高可用 | Hexo</title><link rel="stylesheet" type="text/css" href="//fonts.neworld.org/css?family=Source+Code+Pro"><link rel="stylesheet" type="text/css" href="/css/style.css?v=2.0.1"><link rel="stylesheet" type="text/css" href="/css/highlight.css?v=2.0.1"><link rel="Shortcut Icon" href="/favicon.ico"><link rel="bookmark" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">keepalived  高可用</h1><a id="logo" href="/.">Hexo</a><p class="description"></p></div><div id="nav-menu"><a href="/." class="current"><i class="fa fa-home"> Start</i></a><a href="/archives/"><i class="fa fa-archive"> Archiv</i></a><a href="/about/"><i class="fa fa-user"> Über</i></a><a href="/atom.xml"><i class="fa fa-rss"> RSS</i></a></div><div id="search-form"><div id="result-mask" class="hide"></div><label><input id="search-key" type="text" autocomplete="off" placeholder="Arama"></label><div id="result-wrap" class="hide"><div id="search-result"></div></div><div class="hide"><template id="search-tpl"><div class="item"><a href="/{path}" title="{title}"><div class="title">{title}</div><div class="time">{date}</div><div class="tags">{tags}</div></a></div></template></div></div></div><div id="layout" class="layout-g"><div class="layout-l"><div class="content_container"><div class="post"><h1 class="post-title">keepalived  高可用</h1><div class="post-meta"><a href="/2017/09/08/keepalived高可用/#comments" class="comment-count"></a><p><span class="date">Sep 08, 2017</span><span><i id="busuanzi_container_page_pv"><i id="busuanzi_value_page_pv"></i><i>Schlägt</i></i></span></p></div><div class="post-content"><p>  在持久存储层上，通常有三种格式的数据需要存储，分别为：第一个是结构化数据存储，放在关系型数据库当中，如： mysql , mariadb 等<br>第二个是半结构化数据存储，如：芒果db 等，这个层级的产品很多，流派也很多。 第三种是非结构化数据存储，通常存储在分布式文件系统或者分布式存储当中。</p>
+<p>HA Cluster（高可用集群）：<br>    ha services:resources(资源，分为IP地址跟运行的进程两种资源)</p>
+<pre><code>集群类型：LB（lvs/nginx（http/upstream, stream/upstream））、HA、HP
+
+    SPoF: Single Point of Failure
+
+系统可用性的公式：A=MTBF/（MTBF+MTTR）  可用性=平均无故障时间/（平均无故障时间+平均修复时间）
+    (0,1), 95%, 
+    几个9（指标）: 99%, 99.5%, ...., 99.999%，99.9999%；
+        99%： %1, 99.9%， 0.1%
+</code></pre><a id="more"></a>            
+<pre><code>    系统故障：
+        硬件故障：设计缺陷、wear out、自然灾害、……
+        软件故障：设计缺陷、
+        failover  故障切换、故障转移。
+        network partition :网络分区，表示网络之间不能协调。
+            出现这种现象我们称之为脑裂 brain split
+        with quorum :大于集群半数
+        without quprum ：小于集群半数
+
+heartbeat：OpenAIS
+    heartbeat: 
+        heartbeat
+        cluster-glue
+        pacemaker
+
+    corosync + pacemaker
+    cman+rgmanager
+
+keepalived, corosync
+vrrp: 虚拟冗余路由协议
+
+RESTful API
+
+    提升系统高用性的解决方案之降低MTTR：
+
+        手段：冗余（redundant）
+
+        active/passive（主备），active/active（双主） 
+            active --&gt; HEARTBEAT --&gt; passive 
+            active &lt;--&gt; HEARTBEAT &lt;--&gt; active
+
+    高可用的是“服务”：
+        HA nginx service：
+            vip/nginx process[/shared storage]
+
+            资源：组成一个高可用服务的“组件”；
+
+            (1) passive node的数量？
+            (2) 资源切换？
+
+        shared storage：
+            NAS：文件共享服务器；
+            SAN：存储区域网络，块级别的共享；
+
+        Network partition：网络分区
+            隔离设备：
+                node：STONITH = Shooting The Other Node In The Head
+                资源：fence 
+
+            quorum：            
+                with quorum： &gt; total/2
+                without quorum: &lt;= total/2
+
+            TWO nodes Cluster？
+                辅助设备：ping node, quorum disk; 
+
+    Failover：故障切换，即某资源的主节点故障时，将资源转移至其它节点的操作；
+    Failback：故障移回，即某资源的主节点故障后重新修改上线后，将转移至其它节点的资源重新切回的过程； 
+
+HA Cluster实现方案:
+    vrrp协议的实现
+        keepalived
+    ais：完备HA集群
+        RHCS（cman）
+        heartbeat
+        corosync
+
+keepalived：
+
+    vrrp协议：Virtual Redundant Routing Protocol
+        术语：
+            虚拟路由器：Virtual Router 
+            虚拟路由器标识：VRID(0-255)
+            物理路由器：
+                master：主设备
+                backup：备用设备
+                priority：优先级
+            VIP：Virtual IP 
+            VMAC：Virutal MAC (00-00-5e-00-01-VRID)
+                GraciousARP
+
+        通告：心跳，优先级等；周期性；
+
+        抢占式，非抢占式；
+
+        安全工作：
+            认证：
+                无认证
+                简单字符认证
+                MD5
+
+        工作模式：
+            主/备：单虚拟路径器；
+            主/主：主/备（虚拟路径器1），备/主（虚拟路径器2）
+
+    keepalived:
+        vrrp协议的软件实现，原生设计的目的为了高可用ipvs服务：
+            基于vrrp协议完成地址流动；
+            为vip地址所在的节点生成ipvs规则（在配置文件中预先定义）；
+            为ipvs集群的各RS做健康状态检测；
+            基于脚本调用接口通过执行脚本完成脚本中定义的功能，进而影响集群事务；
+
+        组件：
+            核心组件：
+                vrrp stack
+                ipvs wrapper
+                checkers
+            控制组件：配置文件分析器
+            IO复用器
+            内存管理组件
+
+    HA Cluster的配置前提：
+        (1) 各节点时间必须同步；
+            ntp, chrony
+        (2) 确保iptables及selinux不会成为阻碍；
+        (3) 各节点之间可通过主机名互相通信（对KA并非必须）；
+            建议使用/etc/hosts文件实现； 
+        (4) 确保各节点的用于集群服务的接口支持MULTICAST通信；
+            D类：224-239；
+
+    keepalived安装配置：
+        CentOS 6.4+ 随base仓库提供；    
+
+        程序环境：
+            主配置文件：/etc/keepalived/keepalived.conf
+            主程序文件：/usr/sbin/keepalived
+            Unit File：keepalived.service
+            Unit File的环境配置文件：/etc/sysconfig/keepalived
+
+        配置文件组件部分：
+            TOP HIERACHY
+                GLOBAL CONFIGURATION
+                    Global definitions
+                    Static routes/addresses
+                VRRPD CONFIGURATION
+                    VRRP synchronization group(s)：vrrp同步组；
+                    VRRP instance(s)：每个vrrp instance即一个vrrp路由器；
+                LVS CONFIGURATION
+                    Virtual server group(s)
+                    Virtual server(s)：ipvs集群的vs和rs；
+
+        单主配置示例：
+            ! Configuration File for keepalived
+
+            global_defs {
+                notification_email {
+                    root@localhost
+                }
+                notification_email_from keepalived@localhost
+                smtp_server 127.0.0.1
+                smtp_connect_timeout 30
+                router_id node1
+                vrrp_mcast_group4 224.0.100.19
+            }
+
+            vrrp_instance VI_1 {
+                state BACKUP
+                interface eno16777736
+                virtual_router_id 14
+                priority 98
+                advert_int 1
+                authentication {
+                    auth_type PASS
+                    auth_pass 571f97b2
+                }
+                virtual_ipaddress {
+                    10.1.0.91/16 dev eno16777736
+                }
+            }            
+
+
+        配置语法：
+            配置虚拟路由器：
+                vrrp_instance &lt;STRING&gt; {
+                    ....
+                }
+
+                专用参数：
+                     state MASTER|BACKUP：当前节点在此虚拟路由器上的初始状态；只能有一个是MASTER，余下的都应该为BACKUP；
+                     interface IFACE_NAME：绑定为当前虚拟路由器使用的物理接口；
+                     virtual_router_id VRID：当前虚拟路由器的惟一标识，范围是0-255；
+                     priority 100：当前主机在此虚拟路径器中的优先级；范围1-254；
+                    advert_int 1：vrrp通告的时间间隔；
+                    authentication {
+                        auth_type AH|PASS
+                        auth_pass &lt;PASSWORD&gt;
+                    }
+                    virtual_ipaddress {
+                        &lt;IPADDR&gt;/&lt;MASK&gt; brd &lt;IPADDR&gt; dev &lt;STRING&gt; scope &lt;SCOPE&gt; label &lt;LABEL&gt;
+                        192.168.200.17/24 dev eth1
+                        192.168.200.18/24 dev eth2 label eth2:1
+                    }
+                    track_interface {
+                        eth0
+                        eth1
+                        ...
+                    }
+                        配置要监控的网络接口，一旦接口出现故障，则转为FAULT状态；
+                    nopreempt：定义工作模式为非抢占模式；
+                    preempt_delay 300：抢占式模式下，节点上线后触发新选举操作的延迟时长；                        
+
+                    定义通知脚本：
+                        notify_master &lt;STRING&gt;|&lt;QUOTED-STRING&gt;：当前节点成为主节点时触发的脚本；
+                        notify_backup &lt;STRING&gt;|&lt;QUOTED-STRING&gt;：当前节点转为备节点时触发的脚本；
+                        notify_fault &lt;STRING&gt;|&lt;QUOTED-STRING&gt;：当前节点转为“失败”状态时触发的脚本；
+
+                        notify &lt;STRING&gt;|&lt;QUOTED-STRING&gt;：通用格式的通知触发机制，一个脚本可完成以上三种状态的转换时的通知；
+
+
+        双主模型示例：            
+            ! Configuration File for keepalived
+
+            global_defs {
+                notification_email {
+                    root@localhost
+                }
+                notification_email_from keepalived@localhost
+                smtp_server 127.0.0.1
+                smtp_connect_timeout 30
+                router_id node1
+                vrrp_mcast_group4 224.0.100.19
+            }
+
+            vrrp_instance VI_1 {
+                state MASTER
+                interface eno16777736
+                virtual_router_id 14
+                priority 100
+                advert_int 1
+                authentication {
+                    auth_type PASS
+                    auth_pass 571f97b2
+                }
+                virtual_ipaddress {
+                    10.1.0.91/16 dev eno16777736
+                }
+            }
+
+            vrrp_instance VI_2 {
+                state BACKUP
+                interface eno16777736
+                virtual_router_id 15
+                priority 98
+                advert_int 1
+                authentication {
+                    auth_type PASS
+                    auth_pass 578f07b2
+                }
+                virtual_ipaddress {
+                    10.1.0.92/16 dev eno16777736
+                }
+            }                        
+
+
+    通知脚本的使用方式：
+        示例通知脚本：
+            #!/bin/bash
+            #
+            contact=&apos;root@localhost&apos;
+
+            notify() {
+                local mailsubject=&quot;$(hostname) to be $1, vip floating&quot;
+                local mailbody=&quot;$(date +&apos;%F %T&apos;): vrrp transition, $(hostname) changed to be $1&quot;
+                echo &quot;$mailbody&quot; | mail -s &quot;$mailsubject&quot; $contact
+            }
+
+            case $1 in
+            master)
+                notify master
+                ;;
+            backup)
+                notify backup
+                ;;
+            fault)
+                notify fault
+                ;;
+            *)
+                echo &quot;Usage: $(basename $0) {master|backup|fault}&quot;
+                exit 1
+                ;;
+            esac            
+
+        脚本的调用方法：
+            notify_master &quot;/etc/keepalived/notify.sh master&quot;
+            notify_backup &quot;/etc/keepalived/notify.sh backup&quot;
+            notify_fault &quot;/etc/keepalived/notify.sh fault&quot;            
+
+虚拟服务器：
+    配置参数：
+        virtual_server IP port |
+        virtual_server fwmark int 
+        {
+            ...
+            real_server {
+                ...
+            }
+            ...
+        }
+
+        常用参数：
+             delay_loop &lt;INT&gt;：服务轮询的时间间隔；
+             lb_algo rr|wrr|lc|wlc|lblc|sh|dh：定义调度方法；
+             lb_kind NAT|DR|TUN：集群的类型；
+             persistence_timeout &lt;INT&gt;：持久连接时长；
+             protocol TCP：服务协议，仅支持TCP；
+            sorry_server &lt;IPADDR&gt; &lt;PORT&gt;：备用服务器地址；
+            real_server &lt;IPADDR&gt; &lt;PORT&gt;
+            {
+                 weight &lt;INT&gt;
+                 notify_up &lt;STRING&gt;|&lt;QUOTED-STRING&gt;
+                 notify_down &lt;STRING&gt;|&lt;QUOTED-STRING&gt;
+                 HTTP_GET|SSL_GET|TCP_CHECK|SMTP_CHECK|MISC_CHECK { ... }：定义当前主机的健康状态检测方法；
+            }
+
+            HTTP_GET|SSL_GET：应用层检测
+
+            HTTP_GET|SSL_GET {
+                url {
+                    path &lt;URL_PATH&gt;：定义要监控的URL；
+                    status_code &lt;INT&gt;：判断上述检测机制为健康状态的响应码；
+                    digest &lt;STRING&gt;：判断上述检测机制为健康状态的响应的内容的校验码；
+                }
+                nb_get_retry &lt;INT&gt;：重试次数；
+                delay_before_retry &lt;INT&gt;：重试之前的延迟时长；
+                connect_ip &lt;IP ADDRESS&gt;：向当前RS的哪个IP地址发起健康状态检测请求
+                connect_port &lt;PORT&gt;：向当前RS的哪个PORT发起健康状态检测请求
+                bindto &lt;IP ADDRESS&gt;：发出健康状态检测请求时使用的源地址；
+                bind_port &lt;PORT&gt;：发出健康状态检测请求时使用的源端口；
+                connect_timeout &lt;INTEGER&gt;：连接请求的超时时长；
+            }
+
+             TCP_CHECK {
+                connect_ip &lt;IP ADDRESS&gt;：向当前RS的哪个IP地址发起健康状态检测请求
+                connect_port &lt;PORT&gt;：向当前RS的哪个PORT发起健康状态检测请求
+                bindto &lt;IP ADDRESS&gt;：发出健康状态检测请求时使用的源地址；
+                bind_port &lt;PORT&gt;：发出健康状态检测请求时使用的源端口；
+                connect_timeout &lt;INTEGER&gt;：连接请求的超时时长；
+            }
+
+    高可用的ipvs集群示例：
+        ! Configuration File for keepalived
+
+        global_defs {
+            notification_email {
+                root@localhost
+            }
+            notification_email_from keepalived@localhost
+            smtp_server 127.0.0.1
+            smtp_connect_timeout 30
+            router_id node1
+            vrrp_mcast_group4 224.0.100.19
+        }
+
+        vrrp_instance VI_1 {
+            state MASTER
+            interface eno16777736
+            virtual_router_id 14
+            priority 100
+            advert_int 1
+            authentication {
+                auth_type PASS
+                auth_pass 571f97b2
+            }
+            virtual_ipaddress {
+                10.1.0.93/16 dev eno16777736
+            }
+            notify_master &quot;/etc/keepalived/notify.sh master&quot;
+            notify_backup &quot;/etc/keepalived/notify.sh backup&quot;
+            notify_fault &quot;/etc/keepalived/notify.sh fault&quot;
+        }
+
+        virtual_server 10.1.0.93 80 {
+            delay_loop 3
+            lb_algo rr
+            lb_kind DR
+            protocol TCP
+
+            sorry_server 127.0.0.1 80
+
+            real_server 10.1.0.69 80 {
+                weight 1
+                HTTP_GET {
+                url {
+                    path /
+                    status_code 200
+                }
+                connect_timeout 1
+                nb_get_retry 3
+                delay_before_retry 1
+                }
+            }
+            real_server 10.1.0.71 80 {
+                weight 1
+                HTTP_GET {
+                url {
+                    path /
+                    status_code 200
+                }
+                connect_timeout 1
+                nb_get_retry 3
+                delay_before_retry 1
+                }
+            }
+        }
+
+        TCP_CHECK使用示例：
+            TCP_CHECK {
+                nb_get_retry 3
+                delay_before_retry 2
+                connect_timeout 3
+            }            
+
+
+
+
+博客作业：第一部分
+    双主模式的lvs集群，拓扑、实现过程；
+
+    配置示例（一个节点）：    
+
+        ! Configuration File for keepalived
+
+        global_defs {
+        notification_email {
+        root@localhost
+        }
+        notification_email_from kaadmin@localhost
+        smtp_server 127.0.0.1
+        smtp_connect_timeout 30
+        router_id node1
+        vrrp_mcast_group4 224.0.100.67
+        }
+
+        vrrp_instance VI_1 {
+        state MASTER
+        interface eno16777736
+        virtual_router_id 44
+        priority 100
+        advert_int 1
+        authentication {
+            auth_type PASS
+            auth_pass f1bf7fde
+        }
+        virtual_ipaddress {
+            172.16.0.80/16 dev eno16777736 label eno16777736:0
+        }
+        track_interface {
+            eno16777736
+        }
+        notify_master &quot;/etc/keepalived/notify.sh master&quot;
+        notify_backup &quot;/etc/keepalived/notify.sh backup&quot;
+        notify_fault &quot;/etc/keepalived/notify.sh fault&quot;
+        }
+
+        vrrp_instance VI_2 {
+        state BACKUP
+        interface eno16777736
+        virtual_router_id 45
+        priority 98
+        advert_int 1
+        authentication {
+            auth_type PASS
+            auth_pass f2bf7ade
+        }
+        virtual_ipaddress {
+            172.16.0.90/16 dev eno16777736 label eno16777736:1
+        }
+        track_interface {
+            eno16777736
+        }
+        notify_master &quot;/etc/keepalived/notify.sh master&quot;
+        notify_backup &quot;/etc/keepalived/notify.sh backup&quot;
+        notify_fault &quot;/etc/keepalived/notify.sh fault&quot;
+        }
+
+        virtual_server fwmark 3 {
+        delay_loop 2
+        lb_algo rr
+        lb_kind DR
+        nat_mask 255.255.0.0
+        protocol TCP
+        sorry_server 127.0.0.1 80
+
+        real_server 172.16.0.69 80 {
+            weight 1
+            HTTP_GET {
+            url {
+                path /
+                status_code 200
+            }
+            connect_timeout 2
+            nb_get_retry 3
+            delay_before_retry 3
+            }
+        }
+        real_server 172.16.0.6 80 {
+            weight 1
+            HTTP_GET {
+                url {
+                    path /
+                    status_code 200
+                }
+                connect_timeout 2
+                nb_get_retry 3
+                delay_before_retry 3
+                }
+            }
+        }            
+</code></pre><p>回顾：<br>    keepalived：HA Cluster<br>        vrrp：vrrp_instance<br>            虚拟路由器：物理路由器；<br>                VRID：Virutal Router ID;<br>                Master/Backup<br>                    一主一备或一主多备；<br>                    priority<br>                抢占模式/非抢占模式</p>
+<pre><code>ipvs wrapper（checkers）：
+    checkers: 对各vs的各RS做健康状态检测；
+        应用层检测：HTTP_GET, SSL_GET, SMTP_CHECK
+        传输层检测：TCP_CHECK
+        自定义检测：MISC_CHECK
+</code></pre><p>keepalived(2)</p>
+<pre><code>keepalived调用外部的辅助脚本进行资源监控，并根据监控的结果状态能实现优先动态调整；
+    分两步：(1) 先定义一个脚本；(2) 在vrrp实例中调用此脚本；
+        vrrp_script &lt;SCRIPT_NAME&gt; {
+            script &quot;&quot;
+            interval INT 
+            weight -INT 
+            rise 2
+            fall 3
+        }
+
+        track_script {
+            SCRIPT_NAME_1
+            SCRIPT_NAME_2
+            ...
+        }
+
+    注意：
+        vrrp_script chk_down {
+            script &quot;/bin/bash -c &apos;[[ -f /etc/keepalived/down ]]&apos; &amp;&amp; exit 1 || exit 0&quot;
+            interval 1
+            weight -10
+        }
+
+            [[ -f /etc/keepalived/down ]]要特别地作为bash的参数的运行！
+
+
+
+    示例：高可用nginx服务
+
+        ! Configuration File for keepalived
+
+        global_defs {
+            notification_email {
+                root@localhost
+            }
+            notification_email_from keepalived@localhost
+            smtp_server 127.0.0.1
+            smtp_connect_timeout 30
+            router_id node1
+            vrrp_mcast_group4 224.0.100.19
+        }
+
+        vrrp_script chk_down {
+            script &quot;/bin/bash -c &apos;[[ -f /etc/keepalived/down ]]&apos; &amp;&amp; exit 1 || exit 0&quot;
+            interval 1
+            weight -5
+        }
+
+        vrrp_script chk_nginx {
+            script &quot;killall -0 nginx &amp;&amp; exit 0 || exit 1&quot;
+            interval 1
+            weight -5
+            fall 2
+            rise 1
+        }
+
+        vrrp_instance VI_1 {
+            state MASTER
+            interface eno16777736
+            virtual_router_id 14
+            priority 100
+            advert_int 1
+            authentication {
+                auth_type PASS
+                auth_pass 571f97b2
+            }
+            virtual_ipaddress {
+                10.1.0.93/16 dev eno16777736
+            }
+            track_script {
+                chk_down
+                chk_nginx
+            }
+            notify_master &quot;/etc/keepalived/notify.sh master&quot;
+            notify_backup &quot;/etc/keepalived/notify.sh backup&quot;
+            notify_fault &quot;/etc/keepalived/notify.sh fault&quot;
+        }
+
+博客作业：
+    （1）双主模型的ipvs高可用集群；
+    （2）双主模型的haproxy proxy高可用集群； 
+
+    测试：ipvs使用sh算法或持久连接时，故障切换后，同一个客户端是否依然能关联至此前绑定的RS；
+
+    （3）编写ansible role，完成使用keepalived高可用Nginx的配置；
+        nginx role
+        keepalived: 
+</code></pre></div><div class="tags"><a href="/tags/Linux/">Linux</a><a href="/tags/keepalied/">keepalied</a></div><div class="post-share"><div class="bdsharebuttonbox"><span style="float:left;line-height: 28px;height: 28px;font-size:16px;font-weight:blod">分享到：</span><a href="#" data-cmd="more" class="bds_more"></a><a href="#" data-cmd="mshare" title="分享到一键分享" class="bds_mshare"></a><a href="#" data-cmd="fbook" title="分享到Facebook" class="bds_fbook"></a><a href="#" data-cmd="twi" title="分享到Twitter" class="bds_twi"></a><a href="#" data-cmd="linkedin" title="分享到linkedin" class="bds_linkedin"></a><a href="#" data-cmd="youdao" title="分享到有道云笔记" class="bds_youdao"></a><a href="#" data-cmd="evernotecn" title="分享到印象笔记" class="bds_evernotecn"></a><a href="#" data-cmd="weixin" title="分享到微信" class="bds_weixin"></a><a href="#" data-cmd="qzone" title="分享到QQ空间" class="bds_qzone"></a><a href="#" data-cmd="tsina" title="分享到新浪微博" class="bds_tsina"></a></div></div><div class="post-nav"><a href="/2017/09/14/keepalived 各种高可用实战演练/" class="pre">keepalived 各种高可用实战演练</a><a href="/2017/08/28/HAproxy 原理介绍/" class="next">HAproxy 原理介绍</a></div><div id="comments"></div></div></div></div><div class="layout-r"><div id="sidebar"><div class="search-pla"></div><div id="toc" class="widget"><div class="widget-title"><i class="fa fa-fei">Inhalte</i></div></div><div class="widget"><div class="widget-title"><i class="fa fa-xie"> Letzte</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2018/08/09/Nginx 各种实验演示/">Nginx 各种实验演示</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/08/09/Nginx 详细介绍/">Nginx 详细介绍</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/08/09/日志管理介绍/">日志管理介绍</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/08/09/Linux 防火墙各种规则实战应用/">Linux 防火墙各种规则实战应用</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/15/memcache  缓存原理介绍/">memcache  缓存原理介绍</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/08/tomcat 各种架构实验演示/">tomcat 各种架构实验演示</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/05/浅谈 tomcat 原理/">浅谈 tomcat 原理</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/09/25/Varnish 缓存服务器介绍/">Varnish 缓存服务器介绍</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/09/14/keepalived 各种高可用实战演练/">keepalived 各种高可用实战演练</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/09/08/keepalived高可用/">keepalived  高可用</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-biao"> Tags</i></div><div class="tagcloud"><a href="/tags/lvs/" style="font-size: 15px;">lvs</a> <a href="/tags/Linux/" style="font-size: 15px;">Linux</a> <a href="/tags/DNS/" style="font-size: 15px;">DNS</a> <a href="/tags/权限管理/" style="font-size: 15px;">权限管理</a> <a href="/tags/LAMP/" style="font-size: 15px;">LAMP</a> <a href="/tags/练习题/" style="font-size: 15px;">练习题</a> <a href="/tags/su和sudo/" style="font-size: 15px;">su和sudo</a> <a href="/tags/MYSQL/" style="font-size: 15px;">MYSQL</a> <a href="/tags/TCP-IP/" style="font-size: 15px;">TCP/IP</a> <a href="/tags/文件系统/" style="font-size: 15px;">文件系统</a> <a href="/tags/SSH/" style="font-size: 15px;">SSH</a> <a href="/tags/varnish/" style="font-size: 15px;">varnish</a> <a href="/tags/mysql/" style="font-size: 15px;">mysql</a> <a href="/tags/keepalied/" style="font-size: 15px;">keepalied</a> <a href="/tags/DHCP/" style="font-size: 15px;">DHCP</a> <a href="/tags/memcache/" style="font-size: 15px;">memcache</a> <a href="/tags/rpm/" style="font-size: 15px;">rpm</a> <a href="/tags/tomcat/" style="font-size: 15px;">tomcat</a> <a href="/tags/共享服务/" style="font-size: 15px;">共享服务</a> <a href="/tags/自动化安装/" style="font-size: 15px;">自动化安装</a> <a href="/tags/基本命令/" style="font-size: 15px;">基本命令</a> <a href="/tags/CA/" style="font-size: 15px;">CA</a> <a href="/tags/dns/" style="font-size: 15px;">dns</a> <a href="/tags/sed/" style="font-size: 15px;">sed</a> <a href="/tags/mini系统/" style="font-size: 15px;">mini系统</a> <a href="/tags/进程管理、计划任务/" style="font-size: 15px;">进程管理、计划任务</a> <a href="/tags/haproxy/" style="font-size: 15px;">haproxy</a> <a href="/tags/用户组/" style="font-size: 15px;">用户组</a></div></div><div class="widget"><div class="widget-title"><i class="fa fa-archive"> Archiv</i></div><ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/10/">October 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">September 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/08/">August 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">June 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">March 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">February 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">January 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">December 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">November 2016</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-you"> Blogroll</i></div><ul></ul><a href="http://www.example1.com/" title="site-name1" target="_blank">site-name1</a><ul></ul><a href="http://www.example2.com/" title="site-name2" target="_blank">site-name2</a><ul></ul><a href="http://www.example3.com/" title="site-name3" target="_blank">site-name3</a></div></div></div></div><a id="totop" href="#top"></a><div id="footer"><div class="footer-info"><p><a href="/baidusitemap.xml">Baidu Site Haritası</a> |  <a href="/atom.xml">RSS</a> |  <a href="/about/">Über</a></p><p>本站总访问量：<i id="busuanzi_container_site_pv"><i id="busuanzi_value_site_pv"></i></i>次</p><p><span> Copyright &copy;<a href="/." rel="nofollow">John Doe.</a></span><span> Theme by<a rel="nofollow" target="_blank" href="https://github.com/chaooo/hexo-theme-BlueLake"> BlueLake.</a></span><span> Count by<a href="http://busuanzi.ibruce.info/"> busuanzi.</a></span><span> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a></span></p></div></div></div><script src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js" async></script><script type="text/javascript" src="/js/search.json.js?v=2.0.1"></script><script type="text/javascript" src="/js/toctotop.js?v=2.0.1" async></script><script>window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":["mshare","weixin","tsina","qzone","linkedin","fbook","twi","print","renren","sqq","evernotecn","bdysc","tqq","tqf","bdxc","kaixin001","tieba","douban","bdhome","thx","ibaidu","meilishuo","mogujie","diandian","huaban","duitang","hx","fx","youdao","sdo","qingbiji","people","xinhua","mail","isohu","yaolan","wealink","ty","iguba","h163","copy"],"bdPic":"","bdStyle":"1","bdSize":"16"},"share":{},"image":{"viewList":["tsina","qzone","weixin","fbook","twi","linkedin","youdao","evernotecn","mshare"],"viewText":"分享到：","viewSize":"16"},"selectShare":{"bdContainerClass":null,"bdSelectMiniList":["tsina","qzone","weixin","fbook","twi","linkedin","youdao","evernotecn","mshare"]}};with(document)0[(getElementsByTagName('head')[0]||head).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script></body></html>
