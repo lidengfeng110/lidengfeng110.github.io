@@ -1,4 +1,97 @@
-<!DOCTYPE html><html lang="null"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description"><title>centos 7.4 实现二进制安装mariadb-10.2.15-linux-x86_64.tar.gz       mysql 数据库 | Hexo</title><link rel="stylesheet" type="text/css" href="//fonts.neworld.org/css?family=Source+Code+Pro"><link rel="stylesheet" type="text/css" href="/css/style.css?v=2.0.1"><link rel="stylesheet" type="text/css" href="/css/highlight.css?v=2.0.1"><link rel="Shortcut Icon" href="/favicon.ico"><link rel="bookmark" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">centos 7.4 实现二进制安装mariadb-10.2.15-linux-x86_64.tar.gz       mysql 数据库</h1><a id="logo" href="/.">Hexo</a><p class="description"></p></div><div id="nav-menu"><a href="/." class="current"><i class="fa fa-home"> Start</i></a><a href="/archives/"><i class="fa fa-archive"> Archiv</i></a><a href="/about/"><i class="fa fa-user"> Über</i></a><a href="/atom.xml"><i class="fa fa-rss"> RSS</i></a></div><div id="search-form"><div id="result-mask" class="hide"></div><label><input id="search-key" type="text" autocomplete="off" placeholder="Arama"></label><div id="result-wrap" class="hide"><div id="search-result"></div></div><div class="hide"><template id="search-tpl"><div class="item"><a href="/{path}" title="{title}"><div class="title">{title}</div><div class="time">{date}</div><div class="tags">{tags}</div></a></div></template></div></div></div><div id="layout" class="layout-g"><div class="layout-l"><div class="content_container"><div class="post"><h1 class="post-title">centos 7.4 实现二进制安装mariadb-10.2.15-linux-x86_64.tar.gz       mysql 数据库</h1><div class="post-meta"><a href="/2017/06/03/centos 7.4 实现二进制安装mariadb-10.2.15-linux-x86_64.tar.gz       mysql 数据库/#comments" class="comment-count"></a><p><span class="date">Jun 03, 2017</span><span><i id="busuanzi_container_page_pv"><i id="busuanzi_value_page_pv"></i><i>Schlägt</i></i></span></p></div><div class="post-content"><h2 id="实验：centos-7-4-实现二进制安装mariadb-10-2-15-linux-x86-64-tar-gz-mysql-数据库"><a href="#实验：centos-7-4-实现二进制安装mariadb-10-2-15-linux-x86-64-tar-gz-mysql-数据库" class="headerlink" title="实验：centos 7.4 实现二进制安装mariadb-10.2.15-linux-x86_64.tar.gz       mysql 数据库"></a>实验：centos 7.4 实现二进制安装mariadb-10.2.15-linux-x86_64.tar.gz       mysql 数据库</h2><p>1，检查相应的坏境<br>查看下防火墙iptables和selinux 是否关闭，没关闭先关闭。<br>再查看下原来主机上是否已有 mariadb 数据库，如果有先卸载在进行安装。</p>
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>centos 7.4 实现二进制安装mariadb-10.2.15-linux-x86_64.tar.gz       mysql 数据库 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="实验：centos 7.4 实现二进制安装mariadb-10.2.15-linux-x86_64.tar.gz       mysql 数据库1，检查相应的坏境查看下防火墙iptables和selinux 是否关闭，没关闭先关闭。再查看下原来主机上是否已有 mariadb 数据库，如果有先卸载在进行安装。 2,下载对应的二进制文件">
+<meta name="keywords" content="Linux,mysql">
+<meta property="og:type" content="article">
+<meta property="og:title" content="centos 7.4 实现二进制安装mariadb-10.2.15-linux-x86_64.tar.gz       mysql 数据库">
+<meta property="og:url" content="http://yoursite.com/2017/06/03/centos 7.4 实现二进制安装mariadb-10.2.15-linux-x86_64.tar.gz       mysql 数据库/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="实验：centos 7.4 实现二进制安装mariadb-10.2.15-linux-x86_64.tar.gz       mysql 数据库1，检查相应的坏境查看下防火墙iptables和selinux 是否关闭，没关闭先关闭。再查看下原来主机上是否已有 mariadb 数据库，如果有先卸载在进行安装。 2,下载对应的二进制文件">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="http://i2.bvimg.com/657107/845d967c36390cf6.png">
+<meta property="og:image" content="http://i2.bvimg.com/657107/bc62920d17c5a79f.png">
+<meta property="og:image" content="http://i2.bvimg.com/657107/7f47fc9b13680bc5.png">
+<meta property="og:updated_time" content="2018-08-19T04:26:22.953Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="centos 7.4 实现二进制安装mariadb-10.2.15-linux-x86_64.tar.gz       mysql 数据库">
+<meta name="twitter:description" content="实验：centos 7.4 实现二进制安装mariadb-10.2.15-linux-x86_64.tar.gz       mysql 数据库1，检查相应的坏境查看下防火墙iptables和selinux 是否关闭，没关闭先关闭。再查看下原来主机上是否已有 mariadb 数据库，如果有先卸载在进行安装。 2,下载对应的二进制文件">
+<meta name="twitter:image" content="http://i2.bvimg.com/657107/845d967c36390cf6.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-centos 7.4 实现二进制安装mariadb-10.2.15-linux-x86_64.tar.gz       mysql 数据库" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/06/03/centos 7.4 实现二进制安装mariadb-10.2.15-linux-x86_64.tar.gz       mysql 数据库/" class="article-date">
+  <time datetime="2017-06-02T16:00:00.000Z" itemprop="datePublished">2017-06-03</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      centos 7.4 实现二进制安装mariadb-10.2.15-linux-x86_64.tar.gz       mysql 数据库
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="实验：centos-7-4-实现二进制安装mariadb-10-2-15-linux-x86-64-tar-gz-mysql-数据库"><a href="#实验：centos-7-4-实现二进制安装mariadb-10-2-15-linux-x86-64-tar-gz-mysql-数据库" class="headerlink" title="实验：centos 7.4 实现二进制安装mariadb-10.2.15-linux-x86_64.tar.gz       mysql 数据库"></a>实验：centos 7.4 实现二进制安装mariadb-10.2.15-linux-x86_64.tar.gz       mysql 数据库</h2><p>1，检查相应的坏境<br>查看下防火墙iptables和selinux 是否关闭，没关闭先关闭。<br>再查看下原来主机上是否已有 mariadb 数据库，如果有先卸载在进行安装。</p>
 <p>2,下载对应的二进制文件<br><img src="http://i2.bvimg.com/657107/845d967c36390cf6.png" alt="Markdown"><br><a id="more"></a><br>3，准备用户账号，mysql，顺便指定数据库家目录，系统默认是 /var/lib/mysql/ 目录下，但是在生产中一般都是自己指定，现在我们指定在 /data/mysqldb/  目录下。<br>          useradd -r -d /data/mysqldb -s /sbin/nologin mysql</p>
 <p>接下来要创建一个安装路径 ，这个路径将来要把解压缩包的内容存放在那，但是这个路径在压缩包里已经有定义了，所以我们要放进人家对应的目录下  /usr/local/  .<br>       解压缩      tar xvf mariadb-10.2.15-linux-x86_64.tar.gz  -C /usr/local/  </p>
 <p>解压缩完会在对应目录下生成一个带版本号的文件，这是不符合条件的，所以要么改名，要么使用软连接。当然，使用软连接更方便点。  </p>
@@ -13,5 +106,141 @@
 <p>修改数据库要参照 mysql/support-files/ 这个目录下的一些配置文件，根据生产需求拷贝想用的文件去覆盖主配置文件。<br>      cp support-files/my-huge.cnf /etc/my.cnf<br>然后进行修改     vim /etc/my.cnf<br>  在mysqld 语句块中添加路径   datadir       =/data/mysqldb<br>这样数据库的配置文件就准备好了。  </p>
 <p>在准备启动脚本<br>在 /usr/local/mysql/support-files/ 目录下二进制程序已经有了相关的脚本，我们拷贝一份就可以了。<br> cd /usr/local/mysql/<br> cp support-files/mysql.server  /etc/init.d/mysqld  </p>
 <p>加到启动服务中去<br>chkconfig –add mysqld<br>接下来就可以启动服务了<br>systemctl start mysqld<br>启动成功后查看下端口打开没 。<br><img src="http://i2.bvimg.com/657107/7f47fc9b13680bc5.png" alt="Markdown"><br>到此二进制安装就成功了。<br>就可以进行连接了。<br>但是直接连接会存在安全问题。所以把安全脚本跑一边就可以了。<br>mysql_secure_installation<br>跑脚本时输入相应信息就可以了。  </p>
-</div><div class="tags"><a href="/tags/Linux/">Linux</a><a href="/tags/mysql/">mysql</a></div><div class="post-share"><div class="bdsharebuttonbox"><span style="float:left;line-height: 28px;height: 28px;font-size:16px;font-weight:blod">分享到：</span><a href="#" data-cmd="more" class="bds_more"></a><a href="#" data-cmd="mshare" title="分享到一键分享" class="bds_mshare"></a><a href="#" data-cmd="fbook" title="分享到Facebook" class="bds_fbook"></a><a href="#" data-cmd="twi" title="分享到Twitter" class="bds_twi"></a><a href="#" data-cmd="linkedin" title="分享到linkedin" class="bds_linkedin"></a><a href="#" data-cmd="youdao" title="分享到有道云笔记" class="bds_youdao"></a><a href="#" data-cmd="evernotecn" title="分享到印象笔记" class="bds_evernotecn"></a><a href="#" data-cmd="weixin" title="分享到微信" class="bds_weixin"></a><a href="#" data-cmd="qzone" title="分享到QQ空间" class="bds_qzone"></a><a href="#" data-cmd="tsina" title="分享到新浪微博" class="bds_tsina"></a></div></div><div class="post-nav"><a href="/2017/06/05/centos 7.4 上源码安装 mariadb-10.2.15-linux-x86_64.tar.gz       mysql 数据库/" class="pre">centos 7.4 实现源码编译安装mariadb-10.2.15-linux-x86_64.tar.gz       mysql 数据库</a><a href="/2017/06/02/实验：yum包安装 mysql 数据库/" class="next">实验：yum包安装 mysql 数据库</a></div><div id="comments"></div></div></div></div><div class="layout-r"><div id="sidebar"><div class="search-pla"></div><div id="toc" class="widget"><div class="widget-title"><i class="fa fa-fei">Inhalte</i></div><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#实验：centos-7-4-实现二进制安装mariadb-10-2-15-linux-x86-64-tar-gz-mysql-数据库"><span class="toc-text">实验：centos 7.4 实现二进制安装mariadb-10.2.15-linux-x86_64.tar.gz       mysql 数据库</span></a></li></ol></div><div class="widget"><div class="widget-title"><i class="fa fa-xie"> Letzte</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2018/08/09/Nginx 各种实验演示/">Nginx 各种实验演示</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/08/09/Nginx 详细介绍/">Nginx 详细介绍</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/08/09/日志管理介绍/">日志管理介绍</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/08/09/Linux 防火墙各种规则实战应用/">Linux 防火墙各种规则实战应用</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/15/memcache  缓存原理介绍/">memcache  缓存原理介绍</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/08/tomcat 各种架构实验演示/">tomcat 各种架构实验演示</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/05/浅谈 tomcat 原理/">浅谈 tomcat 原理</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/09/25/Varnish 缓存服务器介绍/">Varnish 缓存服务器介绍</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/09/14/keepalived 各种高可用实战演练/">keepalived 各种高可用实战演练</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/09/08/keepalived高可用/">keepalived  高可用</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-biao"> Tags</i></div><div class="tagcloud"><a href="/tags/varnish/" style="font-size: 15px;">varnish</a> <a href="/tags/Linux/" style="font-size: 15px;">Linux</a> <a href="/tags/haproxy/" style="font-size: 15px;">haproxy</a> <a href="/tags/DNS/" style="font-size: 15px;">DNS</a> <a href="/tags/LAMP/" style="font-size: 15px;">LAMP</a> <a href="/tags/权限管理/" style="font-size: 15px;">权限管理</a> <a href="/tags/练习题/" style="font-size: 15px;">练习题</a> <a href="/tags/用户组/" style="font-size: 15px;">用户组</a> <a href="/tags/su和sudo/" style="font-size: 15px;">su和sudo</a> <a href="/tags/MYSQL/" style="font-size: 15px;">MYSQL</a> <a href="/tags/文件系统/" style="font-size: 15px;">文件系统</a> <a href="/tags/SSH/" style="font-size: 15px;">SSH</a> <a href="/tags/TCP-IP/" style="font-size: 15px;">TCP/IP</a> <a href="/tags/mysql/" style="font-size: 15px;">mysql</a> <a href="/tags/DHCP/" style="font-size: 15px;">DHCP</a> <a href="/tags/keepalied/" style="font-size: 15px;">keepalied</a> <a href="/tags/lvs/" style="font-size: 15px;">lvs</a> <a href="/tags/memcache/" style="font-size: 15px;">memcache</a> <a href="/tags/rpm/" style="font-size: 15px;">rpm</a> <a href="/tags/tomcat/" style="font-size: 15px;">tomcat</a> <a href="/tags/共享服务/" style="font-size: 15px;">共享服务</a> <a href="/tags/自动化安装/" style="font-size: 15px;">自动化安装</a> <a href="/tags/基本命令/" style="font-size: 15px;">基本命令</a> <a href="/tags/CA/" style="font-size: 15px;">CA</a> <a href="/tags/dns/" style="font-size: 15px;">dns</a> <a href="/tags/sed/" style="font-size: 15px;">sed</a> <a href="/tags/mini系统/" style="font-size: 15px;">mini系统</a> <a href="/tags/进程管理、计划任务/" style="font-size: 15px;">进程管理、计划任务</a></div></div><div class="widget"><div class="widget-title"><i class="fa fa-archive"> Archiv</i></div><ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/10/">October 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">September 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/08/">August 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">June 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">March 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">February 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">January 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">December 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">November 2016</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-you"> Blogroll</i></div><ul></ul><a href="http://www.example1.com/" title="site-name1" target="_blank">site-name1</a><ul></ul><a href="http://www.example2.com/" title="site-name2" target="_blank">site-name2</a><ul></ul><a href="http://www.example3.com/" title="site-name3" target="_blank">site-name3</a></div></div></div></div><a id="totop" href="#top"></a><div id="footer"><div class="footer-info"><p><a href="/baidusitemap.xml">Baidu Site Haritası</a> |  <a href="/atom.xml">RSS</a> |  <a href="/about/">Über</a></p><p>本站总访问量：<i id="busuanzi_container_site_pv"><i id="busuanzi_value_site_pv"></i></i>次</p><p><span> Copyright &copy;<a href="/." rel="nofollow">John Doe.</a></span><span> Theme by<a rel="nofollow" target="_blank" href="https://github.com/chaooo/hexo-theme-BlueLake"> BlueLake.</a></span><span> Count by<a href="http://busuanzi.ibruce.info/"> busuanzi.</a></span><span> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a></span></p></div></div></div><script src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js" async></script><script type="text/javascript" src="/js/search.json.js?v=2.0.1"></script><script type="text/javascript" src="/js/toctotop.js?v=2.0.1" async></script><script>window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":["mshare","weixin","tsina","qzone","linkedin","fbook","twi","print","renren","sqq","evernotecn","bdysc","tqq","tqf","bdxc","kaixin001","tieba","douban","bdhome","thx","ibaidu","meilishuo","mogujie","diandian","huaban","duitang","hx","fx","youdao","sdo","qingbiji","people","xinhua","mail","isohu","yaolan","wealink","ty","iguba","h163","copy"],"bdPic":"","bdStyle":"1","bdSize":"16"},"share":{},"image":{"viewList":["tsina","qzone","weixin","fbook","twi","linkedin","youdao","evernotecn","mshare"],"viewText":"分享到：","viewSize":"16"},"selectShare":{"bdContainerClass":null,"bdSelectMiniList":["tsina","qzone","weixin","fbook","twi","linkedin","youdao","evernotecn","mshare"]}};with(document)0[(getElementsByTagName('head')[0]||head).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
-</script></body></html>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2017/06/03/centos 7.4 实现二进制安装mariadb-10.2.15-linux-x86_64.tar.gz       mysql 数据库/" data-id="cjlblz3pg0013t4rbxofq0bsk" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/">Linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/mysql/">mysql</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2017/06/05/centos 7.4 上源码安装 mariadb-10.2.15-linux-x86_64.tar.gz       mysql 数据库/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          centos 7.4 实现源码编译安装mariadb-10.2.15-linux-x86_64.tar.gz       mysql 数据库
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2017/06/02/实验：yum包安装 mysql 数据库/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">实验：yum包安装 mysql 数据库</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/CA/">CA</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DHCP/">DHCP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DNS/">DNS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LAMP/">LAMP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/">Linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MYSQL/">MYSQL</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SSH/">SSH</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/TCP-IP/">TCP/IP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/dns/">dns</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/haproxy/">haproxy</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/keepalied/">keepalied</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lvs/">lvs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/memcache/">memcache</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mini系统/">mini系统</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql/">mysql</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rpm/">rpm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sed/">sed</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/su和sudo/">su和sudo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tomcat/">tomcat</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/varnish/">varnish</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/共享服务/">共享服务</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/基本命令/">基本命令</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/文件系统/">文件系统</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/权限管理/">权限管理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/用户组/">用户组</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/练习题/">练习题</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/自动化安装/">自动化安装</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/进程管理、计划任务/">进程管理、计划任务</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/CA/" style="font-size: 10px;">CA</a> <a href="/tags/DHCP/" style="font-size: 10px;">DHCP</a> <a href="/tags/DNS/" style="font-size: 15px;">DNS</a> <a href="/tags/LAMP/" style="font-size: 10px;">LAMP</a> <a href="/tags/Linux/" style="font-size: 20px;">Linux</a> <a href="/tags/MYSQL/" style="font-size: 15px;">MYSQL</a> <a href="/tags/SSH/" style="font-size: 10px;">SSH</a> <a href="/tags/TCP-IP/" style="font-size: 10px;">TCP/IP</a> <a href="/tags/dns/" style="font-size: 10px;">dns</a> <a href="/tags/haproxy/" style="font-size: 10px;">haproxy</a> <a href="/tags/keepalied/" style="font-size: 12.5px;">keepalied</a> <a href="/tags/lvs/" style="font-size: 10px;">lvs</a> <a href="/tags/memcache/" style="font-size: 10px;">memcache</a> <a href="/tags/mini系统/" style="font-size: 10px;">mini系统</a> <a href="/tags/mysql/" style="font-size: 17.5px;">mysql</a> <a href="/tags/rpm/" style="font-size: 10px;">rpm</a> <a href="/tags/sed/" style="font-size: 10px;">sed</a> <a href="/tags/su和sudo/" style="font-size: 10px;">su和sudo</a> <a href="/tags/tomcat/" style="font-size: 12.5px;">tomcat</a> <a href="/tags/varnish/" style="font-size: 10px;">varnish</a> <a href="/tags/共享服务/" style="font-size: 12.5px;">共享服务</a> <a href="/tags/基本命令/" style="font-size: 10px;">基本命令</a> <a href="/tags/文件系统/" style="font-size: 12.5px;">文件系统</a> <a href="/tags/权限管理/" style="font-size: 10px;">权限管理</a> <a href="/tags/用户组/" style="font-size: 10px;">用户组</a> <a href="/tags/练习题/" style="font-size: 10px;">练习题</a> <a href="/tags/自动化安装/" style="font-size: 10px;">自动化安装</a> <a href="/tags/进程管理、计划任务/" style="font-size: 10px;">进程管理、计划任务</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/10/">October 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">September 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/08/">August 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">June 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">March 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">February 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">January 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">December 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">November 2016</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2018/08/09/Nginx 各种实验演示/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2018/08/09/Nginx 详细介绍/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2018/08/09/日志管理介绍/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2018/08/09/Linux 防火墙各种规则实战应用/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2017/10/15/memcache  缓存原理介绍/">memcache  缓存原理介绍</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2018 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

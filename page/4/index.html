@@ -1,6 +1,135 @@
-<!DOCTYPE html><html lang="null"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description"><title>Hexo</title><link rel="stylesheet" type="text/css" href="//fonts.neworld.org/css?family=Source+Code+Pro"><link rel="stylesheet" type="text/css" href="/css/style.css?v=2.0.1"><link rel="stylesheet" type="text/css" href="/css/highlight.css?v=2.0.1"><link rel="Shortcut Icon" href="/favicon.ico"><link rel="bookmark" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">Hexo</h1><a id="logo" href="/.">Hexo</a><p class="description"></p></div><div id="nav-menu"><a href="/." class="current"><i class="fa fa-home"> Start</i></a><a href="/archives/"><i class="fa fa-archive"> Archiv</i></a><a href="/about/"><i class="fa fa-user"> Über</i></a><a href="/atom.xml"><i class="fa fa-rss"> RSS</i></a></div><div id="search-form"><div id="result-mask" class="hide"></div><label><input id="search-key" type="text" autocomplete="off" placeholder="Arama"></label><div id="result-wrap" class="hide"><div id="search-result"></div></div><div class="hide"><template id="search-tpl"><div class="item"><a href="/{path}" title="{title}"><div class="title">{title}</div><div class="time">{date}</div><div class="tags">{tags}</div></a></div></template></div></div></div><div id="layout" class="layout-g"><div class="layout-l"><div class="content_container"><div class="post"><h2 class="post-title"><a href="/2017/04/01/Linux系统中su 和 sudo 的用法/">Linux系统中su 和 sudo 的用法</a></h2><div class="post-meta"><p><span class="date">2017-04-01</span></p></div><div class="post-content"><h2 id="su"><a href="#su" class="headerlink" title="su"></a>su</h2><p>切换用户或以指定用户运行命令。  </p>
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://yoursite.com/page/4/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:locale" content="default">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Hexo">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main">
+  
+    <article id="post-Linux系统中su 和 sudo 的用法" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/04/01/Linux系统中su 和 sudo 的用法/" class="article-date">
+  <time datetime="2017-03-31T16:00:00.000Z" itemprop="datePublished">2017-04-01</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/04/01/Linux系统中su 和 sudo 的用法/">Linux系统中su 和 sudo 的用法</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="su"><a href="#su" class="headerlink" title="su"></a>su</h2><p>切换用户或以指定用户运行命令。  </p>
 <p>使用su可以指定运行命令的身份(user/group/uid/gid)。  </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">为了向后兼容，su默认不会改变当前目录，且仅设置HOME和SHELL这两个环境变量(若目标用户非root，则还设置USER和LOGNAME环境变量)。推荐使用--login选项(即&quot;-&quot;选项)避免环境变量混乱。  </span><br><span class="line"></span><br><span class="line">su [options...] [-] [user [args...]]</span><br><span class="line">选项说明：</span><br><span class="line">-c command：使用-c选项传递要指定的命令到shell上执行。使用-c执行命令会为每个su都分配新的会话环境</span><br><span class="line">-, -l, --login：启动shell作为登录的shell，模拟真正的登录环境。它会做下面几件事：</span><br><span class="line">                1.清除除了TERM外的所有环境变量</span><br><span class="line">                2.初始化HOME,SHELL,USER,LOGNAME,PATH环境变量</span><br><span class="line">                3.进入目标用户的家目录</span><br><span class="line">                4.设置argv[0]为&quot;-&quot;以便设置shell作为登录的shell</span><br><span class="line">                  使用--login的su是交互式登录。不使用--login的su是非交互式登录(除不带任何参数的su外</span><br><span class="line">-m, -p, --preserve-environment：保留整个环境变量(不会重新设置HOME,SHELL,USER和LOGNAME)，</span><br><span class="line">                                保留环境的方法是新用户shell上执行原用户的各配置文件，如~/.bashrc。</span><br><span class="line">                                当设置了--login时，将忽略该选项</span><br><span class="line">-s SHELL：运行指定的shell而非默认shell，选择shell的顺序优先级如下：</span><br><span class="line">                1.--shell指定的shell</span><br><span class="line">                2.如果使用了--preserve-environment，选择SHELL环境变量的shell</span><br><span class="line">                3.选项目标用户在passwd文件中指定的shell</span><br><span class="line">                4./bin/sh</span><br></pre></td></tr></table></figure></div><p class="readmore"><a href="/2017/04/01/Linux系统中su 和 sudo 的用法/">Mehr lesen</a></p></div><div class="post"><h2 class="post-title"><a href="/2017/03/22/实现DNS服务主从复制/">实现DNS服务主从复制</a></h2><div class="post-meta"><p><span class="date">2017-03-22</span></p></div><div class="post-content"><blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">为了向后兼容，su默认不会改变当前目录，且仅设置HOME和SHELL这两个环境变量(若目标用户非root，则还设置USER和LOGNAME环境变量)。推荐使用--login选项(即&quot;-&quot;选项)避免环境变量混乱。  </span><br><span class="line"></span><br><span class="line">su [options...] [-] [user [args...]]</span><br><span class="line">选项说明：</span><br><span class="line">-c command：使用-c选项传递要指定的命令到shell上执行。使用-c执行命令会为每个su都分配新的会话环境</span><br><span class="line">-, -l, --login：启动shell作为登录的shell，模拟真正的登录环境。它会做下面几件事：</span><br><span class="line">                1.清除除了TERM外的所有环境变量</span><br><span class="line">                2.初始化HOME,SHELL,USER,LOGNAME,PATH环境变量</span><br><span class="line">                3.进入目标用户的家目录</span><br><span class="line">                4.设置argv[0]为&quot;-&quot;以便设置shell作为登录的shell</span><br><span class="line">                  使用--login的su是交互式登录。不使用--login的su是非交互式登录(除不带任何参数的su外</span><br><span class="line">-m, -p, --preserve-environment：保留整个环境变量(不会重新设置HOME,SHELL,USER和LOGNAME)，</span><br><span class="line">                                保留环境的方法是新用户shell上执行原用户的各配置文件，如~/.bashrc。</span><br><span class="line">                                当设置了--login时，将忽略该选项</span><br><span class="line">-s SHELL：运行指定的shell而非默认shell，选择shell的顺序优先级如下：</span><br><span class="line">                1.--shell指定的shell</span><br><span class="line">                2.如果使用了--preserve-environment，选择SHELL环境变量的shell</span><br><span class="line">                3.选项目标用户在passwd文件中指定的shell</span><br><span class="line">                4./bin/sh</span><br></pre></td></tr></table></figure>
+        
+          <p class="article-more-link">
+            <a href="/2017/04/01/Linux系统中su 和 sudo 的用法/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2017/04/01/Linux系统中su 和 sudo 的用法/" data-id="cjlblz3op000at4rb1xjc3rzi" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/">Linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/su和sudo/">su和sudo</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-实现DNS服务主从复制" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/03/22/实现DNS服务主从复制/" class="article-date">
+  <time datetime="2017-03-21T16:00:00.000Z" itemprop="datePublished">2017-03-22</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/03/22/实现DNS服务主从复制/">实现DNS服务主从复制</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <blockquote>
 <p> 现在我们来实现主从复制，用两台主机做服务器，比如，用192.168.30.7 来做主服务器，用192.168.30.17 来做从服务器。现在我们把两个服务器都搭建起来。  </p>
 </blockquote>
 <blockquote>
@@ -10,7 +139,50 @@
 <blockquote>
 <p>  然后来修改主配置文件  </p>
 </blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/named.conf</span><br><span class="line">   </span><br><span class="line"> 要把 options 中的的这两行都注释掉。  </span><br><span class="line"> #listen-on port 53 &#123; locklhost; &#125;;      </span><br><span class="line">#allow-query     &#123; localhost;any; &#125;;</span><br></pre></td></tr></table></figure></div><p class="readmore"><a href="/2017/03/22/实现DNS服务主从复制/">Mehr lesen</a></p></div><div class="post"><h2 class="post-title"><a href="/2017/03/20/搭建DNS互联网架构服务器(一）/">搭建DNS互联网架构服务器</a></h2><div class="post-meta"><p><span class="date">2017-03-20</span></p></div><div class="post-content"><h2 id="互联网结如架构图如下："><a href="#互联网结如架构图如下：" class="headerlink" title="互联网结如架构图如下："></a>互联网结如架构图如下：</h2><p><img src="http://www.178linux.com/wp-content/uploads/2018/06/dns%E6%9E%B6%E6%9E%84.bmp" alt="image"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/named.conf</span><br><span class="line">   </span><br><span class="line"> 要把 options 中的的这两行都注释掉。  </span><br><span class="line"> #listen-on port 53 &#123; locklhost; &#125;;      </span><br><span class="line">#allow-query     &#123; localhost;any; &#125;;</span><br></pre></td></tr></table></figure>
+        
+          <p class="article-more-link">
+            <a href="/2017/03/22/实现DNS服务主从复制/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2017/03/22/实现DNS服务主从复制/" data-id="cjlblz3pv001rt4rbdl3qdzj3" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/DNS/">DNS</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/">Linux</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-搭建DNS互联网架构服务器(一）" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/03/20/搭建DNS互联网架构服务器(一）/" class="article-date">
+  <time datetime="2017-03-19T16:00:00.000Z" itemprop="datePublished">2017-03-20</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/03/20/搭建DNS互联网架构服务器(一）/">搭建DNS互联网架构服务器</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="互联网结如架构图如下："><a href="#互联网结如架构图如下：" class="headerlink" title="互联网结如架构图如下："></a>互联网结如架构图如下：</h2><p><img src="http://www.178linux.com/wp-content/uploads/2018/06/dns%E6%9E%B6%E6%9E%84.bmp" alt="image"></p>
 <blockquote>
 <p>拓扑结构清楚之后，现在开始从下往上，一步步构建并测试，直到最终完成！</p>
 </blockquote>
@@ -20,18 +192,190 @@
 <blockquote>
 <p>首先，除了客户端以外的所有DNS服务器都要下载 bind 包，后面操作就不赘述了。</p>
 </blockquote>
-<h6 id="注意！！！所有机器都要关闭-selinux-和-清空防火墙-！！！"><a href="#注意！！！所有机器都要关闭-selinux-和-清空防火墙-！！！" class="headerlink" title="注意！！！所有机器都要关闭  selinux   和  清空防火墙 ！！！"></a>注意！！！所有机器都要关闭  selinux   和  清空防火墙 ！！！</h6></div><p class="readmore"><a href="/2017/03/20/搭建DNS互联网架构服务器(一）/">Mehr lesen</a></p></div><div class="post"><h2 class="post-title"><a href="/2017/03/15/搭建DNS 服务，实现主服务器，邮件服务器，泛域名解析，反向解析等/">搭建DNS 服务，实现主服务器，邮件服务器，泛域名解析，反向解析等</a></h2><div class="post-meta"><p><span class="date">2017-03-15</span></p></div><div class="post-content"><h4 id="实验-：-搭建DNS-主服务器，现在拿-192-168-30-7-这台主机做主服务器"><a href="#实验-：-搭建DNS-主服务器，现在拿-192-168-30-7-这台主机做主服务器" class="headerlink" title="实验   ：   搭建DNS 主服务器，现在拿 192.168.30.7 这台主机做主服务器"></a>实验   ：   搭建DNS 主服务器，现在拿 192.168.30.7 这台主机做主服务器</h4><h6 id="先装包-yum-install-bind"><a href="#先装包-yum-install-bind" class="headerlink" title="先装包     yum install bind"></a>先装包     yum install bind</h6><h6 id="启动服务-systemctl-start-named"><a href="#启动服务-systemctl-start-named" class="headerlink" title="启动服务    systemctl start named"></a>启动服务    systemctl start named</h6><h6 id="然后修改主配置文件中的内容-vim-etc-named-conf"><a href="#然后修改主配置文件中的内容-vim-etc-named-conf" class="headerlink" title="然后修改主配置文件中的内容    vim /etc/named.conf"></a>然后修改主配置文件中的内容    vim /etc/named.conf</h6><blockquote>
+<h6 id="注意！！！所有机器都要关闭-selinux-和-清空防火墙-！！！"><a href="#注意！！！所有机器都要关闭-selinux-和-清空防火墙-！！！" class="headerlink" title="注意！！！所有机器都要关闭  selinux   和  清空防火墙 ！！！"></a>注意！！！所有机器都要关闭  selinux   和  清空防火墙 ！！！</h6>
+        
+          <p class="article-more-link">
+            <a href="/2017/03/20/搭建DNS互联网架构服务器(一）/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2017/03/20/搭建DNS互联网架构服务器(一）/" data-id="cjlblz3q9002dt4rbxeorr9h6" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/">Linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/dns/">dns</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-搭建DNS 服务，实现主服务器，邮件服务器，泛域名解析，反向解析等" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/03/15/搭建DNS 服务，实现主服务器，邮件服务器，泛域名解析，反向解析等/" class="article-date">
+  <time datetime="2017-03-14T16:00:00.000Z" itemprop="datePublished">2017-03-15</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/03/15/搭建DNS 服务，实现主服务器，邮件服务器，泛域名解析，反向解析等/">搭建DNS 服务，实现主服务器，邮件服务器，泛域名解析，反向解析等</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h4 id="实验-：-搭建DNS-主服务器，现在拿-192-168-30-7-这台主机做主服务器"><a href="#实验-：-搭建DNS-主服务器，现在拿-192-168-30-7-这台主机做主服务器" class="headerlink" title="实验   ：   搭建DNS 主服务器，现在拿 192.168.30.7 这台主机做主服务器"></a>实验   ：   搭建DNS 主服务器，现在拿 192.168.30.7 这台主机做主服务器</h4><h6 id="先装包-yum-install-bind"><a href="#先装包-yum-install-bind" class="headerlink" title="先装包     yum install bind"></a>先装包     yum install bind</h6><h6 id="启动服务-systemctl-start-named"><a href="#启动服务-systemctl-start-named" class="headerlink" title="启动服务    systemctl start named"></a>启动服务    systemctl start named</h6><h6 id="然后修改主配置文件中的内容-vim-etc-named-conf"><a href="#然后修改主配置文件中的内容-vim-etc-named-conf" class="headerlink" title="然后修改主配置文件中的内容    vim /etc/named.conf"></a>然后修改主配置文件中的内容    vim /etc/named.conf</h6><blockquote>
 <p> 创建以 magedu.com 的区域数据，一般建议区域数据都存放在  /etc/named.rfc1912.zones 文件中  ，添加内容如下：</p>
 </blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">zone &quot;magedu.com&quot; IN &#123;  </span><br><span class="line">                    type master;  </span><br><span class="line">                    file &quot;magedu.com.zone&quot;;</span><br><span class="line">&#125;;  </span><br><span class="line">  ##这是主从类型中的主类型，存放名字和IP 的数据库文件</span><br></pre></td></tr></table></figure></div><p class="readmore"><a href="/2017/03/15/搭建DNS 服务，实现主服务器，邮件服务器，泛域名解析，反向解析等/">Mehr lesen</a></p></div><div class="post"><h2 class="post-title"><a href="/2017/03/12/Linux 文件权限管理/">Linux 文件权限管理</a></h2><div class="post-meta"><p><span class="date">2017-03-12</span></p></div><div class="post-content"><h4 id="文件-目录的权限"><a href="#文件-目录的权限" class="headerlink" title="文件/目录的权限"></a>文件/目录的权限</h4><h5 id="文件的权限"><a href="#文件的权限" class="headerlink" title="文件的权限"></a>文件的权限</h5><h6 id="每个文件都有其所有者-u-user-、所属组-g-group-和其他人-o-other-对它的操作权限，a-all则同时代表这3者。权限包括读-r-read-、写-w-write-、执行-x-execute-。在不同类型的文件上读、写、执行权限的体现有所不同，所以目录权限和普通文件权限要区分开来。"><a href="#每个文件都有其所有者-u-user-、所属组-g-group-和其他人-o-other-对它的操作权限，a-all则同时代表这3者。权限包括读-r-read-、写-w-write-、执行-x-execute-。在不同类型的文件上读、写、执行权限的体现有所不同，所以目录权限和普通文件权限要区分开来。" class="headerlink" title="每个文件都有其所有者(u:user)、所属组(g:group)和其他人(o:other)对它的操作权限，a:all则同时代表这3者。权限包括读(r:read)、写(w:write)、执行(x:execute)。在不同类型的文件上读、写、执行权限的体现有所不同，所以目录权限和普通文件权限要区分开来。"></a>每个文件都有其所有者(u:user)、所属组(g:group)和其他人(o:other)对它的操作权限，a:all则同时代表这3者。权限包括读(r:read)、写(w:write)、执行(x:execute)。在不同类型的文件上读、写、执行权限的体现有所不同，所以目录权限和普通文件权限要区分开来。</h6><h5 id="在普通文件上："><a href="#在普通文件上：" class="headerlink" title="在普通文件上："></a>在普通文件上：</h5><blockquote>
-<p>r：可读，可以使用类似cat等命令查看文件内容；读是文件的最基本权限，没有读权限，普通文件的一切操作行为都被限制。<br></div><p class="readmore"><a href="/2017/03/12/Linux 文件权限管理/">Mehr lesen</a></p></div><div class="post"><h2 class="post-title"><a href="/2017/03/08/LINUX系统中用户、组管理/">安装管理包：LINUX系统中用户、组管理</a></h2><div class="post-meta"><p><span class="date">2017-03-08</span></p></div><div class="post-content"><h4 id="用户和组的基本概念"><a href="#用户和组的基本概念" class="headerlink" title="用户和组的基本概念"></a>用户和组的基本概念</h4><blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">zone &quot;magedu.com&quot; IN &#123;  </span><br><span class="line">                    type master;  </span><br><span class="line">                    file &quot;magedu.com.zone&quot;;</span><br><span class="line">&#125;;  </span><br><span class="line">  ##这是主从类型中的主类型，存放名字和IP 的数据库文件</span><br></pre></td></tr></table></figure>
+        
+          <p class="article-more-link">
+            <a href="/2017/03/15/搭建DNS 服务，实现主服务器，邮件服务器，泛域名解析，反向解析等/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2017/03/15/搭建DNS 服务，实现主服务器，邮件服务器，泛域名解析，反向解析等/" data-id="cjlblz3q8002at4rb3utkf60g" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/DNS/">DNS</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/">Linux</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-Linux 文件权限管理" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/03/12/Linux 文件权限管理/" class="article-date">
+  <time datetime="2017-03-11T16:00:00.000Z" itemprop="datePublished">2017-03-12</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/03/12/Linux 文件权限管理/">Linux 文件权限管理</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h4 id="文件-目录的权限"><a href="#文件-目录的权限" class="headerlink" title="文件/目录的权限"></a>文件/目录的权限</h4><h5 id="文件的权限"><a href="#文件的权限" class="headerlink" title="文件的权限"></a>文件的权限</h5><h6 id="每个文件都有其所有者-u-user-、所属组-g-group-和其他人-o-other-对它的操作权限，a-all则同时代表这3者。权限包括读-r-read-、写-w-write-、执行-x-execute-。在不同类型的文件上读、写、执行权限的体现有所不同，所以目录权限和普通文件权限要区分开来。"><a href="#每个文件都有其所有者-u-user-、所属组-g-group-和其他人-o-other-对它的操作权限，a-all则同时代表这3者。权限包括读-r-read-、写-w-write-、执行-x-execute-。在不同类型的文件上读、写、执行权限的体现有所不同，所以目录权限和普通文件权限要区分开来。" class="headerlink" title="每个文件都有其所有者(u:user)、所属组(g:group)和其他人(o:other)对它的操作权限，a:all则同时代表这3者。权限包括读(r:read)、写(w:write)、执行(x:execute)。在不同类型的文件上读、写、执行权限的体现有所不同，所以目录权限和普通文件权限要区分开来。"></a>每个文件都有其所有者(u:user)、所属组(g:group)和其他人(o:other)对它的操作权限，a:all则同时代表这3者。权限包括读(r:read)、写(w:write)、执行(x:execute)。在不同类型的文件上读、写、执行权限的体现有所不同，所以目录权限和普通文件权限要区分开来。</h6><h5 id="在普通文件上："><a href="#在普通文件上：" class="headerlink" title="在普通文件上："></a>在普通文件上：</h5><blockquote>
+<p>r：可读，可以使用类似cat等命令查看文件内容；读是文件的最基本权限，没有读权限，普通文件的一切操作行为都被限制。<br>
+        
+          <p class="article-more-link">
+            <a href="/2017/03/12/Linux 文件权限管理/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2017/03/12/Linux 文件权限管理/" data-id="cjlblz3oi0005t4rbiyyba8qh" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/">Linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/权限管理/">权限管理</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-LINUX系统中用户、组管理" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/03/08/LINUX系统中用户、组管理/" class="article-date">
+  <time datetime="2017-03-07T16:00:00.000Z" itemprop="datePublished">2017-03-08</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/03/08/LINUX系统中用户、组管理/">安装管理包：LINUX系统中用户、组管理</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h4 id="用户和组的基本概念"><a href="#用户和组的基本概念" class="headerlink" title="用户和组的基本概念"></a>用户和组的基本概念</h4><blockquote>
 <p>用户和组是操作系统中一种身份认证资源。  </p>
 </blockquote>
 <blockquote>
 <p>每个用户都有用户名、用户的唯一编号uid(user id)、所属组及其默认的shell，可能还有密码、家目录、附属组、注释信息等。  </p>
 </blockquote>
 <blockquote>
-<p>每个组也有自己的名称、组唯一编号gid(group id)。一般来说，gid和uid是可以不相同的，但绝大多数都会让它们保持一致，大致属于约定俗成类的概念吧。<br></div><p class="readmore"><a href="/2017/03/08/LINUX系统中用户、组管理/">Mehr lesen</a></p></div><div class="post"><h2 class="post-title"><a href="/2017/02/28/搭建DNS服务器，实现主DNS服务器，负责解析一个域/">搭建DNS服务器，实现主DNS服务器，负责解析一个域</a></h2><div class="post-meta"><p><span class="date">2017-02-28</span></p></div><div class="post-content"><h4 id="搭建DNS服务器，实现主DNS服务器，负责解析一个域"><a href="#搭建DNS服务器，实现主DNS服务器，负责解析一个域" class="headerlink" title="搭建DNS服务器，实现主DNS服务器，负责解析一个域"></a>搭建DNS服务器，实现主DNS服务器，负责解析一个域</h4><blockquote>
+<p>每个组也有自己的名称、组唯一编号gid(group id)。一般来说，gid和uid是可以不相同的，但绝大多数都会让它们保持一致，大致属于约定俗成类的概念吧。<br>
+        
+          <p class="article-more-link">
+            <a href="/2017/03/08/LINUX系统中用户、组管理/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2017/03/08/LINUX系统中用户、组管理/" data-id="cjlblz3ok0007t4rboactprfs" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/">Linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/用户组/">用户组</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-搭建DNS服务器，实现主DNS服务器，负责解析一个域" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/02/28/搭建DNS服务器，实现主DNS服务器，负责解析一个域/" class="article-date">
+  <time datetime="2017-02-27T16:00:00.000Z" itemprop="datePublished">2017-02-28</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/02/28/搭建DNS服务器，实现主DNS服务器，负责解析一个域/">搭建DNS服务器，实现主DNS服务器，负责解析一个域</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h4 id="搭建DNS服务器，实现主DNS服务器，负责解析一个域"><a href="#搭建DNS服务器，实现主DNS服务器，负责解析一个域" class="headerlink" title="搭建DNS服务器，实现主DNS服务器，负责解析一个域"></a>搭建DNS服务器，实现主DNS服务器，负责解析一个域</h4><blockquote>
 <p>先装包     yum install bind   </p>
 <p>然后查看下包的组成结构     rpm -ql bind </p>
 <p>  /etc/named.conf      这是他的配置文件</p>
@@ -39,16 +383,275 @@
 <p>/var/log/named.log     这是存放日志的</p>
 <p>/usr/sbin/named      主程序文件</p>
 <p>服务名    named.service</p>
-</blockquote></div><p class="readmore"><a href="/2017/02/28/搭建DNS服务器，实现主DNS服务器，负责解析一个域/">Mehr lesen</a></p></div><div class="post"><h2 class="post-title"><a href="/2017/02/15/DNS 服务从基础到深入/">DNS 服务从基础到深入</a></h2><div class="post-meta"><p><span class="date">2017-02-15</span></p></div><div class="post-content"><h2 id="一-简介"><a href="#一-简介" class="headerlink" title="一 简介"></a>一 简介</h2><blockquote>
+</blockquote>
+        
+          <p class="article-more-link">
+            <a href="/2017/02/28/搭建DNS服务器，实现主DNS服务器，负责解析一个域/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2017/02/28/搭建DNS服务器，实现主DNS服务器，负责解析一个域/" data-id="cjlblz3qb002ft4rbmle1dll0" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/DNS/">DNS</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/">Linux</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-DNS 服务从基础到深入" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/02/15/DNS 服务从基础到深入/" class="article-date">
+  <time datetime="2017-02-14T16:00:00.000Z" itemprop="datePublished">2017-02-15</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/02/15/DNS 服务从基础到深入/">DNS 服务从基础到深入</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="一-简介"><a href="#一-简介" class="headerlink" title="一 简介"></a>一 简介</h2><blockquote>
 <p>DNS是Domain name system的简称，有些地方也称为Domain name server，这东西是一个很大的话题。如果不是要配置DNS服务，只需要理解DNS的解析流程和DNS有关的基本知识即可。如果要配置DNS服务，则可以看完全文。<br>推荐阅读书籍：《DNS &amp; bind》，第四版有中文版，第五版目前只有英文版。  </p>
 </blockquote>
-<h5 id="DNS必懂基础"><a href="#DNS必懂基础" class="headerlink" title="DNS必懂基础"></a>DNS必懂基础</h5></div><p class="readmore"><a href="/2017/02/15/DNS 服务从基础到深入/">Mehr lesen</a></p></div><div class="post"><h2 class="post-title"><a href="/2017/02/10/SSH端口转发实验/">SSH端口转发实验</a></h2><div class="post-meta"><p><span class="date">2017-02-10</span></p></div><div class="post-content"><h4 id="一、SSH端口转发相关概念"><a href="#一、SSH端口转发相关概念" class="headerlink" title="一、SSH端口转发相关概念"></a>一、SSH端口转发相关概念</h4><h4 id="二、实验：模拟SSH本地端口转发"><a href="#二、实验：模拟SSH本地端口转发" class="headerlink" title="二、实验：模拟SSH本地端口转发"></a>二、实验：模拟SSH本地端口转发</h4><h4 id="三、实验：模拟SSH远程端口转发"><a href="#三、实验：模拟SSH远程端口转发" class="headerlink" title="三、实验：模拟SSH远程端口转发"></a>三、实验：模拟SSH远程端口转发</h4><h4 id="四、实验：模拟SSH动态端口转发"><a href="#四、实验：模拟SSH动态端口转发" class="headerlink" title="四、实验：模拟SSH动态端口转发"></a>四、实验：模拟SSH动态端口转发</h4><h5 id="一、SSH端口转发相关概念-1"><a href="#一、SSH端口转发相关概念-1" class="headerlink" title="一、SSH端口转发相关概念"></a>一、SSH端口转发相关概念</h5><blockquote>
+<h5 id="DNS必懂基础"><a href="#DNS必懂基础" class="headerlink" title="DNS必懂基础"></a>DNS必懂基础</h5>
+        
+          <p class="article-more-link">
+            <a href="/2017/02/15/DNS 服务从基础到深入/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2017/02/15/DNS 服务从基础到深入/" data-id="cjlblz3oa0001t4rbk4rx1ec5" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/DNS/">DNS</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/">Linux</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-SSH端口转发实验" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/02/10/SSH端口转发实验/" class="article-date">
+  <time datetime="2017-02-09T16:00:00.000Z" itemprop="datePublished">2017-02-10</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/02/10/SSH端口转发实验/">SSH端口转发实验</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h4 id="一、SSH端口转发相关概念"><a href="#一、SSH端口转发相关概念" class="headerlink" title="一、SSH端口转发相关概念"></a>一、SSH端口转发相关概念</h4><h4 id="二、实验：模拟SSH本地端口转发"><a href="#二、实验：模拟SSH本地端口转发" class="headerlink" title="二、实验：模拟SSH本地端口转发"></a>二、实验：模拟SSH本地端口转发</h4><h4 id="三、实验：模拟SSH远程端口转发"><a href="#三、实验：模拟SSH远程端口转发" class="headerlink" title="三、实验：模拟SSH远程端口转发"></a>三、实验：模拟SSH远程端口转发</h4><h4 id="四、实验：模拟SSH动态端口转发"><a href="#四、实验：模拟SSH动态端口转发" class="headerlink" title="四、实验：模拟SSH动态端口转发"></a>四、实验：模拟SSH动态端口转发</h4><h5 id="一、SSH端口转发相关概念-1"><a href="#一、SSH端口转发相关概念-1" class="headerlink" title="一、SSH端口转发相关概念"></a>一、SSH端口转发相关概念</h5><blockquote>
 <p>   在上一节我们知道，SSH会自动加密和解密所有SSH客户端和服务器之间的网络数据。<br>   但是，SSH还同时<br>提供了一个非常有用的功能，这就是端口转发。它能够将其他TCP端口的网络数据通过安全的SSH协议</p>
 </blockquote>
 <blockquote>
 <p>转发，例如：Telnet，SMTP等这些TCP应用都能从中受益，避免了用户名，密码以及隐私信息的明文传<br>输。而与此同时，如果在你的工作环境中防火墙限制了一些网络端口的使用，但是允许SSH的连接，那么<br>端口转发功能也能够将TCP端口转发来使用SSH进行通信。</p>
-</blockquote></div><p class="readmore"><a href="/2017/02/10/SSH端口转发实验/">Mehr lesen</a></p></div><div class="post"><h2 class="post-title"><a href="/2017/02/08/实现PXE自动安装/">实现PXE自动安装</a></h2><div class="post-meta"><p><span class="date">2017-02-08</span></p></div><div class="post-content"><h2 id="实现PXE自动安装"><a href="#实现PXE自动安装" class="headerlink" title="实现PXE自动安装"></a>实现PXE自动安装</h2><h3 id="1、基础网络建设与搭建DHCP服务"><a href="#1、基础网络建设与搭建DHCP服务" class="headerlink" title="1、基础网络建设与搭建DHCP服务"></a>1、基础网络建设与搭建DHCP服务</h3><h5 id="配置静态IP地址并重起网卡"><a href="#配置静态IP地址并重起网卡" class="headerlink" title="配置静态IP地址并重起网卡"></a>配置静态IP地址并重起网卡</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">cat /etc/sysconfig/network-scripts/ifcfg-eth0   </span><br><span class="line">DEVICE=eth0  </span><br><span class="line">TYPE=Ethernet  </span><br><span class="line">ONBOOT=yes  </span><br><span class="line">NM_CONTROLLED=yes  </span><br><span class="line">BOOTPROTO=static  </span><br><span class="line">IPADDR=10.0.0.4  </span><br><span class="line">NETMASK=255.255.255.0  </span><br><span class="line">GATEWAY=10.0.0.2</span><br></pre></td></tr></table></figure>
+</blockquote>
+        
+          <p class="article-more-link">
+            <a href="/2017/02/10/SSH端口转发实验/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2017/02/10/SSH端口转发实验/" data-id="cjlblz3p6000qt4rbetzjc1y5" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/">Linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/SSH/">SSH</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-实现PXE自动安装" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/02/08/实现PXE自动安装/" class="article-date">
+  <time datetime="2017-02-07T16:00:00.000Z" itemprop="datePublished">2017-02-08</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/02/08/实现PXE自动安装/">实现PXE自动安装</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="实现PXE自动安装"><a href="#实现PXE自动安装" class="headerlink" title="实现PXE自动安装"></a>实现PXE自动安装</h2><h3 id="1、基础网络建设与搭建DHCP服务"><a href="#1、基础网络建设与搭建DHCP服务" class="headerlink" title="1、基础网络建设与搭建DHCP服务"></a>1、基础网络建设与搭建DHCP服务</h3><h5 id="配置静态IP地址并重起网卡"><a href="#配置静态IP地址并重起网卡" class="headerlink" title="配置静态IP地址并重起网卡"></a>配置静态IP地址并重起网卡</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">cat /etc/sysconfig/network-scripts/ifcfg-eth0   </span><br><span class="line">DEVICE=eth0  </span><br><span class="line">TYPE=Ethernet  </span><br><span class="line">ONBOOT=yes  </span><br><span class="line">NM_CONTROLLED=yes  </span><br><span class="line">BOOTPROTO=static  </span><br><span class="line">IPADDR=10.0.0.4  </span><br><span class="line">NETMASK=255.255.255.0  </span><br><span class="line">GATEWAY=10.0.0.2</span><br></pre></td></tr></table></figure>
 <blockquote>
 <p>/etc/init.d/network restart<br>ifconfig eth0</p>
 </blockquote>
-<h5 id="2）安装配置DHCP服务"><a href="#2）安装配置DHCP服务" class="headerlink" title="2）安装配置DHCP服务"></a>2）安装配置DHCP服务</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">yum -y install dhcp  </span><br><span class="line">vim /etc/dhcp/dhcpd.conf  </span><br><span class="line">default-lease-time 600;  </span><br><span class="line">max-lease-time 7200;  </span><br><span class="line">ddns-update-style none;  </span><br><span class="line">option domain-name-servers 202.106.0.20;  </span><br><span class="line">#DNS地址可配置2个用逗号分隔  </span><br><span class="line">ignore client-updates;</span><br></pre></td></tr></table></figure></div><p class="readmore"><a href="/2017/02/08/实现PXE自动安装/">Mehr lesen</a></p></div><nav class="page-navigator"><a class="extend prev" rel="prev" href="/page/3/">Vorheriger</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/5/">Nächster</a></nav></div></div><div class="layout-r"><div id="sidebar"><div class="search-pla"></div><div class="widget"><div class="widget-title"><i class="fa fa-xie"> Letzte</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2018/08/09/Nginx 各种实验演示/">Nginx 各种实验演示</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/08/09/Nginx 详细介绍/">Nginx 详细介绍</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/08/09/日志管理介绍/">日志管理介绍</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/08/09/Linux 防火墙各种规则实战应用/">Linux 防火墙各种规则实战应用</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/15/memcache  缓存原理介绍/">memcache  缓存原理介绍</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/08/tomcat 各种架构实验演示/">tomcat 各种架构实验演示</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/05/浅谈 tomcat 原理/">浅谈 tomcat 原理</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/09/25/Varnish 缓存服务器介绍/">Varnish 缓存服务器介绍</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/09/14/keepalived 各种高可用实战演练/">keepalived 各种高可用实战演练</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/09/08/keepalived高可用/">keepalived  高可用</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-biao"> Tags</i></div><div class="tagcloud"><a href="/tags/varnish/" style="font-size: 15px;">varnish</a> <a href="/tags/Linux/" style="font-size: 15px;">Linux</a> <a href="/tags/haproxy/" style="font-size: 15px;">haproxy</a> <a href="/tags/DNS/" style="font-size: 15px;">DNS</a> <a href="/tags/LAMP/" style="font-size: 15px;">LAMP</a> <a href="/tags/权限管理/" style="font-size: 15px;">权限管理</a> <a href="/tags/练习题/" style="font-size: 15px;">练习题</a> <a href="/tags/用户组/" style="font-size: 15px;">用户组</a> <a href="/tags/su和sudo/" style="font-size: 15px;">su和sudo</a> <a href="/tags/MYSQL/" style="font-size: 15px;">MYSQL</a> <a href="/tags/文件系统/" style="font-size: 15px;">文件系统</a> <a href="/tags/SSH/" style="font-size: 15px;">SSH</a> <a href="/tags/TCP-IP/" style="font-size: 15px;">TCP/IP</a> <a href="/tags/mysql/" style="font-size: 15px;">mysql</a> <a href="/tags/DHCP/" style="font-size: 15px;">DHCP</a> <a href="/tags/keepalied/" style="font-size: 15px;">keepalied</a> <a href="/tags/lvs/" style="font-size: 15px;">lvs</a> <a href="/tags/memcache/" style="font-size: 15px;">memcache</a> <a href="/tags/rpm/" style="font-size: 15px;">rpm</a> <a href="/tags/tomcat/" style="font-size: 15px;">tomcat</a> <a href="/tags/共享服务/" style="font-size: 15px;">共享服务</a> <a href="/tags/自动化安装/" style="font-size: 15px;">自动化安装</a> <a href="/tags/基本命令/" style="font-size: 15px;">基本命令</a> <a href="/tags/CA/" style="font-size: 15px;">CA</a> <a href="/tags/dns/" style="font-size: 15px;">dns</a> <a href="/tags/sed/" style="font-size: 15px;">sed</a> <a href="/tags/mini系统/" style="font-size: 15px;">mini系统</a> <a href="/tags/进程管理、计划任务/" style="font-size: 15px;">进程管理、计划任务</a></div></div><div class="widget"><div class="widget-title"><i class="fa fa-archive"> Archiv</i></div><ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/10/">October 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">September 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/08/">August 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">June 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">March 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">February 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">January 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">December 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">November 2016</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-you"> Blogroll</i></div><ul></ul><a href="http://www.example1.com/" title="site-name1" target="_blank">site-name1</a><ul></ul><a href="http://www.example2.com/" title="site-name2" target="_blank">site-name2</a><ul></ul><a href="http://www.example3.com/" title="site-name3" target="_blank">site-name3</a></div></div></div></div><a id="totop" href="#top"></a><div id="footer"><div class="footer-info"><p><a href="/baidusitemap.xml">Baidu Site Haritası</a> |  <a href="/atom.xml">RSS</a> |  <a href="/about/">Über</a></p><p>本站总访问量：<i id="busuanzi_container_site_pv"><i id="busuanzi_value_site_pv"></i></i>次</p><p><span> Copyright &copy;<a href="/." rel="nofollow">John Doe.</a></span><span> Theme by<a rel="nofollow" target="_blank" href="https://github.com/chaooo/hexo-theme-BlueLake"> BlueLake.</a></span><span> Count by<a href="http://busuanzi.ibruce.info/"> busuanzi.</a></span><span> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a></span></p></div></div></div><script src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js" async></script><script type="text/javascript" src="/js/search.json.js?v=2.0.1"></script><script type="text/javascript" src="/js/totop.js?v=2.0.1" async></script></body></html>
+<h5 id="2）安装配置DHCP服务"><a href="#2）安装配置DHCP服务" class="headerlink" title="2）安装配置DHCP服务"></a>2）安装配置DHCP服务</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">yum -y install dhcp  </span><br><span class="line">vim /etc/dhcp/dhcpd.conf  </span><br><span class="line">default-lease-time 600;  </span><br><span class="line">max-lease-time 7200;  </span><br><span class="line">ddns-update-style none;  </span><br><span class="line">option domain-name-servers 202.106.0.20;  </span><br><span class="line">#DNS地址可配置2个用逗号分隔  </span><br><span class="line">ignore client-updates;</span><br></pre></td></tr></table></figure>
+        
+          <p class="article-more-link">
+            <a href="/2017/02/08/实现PXE自动安装/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2017/02/08/实现PXE自动安装/" data-id="cjlblz3pw001tt4rbc4refdjf" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/">Linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/自动化安装/">自动化安装</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+
+
+  <nav id="page-nav">
+    
+    <a class="extend prev" rel="prev" href="/page/3/">&laquo; Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/5/">Next &raquo;</a>
+  </nav>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/CA/">CA</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DHCP/">DHCP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DNS/">DNS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LAMP/">LAMP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/">Linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MYSQL/">MYSQL</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SSH/">SSH</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/TCP-IP/">TCP/IP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/dns/">dns</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/haproxy/">haproxy</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/keepalied/">keepalied</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lvs/">lvs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/memcache/">memcache</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mini系统/">mini系统</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql/">mysql</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rpm/">rpm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sed/">sed</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/su和sudo/">su和sudo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tomcat/">tomcat</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/varnish/">varnish</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/共享服务/">共享服务</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/基本命令/">基本命令</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/文件系统/">文件系统</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/权限管理/">权限管理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/用户组/">用户组</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/练习题/">练习题</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/自动化安装/">自动化安装</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/进程管理、计划任务/">进程管理、计划任务</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/CA/" style="font-size: 10px;">CA</a> <a href="/tags/DHCP/" style="font-size: 10px;">DHCP</a> <a href="/tags/DNS/" style="font-size: 15px;">DNS</a> <a href="/tags/LAMP/" style="font-size: 10px;">LAMP</a> <a href="/tags/Linux/" style="font-size: 20px;">Linux</a> <a href="/tags/MYSQL/" style="font-size: 15px;">MYSQL</a> <a href="/tags/SSH/" style="font-size: 10px;">SSH</a> <a href="/tags/TCP-IP/" style="font-size: 10px;">TCP/IP</a> <a href="/tags/dns/" style="font-size: 10px;">dns</a> <a href="/tags/haproxy/" style="font-size: 10px;">haproxy</a> <a href="/tags/keepalied/" style="font-size: 12.5px;">keepalied</a> <a href="/tags/lvs/" style="font-size: 10px;">lvs</a> <a href="/tags/memcache/" style="font-size: 10px;">memcache</a> <a href="/tags/mini系统/" style="font-size: 10px;">mini系统</a> <a href="/tags/mysql/" style="font-size: 17.5px;">mysql</a> <a href="/tags/rpm/" style="font-size: 10px;">rpm</a> <a href="/tags/sed/" style="font-size: 10px;">sed</a> <a href="/tags/su和sudo/" style="font-size: 10px;">su和sudo</a> <a href="/tags/tomcat/" style="font-size: 12.5px;">tomcat</a> <a href="/tags/varnish/" style="font-size: 10px;">varnish</a> <a href="/tags/共享服务/" style="font-size: 12.5px;">共享服务</a> <a href="/tags/基本命令/" style="font-size: 10px;">基本命令</a> <a href="/tags/文件系统/" style="font-size: 12.5px;">文件系统</a> <a href="/tags/权限管理/" style="font-size: 10px;">权限管理</a> <a href="/tags/用户组/" style="font-size: 10px;">用户组</a> <a href="/tags/练习题/" style="font-size: 10px;">练习题</a> <a href="/tags/自动化安装/" style="font-size: 10px;">自动化安装</a> <a href="/tags/进程管理、计划任务/" style="font-size: 10px;">进程管理、计划任务</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/10/">October 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">September 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/08/">August 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">June 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">March 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">February 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">January 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">December 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">November 2016</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2018/08/09/Nginx 各种实验演示/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2018/08/09/Nginx 详细介绍/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2018/08/09/日志管理介绍/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2018/08/09/Linux 防火墙各种规则实战应用/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2017/10/15/memcache  缓存原理介绍/">memcache  缓存原理介绍</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2018 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>
